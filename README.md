@@ -279,6 +279,135 @@ src
                         UserServiceTest.java           -- User service tests
 ```
 
-## Task List with estimated compeletion times (TODO)
+# Task List with Estimated Time
 
-In this section, you will provide a detailed breakdown of the tasks required to complete your project (any task over 4 hours must be broken down further). List each task involved in building and implementing the system, from setting up the database to creating the UI and testing the functionality. For each task, estimate how much time you expect it to take to complete, based on its complexity. This will help you manage your time and ensure that the project stays on track. Tasks should be organized logically, and you should be as detailed as possible, covering all the components required for your application.
+## **Frontend Development (React)**
+
+### 1. Setup
+- **Tasks:**
+  - Initialize React project.
+  - Install necessary dependencies (React, React Router, WebSocket, etc.).
+  - Set up project structure with folders for components, pages, and services.
+- **Estimated Time:** 1-2 hours
+
+### 2. Audio Player Component
+- **Tasks:**
+  - Create a functional `AudioPlayer` component.
+  - Set up state for current track, isPlaying, etc.
+  - Add audio controls (play/pause, next/prev).
+- **Estimated Time:** 3-4 hours
+
+### 3. Playlist & Song Components
+- **Tasks:**
+  - Create a `Playlist` component to display a list of playlists.
+  - Create a `Song` component for displaying individual songs and their info.
+  - Implement functionality to add songs to playlists.
+- **Estimated Time:** 3-4 hours
+
+### 4. Playlist CRUD
+- **Tasks:**
+  - Implement frontend logic for creating, updating, and deleting playlists.
+  - Create forms for adding/editing playlists.
+  - Display the playlists to users and handle interactions.
+- **Estimated Time:** 3-4 hours
+
+### 5. Like Playlist
+- **Tasks:**
+  - Implement functionality for users to like playlists.
+  - Update frontend to reflect liked playlists.
+- **Estimated Time:** 3-4 hours
+
+### 6. User Profile
+- **Tasks:**
+  - Build out user profiles.
+  - Display all user created playlists.
+  - Display all user liked playlists.
+- **Estimated Time:** 3-4 hours
+
+### 7. User Authentication
+- **Tasks:**
+  - Implement login functionality.
+  - Set up authentication (JWT or cookie-based).
+  - Implement role-based access control for users (Admin/MEMBER).
+- **Estimated Time:** 4-5 hours
+
+### 8. Final Touches & Styling
+- **Tasks:**
+  - Style the components using CSS and Bootstrap.
+  - Ensure a responsive design for different screen sizes.
+  - Polish UI/UX with animations or transitions where necessary.
+- **Estimated Time:** 4-5 hours
+
+---
+
+## **Backend Development (Spring Boot)**
+
+### **1. Model Layer**
+- **Tasks:**
+  - Define entities: `User`, `Playlist`, `Song`.
+  - Set up JPA annotations and relationships (e.g., One-to-Many, Many-to-Many).
+  - Add necessary fields and constraints (e.g., `username`, `password`, `created_at`).
+- **Estimated Time:** 2-3 hours
+
+### **2. Repository Layer**
+- **Tasks:**
+  - Create repository interfaces for each model: `UserRepository`, `PlaylistRepository`, `SongRepository`.
+  - Define custom queries for finding playlists by user, songs by playlist, etc.
+  - Set up methods for basic CRUD operations (e.g., `save()`, `delete()`, `findById()`).
+- **Estimated Time:** 2-3 hours
+
+### **3. Service Layer**
+- **Tasks:**
+  - Implement business logic for managing users, playlists, and songs.
+  - Create methods for adding, updating, deleting playlists and songs.
+  - Implement validation and error handling.
+  - Integrate the repository layer to fetch and manipulate data.
+- **Estimated Time:** 3-4 hours
+
+### **4. Controller Layer**
+- **Tasks:**
+  - Create REST controllers for `User`, `Playlist`, and `Song`.
+  - Implement endpoints for CRUD operations (e.g., `GET /playlists`, `POST /songs`).
+  - Set up input validation and return appropriate responses (status codes, messages).
+  - Implement role-based access control (Admin/MEMBER) for managing playlists and songs.
+- **Estimated Time:** 3-4 hours
+
+### **5. Testing**
+- **Tasks:**
+  - **Unit Tests:**
+    - Write tests for the repository layer (mock data, test CRUD operations).
+    - Write service layer tests to ensure business logic works as expected.
+  - **Integration Tests:**
+    - Test the full flow of API calls, including authentication and authorization.
+    - Write tests for CRUD operations on playlists and songs.
+  - **API Tests:**
+    - Test endpoints for valid and invalid requests (e.g., missing fields, incorrect IDs).
+  - Set up testing frameworks: JUnit, Mockito, Spring Test.
+- **Estimated Time:** 6-7 hours
+
+### **6. Bug Fixes & Refinement**
+- **Tasks:**
+  - Fix any issues found during testing.
+  - Optimize service methods and database queries.
+  - Ensure smooth integration between layers.
+- **Estimated Time:** 6-7 hours
+
+---
+
+## **Database Management (MySQL)**
+
+### **1. Database Schema**
+- **Tasks:**
+  - Design the MySQL database schema for `User`, `Playlist`, `Song`.
+  - Create necessary tables, columns, and relationships (e.g., foreign keys).
+  - Implement constraints like unique usernames, password validation, etc.
+- **Estimated Time:** 2-3 hours
+
+### **2. Database Integration**
+- **Tasks:**
+  - Integrate Spring Boot with MySQL using JDBC.
+  - Ensure repository layer is connected to MySQL.
+- **Estimated Time:** 2-3 hours
+
+
+- **Total Time:** 50-66 hours
