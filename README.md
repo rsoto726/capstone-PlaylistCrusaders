@@ -39,7 +39,7 @@ Technology Stack:
 ## Glossary
 
 ### Playlist
-A curated list of songs, typically grouped around a theme, mood, or genre. In this application, users can share playlists by submitting links from supported streaming platforms (e.g., Spotify, Apple Music).
+A curated list of songs, typically grouped around a theme, mood, or genre. In this application, users can share playlists by submitting links from supported streaming platforms (e.g., SoundCloud Spotify).
 
 ### Like
 A form of positive feedback that users can give to playlists they enjoy. Likes serve as a way to validate and promote playlists within the platform, influencing what appears in trending or popular feeds.
@@ -63,37 +63,24 @@ Sensible layering and pattern choices
 A full test suite that covers the domain and data layers
 Roles: User & Admin
 
----
 
 ### Manage Database Tables
 Will design and implement 4-7 independent database entities that represent different core concepts within the application. These entities will not simply be connected via a bridge table but will each have unique attributes and relationships to other entities. For example, we will create separate tables for users, running clubs, runs, and memberships.
 
----
-
 ### MySQL for Data Management
 Will use MySQL as the relational database management system for storing and retrieving data. Will design the schema to ensure data integrity and optimize query performance. We'll use Spring Data JPA with MySQL to manage the entities and perform CRUD operations.
-
----
 
 ### Spring Boot, MVC, JDBC, Testing, React
 Will implement the backend of the application using Spring Boot, utilizing the MVC (Model-View-Controller) architecture for organizing the application structure. The JDBC will be used for database connections and data transactions. For the frontend, will build the UI with React, ensuring it is responsive and functional. Will also write unit and integration tests to ensure that both the backend and frontend meet the application requirements.
 
----
-
 ### An HTML and CSS UI Built with React
 Will create the user interface using React, ensuring a clean, user-friendly design with HTML and CSS. Will follow modern web development practices, including responsive design to ensure the app works on both mobile and desktop devices. The layout will be organized and intuitive for users to browse and create playlists.
-
----
 
 ### Sensible Layering and Pattern Choices
 Will follow best practices for application architecture, utilizing layered design patterns. This includes separating the logic into distinct layers such as controller, service, and repository. Will ensure that the backend follows the Single Responsibility Principle and that the code is easy to maintain and scale.
 
----
-
 ### A Full Test Suite that Covers the Domain and Data Layers
-Will implement a comprehensive test suite for the project. This will include unit tests for the domain layer (services and models) and the data layer (repositories and database interactions). Will also write integration tests to ensure that the application components work together as expected.
-
----
+Will implement a comprehensive test suite for the project. This will include unit tests for the domain layer (services and models) and the data layer (repositories and database interactions).
 
 ### Must Have at Least 2 Roles
 Will implement role-based access control using Spring Security. The system will have two roles: User and Admin. Users will be able to sign up, create playlists, and view public playlists , while admins will have privileges to delete and view any playlists. Will ensure the roles are securely handled through authentication and authorization.
@@ -120,8 +107,6 @@ Create a playlist that users can listen to and leave likes on.
   - Delete any user's playlist.
   - Potentially disable/suspend users.
 
----
-
 ### Browse Playlists
 
 **Description:**  
@@ -135,8 +120,6 @@ Display playlists to anyone using the application.
 **Preconditions:** None  
 **Post-conditions:** None
 
----
-
 ### Like a Playlist
 
 **Description:**  
@@ -148,8 +131,6 @@ Users can like playlists to show appreciation and save them.
 **Post-conditions:**
 - Playlist receives +1 like.
 - Playlist is added to the user’s “Liked playlists” collection.
-
----
 
 ### Repository Tasks
 
@@ -170,7 +151,6 @@ Users can like playlists to show appreciation and save them.
 - `update`
 - `findById`
 
----
 
 ### Service Tasks
 
@@ -183,7 +163,6 @@ Users can like playlists to show appreciation and save them.
 - `AddSong`
 - `DeleteSong`
 
----
 
 ### Tests
 
@@ -192,7 +171,6 @@ Users can like playlists to show appreciation and save them.
 - Username validation: length, character restrictions.
 - Password validation: length, special character check, uppercase requirement.
 
----
 
 ### Controller Responsibilities
 
@@ -225,7 +203,6 @@ We anticipate needing to learn how to type things like React event handlers, API
 **Success Criteria:**  
 If the entire React frontend is built in TypeScript with strong typing across components and backend API responses, and without falling back to `any`, then I’ll consider this learning goal achieved. Autocomplete, error checking, and refactoring should also be improved.
 
----
 
 ### Learning Goal: Learn how to implement real-time feedback using WebSockets.
 
@@ -333,7 +310,6 @@ If multiple users on the app can see likes appear in real-time as they’re clic
    - **Relationships**:
      - This table represents a many-to-many relationship between `User` and `Role`.
 
----
 
 ### Visual Representation:
 
@@ -450,7 +426,6 @@ src
   - Polish UI/UX with animations or transitions where necessary.
 - **Estimated Time:** 4-5 hours
 
----
 
 ## **Backend Development (Spring Boot)**
 
@@ -504,7 +479,6 @@ src
   - Ensure smooth integration between layers.
 - **Estimated Time:** 6-7 hours
 
----
 
 ## **Database Management (MySQL)**
 
@@ -521,5 +495,6 @@ src
   - Ensure repository layer is connected to MySQL.
 - **Estimated Time:** 2-3 hours
 
+---
 
 - **Total Time:** 50-66 hours
