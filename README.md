@@ -76,7 +76,7 @@ Will use MySQL as the relational database management system for storing and retr
 ---
 
 ### Spring Boot, MVC, JDBC, Testing, React
-Will implement the backend of the application using Spring Boot, utilizing the MVC (Model-View-Controller) architecture for organizing the application structure. The JDBC will be used for database connections and data transactions. For the frontend, I will build the UI with React, ensuring it is responsive and functional. Will also write unit and integration tests to ensure that both the backend and frontend meet the application requirements.
+Will implement the backend of the application using Spring Boot, utilizing the MVC (Model-View-Controller) architecture for organizing the application structure. The JDBC will be used for database connections and data transactions. For the frontend, will build the UI with React, ensuring it is responsive and functional. Will also write unit and integration tests to ensure that both the backend and frontend meet the application requirements.
 
 ---
 
@@ -209,28 +209,140 @@ Users can like playlists to show appreciation and save them.
   - If the user is a `MEMBER`, the run/playlist is set to **pending**.
   - If the user is an `ADMIN`, they can choose to post it immediately or keep it pending.
 
-## Learning Goal (TODO)
+## Learning Goal 
 
-- What specific knowledge or skill do you aim to gain from this project that you haven’t yet learned? Why is it meaningful to you or the project?
-- Describe how this new knowledge or skill will be used within the project. What specific part of the application or feature will rely on it?
-- List initial resources you plan to use to understand this concept (e.g., official documentation, tutorials, or textbooks). Are there any third-party libraries or tools? Will you need an API key or extra setup?
-- What challenges do you anticipate in learning and applying this skill? How do you plan to address them (e.g., experimenting, testing with dummy data, seeking mentorship)?
-- How will you measure whether you have achieved your learning goal? What will the successful implementation of this skill or technology look like in your project?
+### Learning Goal: Learn how to use TypeScript in a full-stack React + Spring Boot web application.
 
-Note: pick a learning goal that is both ambitious and realistic, one that will directly improve the quality of their capstone project while also pushing you to expand your skill set.
+**Application:**  
+Use TypeScript to strongly type all frontend components, props, state, and API interaction layers in the React application. It will help improve code maintainability and prevent bugs in complex features like the audio player, playlist management, and user data handling.
 
-Example: 
+**Research and Resources:**  
+Will start with the [official TypeScript documentation](https://www.typescriptlang.org/docs/), use the React TypeScript Cheatsheet, and follow a few YouTube tutorials on migrating a JavaScript app to TypeScript. Also reference GitHub repos that use TS + React.
 
-Learning Goal: I want to learn how to integrate Google Maps into a web application.
+**Challenges:**  
+We anticipate needing to learn how to type things like React event handlers, API responses, and component props effectively. The challenges will mainly involve setting up the Create React App with TypeScript, getting it started properly, and ensuring consistency in data types across components.
 
-Application: I will use Google Maps API to display the location of each run on an interactive map within the app.
-Research and Resources: I’ll start with the official Google Maps API documentation and a Udemy course on map APIs in JavaScript.
-Challenges: I anticipate needing to figure out how to dynamically load map locations and handle API key security. To address this, I’ll practice with dummy data first and research security best practices for frontend applications.
-Success Criteria: If users can see a Google Maps widget in the app that dynamically updates with each run location, then I’ll consider this learning goal achieved.
+**Success Criteria:**  
+If the entire React frontend is built in TypeScript with strong typing across components and backend API responses, and without falling back to `any`, then I’ll consider this learning goal achieved. Autocomplete, error checking, and refactoring should also be improved.
 
-## Class Diagram (TODO)
+---
 
-In this section, you will provide a visual representation of the relationships between the main classes in your application. The class diagram should illustrate how different entities in your system are connected and how they interact. It will include the classes, their attributes (fields), methods (functions), and relationships (e.g., inheritance, associations). You should focus on clearly depicting the objects and the role they play in the overall architecture of your system. The goal is to show the structure of your application in a way that makes it easy to understand how the system components are related to each other.
+### Learning Goal: Learn how to implement real-time feedback using WebSockets.
+
+**Application:**  
+Will use WebSockets to create a real-time "like" button feature for tracks. When one user clicks 'like', all other users currently on the site will instantly see the updated like count without needing to refresh. This adds a social and interactive component to the app.
+
+**Research and Resources:**  
+Plan on using `socket.io`, so will start with the official Socket.IO documentation. Also will review tutorials on how to integrate Socket.IO with Spring Boot (on the backend) and React (on the frontend), and look through GitHub repos or blog posts that use similar implementations.
+
+**Challenges:**  
+Integrating Socket.IO with Spring Boot isn’t as direct as with Node.js, so will need to figure out how to properly configure the backend to handle WebSocket connections. On the frontend, will need to manage state updates smoothly and handle cleanup when components unmount. Will test with dummy sockets first and look into fallback handling in case connections drop.
+
+**Success Criteria:**  
+If multiple users on the app can see likes appear in real-time as they’re clicked — without needing to refresh — then will consider this a success.
+
+
+## Class Diagram 
+
+### Key Entities and Their Relationships:
+
+#### 1. **User**
+   - **Attributes**:
+     - `id: int`
+     - `username: string`
+     - `email: string`
+     - `password: string`
+   - **Methods**:
+     - `login()`
+     - `logout()`
+     - `updatePassword()`
+     - `disableAccount()`
+   - **Relationships**:
+     - A `User` can have many `Playlists` (1-to-many relationship).
+     - A `User` can like many `Playlists` via `Like` (many-to-many relationship).
+     - A `User` has a role via the `User_Role` table (many-to-many relationship).
+
+#### 2. **Role**
+   - **Attributes**:
+     - `role_id: int`
+     - `role_name: enum` (e.g., 'admin', 'user', 'suspended')
+   - **Methods**:
+
+   - **Relationships**:
+     - A `Role` can be assigned to many `Users` via the `User_Role` table.
+
+#### 3. **Playlist**
+   - **Attributes**:
+     - `id: int`
+     - `name: string`
+     - `description: string`
+     - `public: boolean`
+     - `created_at: datetime`
+     - `updated_at: datetime`
+     - `user_id: int` (Foreign key to `User`)
+   - **Methods**:
+     - `create()`
+     - `update()`
+     - `delete()`
+   - **Relationships**:
+     - A `Playlist` belongs to a `User` (many-to-one relationship).
+     - A `Playlist` can contain many `Songs` via the `Playlist_Song` table (many-to-many relationship).
+     - A `Playlist` can be liked by many `Users` via the `Like` table (many-to-many relationship).
+
+#### 4. **Song**
+   - **Attributes**:
+     - `id: int`
+     - `url: string`
+     - `artist: string`
+     - `name: string`
+     - `artwork: string` (URL to artwork)
+   - **Methods**:
+     - `add()`
+     - `delete()`
+   - **Relationships**:
+     - A `Song` can appear in many `Playlists` via the `Playlist_Song` table (many-to-many relationship).
+
+#### 5. **Like**
+   - **Attributes**:
+     - `id: int`
+     - `user_id: int` (Foreign key to `User`)
+     - `playlist_id: int` (Foreign key to `Playlist`)
+   - **Methods**:
+     - `toggleLike()`
+   - **Relationships**:
+     - A `Like` is associated with one `User` and one `Playlist` (many-to-one relationships).
+
+#### 6. **Playlist_Song**
+   - **Attributes**:
+     - `id: int`
+     - `playlist_id: int` (Foreign key to `Playlist`)
+     - `song_id: int` (Foreign key to `Song`)
+   - **Methods**:
+     - `addToPlaylist()`
+     - `removeFromPlaylist()`
+   - **Relationships**:
+     - This table represents a many-to-many relationship between `Playlist` and `Song`.
+
+#### 7. **User_Role**
+   - **Attributes**:
+     - `user_id: int` (Foreign key to `User`)
+     - `role_id: int` (Foreign key to `Role`)
+   - **Methods**:
+     - `assignRole()`
+     - `removeAdmin()` (admin removal protection in assignRole)
+   - **Relationships**:
+     - This table represents a many-to-many relationship between `User` and `Role`.
+
+---
+
+### Visual Representation:
+
+- **User** -> **Playlist** (1-to-many)
+- **User** -> **Like** -> **Playlist** (many-to-many via `Like`)
+- **Playlist** -> **Song** (many-to-many via `Playlist_Song`)
+- **User** -> **Role** (many-to-many via `User_Role`)
+
+
 
 ## Class List
 
