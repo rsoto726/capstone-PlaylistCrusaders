@@ -39,7 +39,7 @@ Technology Stack:
 ## Glossary
 
 ### Playlist
-A curated list of songs, typically grouped around a theme, mood, or genre. In this application, users can share playlists by submitting links from supported streaming platforms (e.g., SoundCloud Spotify).
+A curated list of songs, typically grouped around a theme, mood, or genre. In this application, users can share playlists by submitting links from supported streaming platforms (e.g., Spotify, Apple Music).
 
 ### Like
 A form of positive feedback that users can give to playlists they enjoy. Likes serve as a way to validate and promote playlists within the platform, influencing what appears in trending or popular feeds.
@@ -63,24 +63,37 @@ Sensible layering and pattern choices
 A full test suite that covers the domain and data layers
 Roles: User & Admin
 
+---
 
 ### Manage Database Tables
 Will design and implement 4-7 independent database entities that represent different core concepts within the application. These entities will not simply be connected via a bridge table but will each have unique attributes and relationships to other entities. For example, we will create separate tables for users, running clubs, runs, and memberships.
 
+---
+
 ### MySQL for Data Management
 Will use MySQL as the relational database management system for storing and retrieving data. Will design the schema to ensure data integrity and optimize query performance. We'll use Spring Data JPA with MySQL to manage the entities and perform CRUD operations.
+
+---
 
 ### Spring Boot, MVC, JDBC, Testing, React
 Will implement the backend of the application using Spring Boot, utilizing the MVC (Model-View-Controller) architecture for organizing the application structure. The JDBC will be used for database connections and data transactions. For the frontend, will build the UI with React, ensuring it is responsive and functional. Will also write unit and integration tests to ensure that both the backend and frontend meet the application requirements.
 
+---
+
 ### An HTML and CSS UI Built with React
 Will create the user interface using React, ensuring a clean, user-friendly design with HTML and CSS. Will follow modern web development practices, including responsive design to ensure the app works on both mobile and desktop devices. The layout will be organized and intuitive for users to browse and create playlists.
+
+---
 
 ### Sensible Layering and Pattern Choices
 Will follow best practices for application architecture, utilizing layered design patterns. This includes separating the logic into distinct layers such as controller, service, and repository. Will ensure that the backend follows the Single Responsibility Principle and that the code is easy to maintain and scale.
 
+---
+
 ### A Full Test Suite that Covers the Domain and Data Layers
-Will implement a comprehensive test suite for the project. This will include unit tests for the domain layer (services and models) and the data layer (repositories and database interactions).
+Will implement a comprehensive test suite for the project. This will include unit tests for the domain layer (services and models) and the data layer (repositories and database interactions). Will also write integration tests to ensure that the application components work together as expected.
+
+---
 
 ### Must Have at Least 2 Roles
 Will implement role-based access control using Spring Security. The system will have two roles: User and Admin. Users will be able to sign up, create playlists, and view public playlists , while admins will have privileges to delete and view any playlists. Will ensure the roles are securely handled through authentication and authorization.
@@ -107,6 +120,8 @@ Create a playlist that users can listen to and leave likes on.
   - Delete any user's playlist.
   - Potentially disable/suspend users.
 
+---
+
 ### Browse Playlists
 
 **Description:**  
@@ -120,6 +135,8 @@ Display playlists to anyone using the application.
 **Preconditions:** None  
 **Post-conditions:** None
 
+---
+
 ### Like a Playlist
 
 **Description:**  
@@ -132,45 +149,107 @@ Users can like playlists to show appreciation and save them.
 - Playlist receives +1 like.
 - Playlist is added to the user’s “Liked playlists” collection.
 
+---
+
 ### Repository Tasks
 
-**Playlist**
+**PlaylistRepository**
 - `findByUser`
 - `findByUserLikes`
 - `create`
 - `update`
 - `delete`
 
-**Song**
+**SongRepository**
 - `findByPlaylist`
 - `create`
 - `delete`
 
-**User**
+**UserRepository**
 - `create`
 - `update`
 - `findById`
 
+---
 
 ### Service Tasks
 
+**PlaylistService**
 - `UpdateLike`: Update like count and send socket update to frontend.
-- `GetPlaylists`: Fetch playlists and associated songs.
-- `GetUser`: Handle login and user retrieval.
-- `UpdatePlaylist`
-- `DeletePlaylist`
-- `CreatePlaylist`
-- `AddSong`
-- `DeleteSong`
+- `GetUserPlaylists`: Get user playlists and associated songs.
+- `getUserLikePlaylists`: Get user liked playlists and associated songs.
+- `UpdatePlaylist`: Add/Remove song from Playlist
+- `DeletePlaylist`: Remove playlist
+- `CreatePlaylist`: Create empty Playlist
+- `PublishPlaylist`: Set Playlist to public/private.
+- `AddSong`: Check if song exists in DB, if yes, just add, if no, continue with API retrieval
+- `DeleteSong`: Remove song from playlist (Check if song in use anywhere else, if not, delete from db? >maybe)
 
+**UserService**
+- `GetUser`: Handle login and user retrieval.
+- `getUserLikes`: Check user-playlist connections.
+- `checkUserRole`: Check user's role for admin/normal user/disabled.
+- `disableUser`: if admin, and target not admin, set user role to disabled.
+- `resetPassword`: User password update.
+
+
+**SongService**
+- `CreateSong`: Process API music data
+
+---
 
 ### Tests
 
-- Test "found" and "not found" cases.
-- Sample SoundCloud URL and data for song testing.
-- Username validation: length, character restrictions.
-- Password validation: length, special character check, uppercase requirement.
+**Repository Tests**
+- `findPlayListByUser`
+- `findPlayListByUserLikes`
+- `findNullInvalidUser`
+- `findNullInvalidUserLikes`
+- `createPlayList`
+- `updatePlayList`
+- `deletePlayList`
 
+- `findSongByPlaylist`
+- `findNullInvalidPlaylist`
+- `createSong`
+- `deleteSong`
+
+- `createUser`
+- `updateUserPassword`
+- `deleteUser`
+
+**Service Tests**
+- `addLike`
+- `removeLike`
+- `getPlaylistSongs`
+- `getNullInvalidPlaylist`
+- `createPlaylist`
+- `addSongToPlaylist`
+- `addNullToPlaylist`
+- `publishPlaylist`
+- `publishPlaylistFailNotOwner`
+- `updatePlaylist`
+- `updateNullPlaylistNotFound`
+- `deletePlaylist`
+- `deleteNullPlaylistNotFound`
+- `getUser`
+- `getNullUserNotFound`
+- `createUser`
+- `createUserFailInvalidName`
+- `createUserFailInvalidPassword`
+- `checkUseRole`
+- `disableUser`
+- `disableUserFailNotAdmin`
+- `disableUserFailTargetAdmin`
+- `updateUserPassword`
+- `updateUserFailInvalidPassword`
+- `updateUserPassword`
+- `createSong`
+- `createSongFailInvalidUrl`
+- `deleteSong`
+- `deleteSongFailNotFound`
+
+---
 
 ### Controller Responsibilities
 
@@ -203,8 +282,9 @@ We anticipate needing to learn how to type things like React event handlers, API
 **Success Criteria:**  
 If the entire React frontend is built in TypeScript with strong typing across components and backend API responses, and without falling back to `any`, then I’ll consider this learning goal achieved. Autocomplete, error checking, and refactoring should also be improved.
 
+---
 
-### Learning Goal: Learn how to implement real-time feedback using WebSockets.
+### Learning Goal: Learn how to implement real-time feedback using WebSockets. --STRETCH GOAL
 
 **Application:**  
 Will use WebSockets to create a real-time "like" button feature for tracks. When one user clicks 'like', all other users currently on the site will instantly see the updated like count without needing to refresh. This adds a social and interactive component to the app.
@@ -220,6 +300,52 @@ If multiple users on the app can see likes appear in real-time as they’re clic
 
 
 ## Class Diagram 
+
+```
+Package/Class Overview
+
+src
+├───main
+│   └───java
+│       └───learn
+│           └───playlist
+│               │   App.java                      -- app entry point
+│               │
+│               ├───data
+│               │       DataException.java        -- data layer custom exception
+│               │       PlaylistRepository.java   -- playlist repository
+│               │       SongRepository.java       -- song repository
+│               │       UserRepository.java       -- user repository
+│               │
+│               ├───domain
+│               │       PlaylistService.java      -- business logic for playlists
+│               │       SongService.java          -- business logic for songs
+│               │       UserService.java          -- business logic for user
+│               │
+│               ├───models
+│               │       Playlist.java             -- playlist model
+│               │       Song.java                 -- song model
+│               │       User.java                 -- user model
+│               │
+│               └───ui
+│                       Controller.java           -- UI controller for all interactions
+│                       View.java                 -- console input/output views
+│
+└───test
+    └───java
+        └───learn
+            └───playlist
+                ├───data
+                │       PlaylistRepositoryTest.java    -- Playlist repository tests
+                │       SongRepositoryTest.java        -- Song repository tests
+                │       UserRepositoryTest.java        -- User repository tests
+                │
+                └───domain
+                        PlaylistServiceTest.java       -- Playlist service tests
+                        SongServiceTest.java           -- Song service tests
+                        UserServiceTest.java           -- User service tests
+```
+
 
 ### Key Entities and Their Relationships:
 
@@ -310,6 +436,7 @@ If multiple users on the app can see likes appear in real-time as they’re clic
    - **Relationships**:
      - This table represents a many-to-many relationship between `User` and `Role`.
 
+---
 
 ### Visual Representation:
 
@@ -319,66 +446,18 @@ If multiple users on the app can see likes appear in real-time as they’re clic
 - **User** -> **Role** (many-to-many via `User_Role`)
 
 
-
-## Class List
-
-```
-Package/Class Overview
-
-src
-├───main
-│   └───java
-│       └───learn
-│           └───playlist
-│               │   App.java                      -- app entry point
-│               │
-│               ├───data
-│               │       DataException.java        -- data layer custom exception
-│               │       PlaylistRepository.java   -- playlist repository
-│               │       SongRepository.java       -- song repository
-│               │       UserRepository.java       -- user repository
-│               │
-│               ├───domain
-│               │       PlaylistService.java      -- business logic for playlists
-│               │       SongService.java          -- business logic for songs
-│               │       UserService.java          -- business logic for user
-│               │
-│               ├───models
-│               │       Playlist.java             -- playlist model
-│               │       Song.java                 -- song model
-│               │       User.java                 -- user model
-│               │
-│               └───ui
-│                       Controller.java           -- UI controller for all interactions
-│                       View.java                 -- console input/output views
-│
-└───test
-    └───java
-        └───learn
-            └───playlist
-                ├───data
-                │       PlaylistRepositoryTest.java    -- Playlist repository tests
-                │       SongRepositoryTest.java        -- Song repository tests
-                │       UserRepositoryTest.java        -- User repository tests
-                │
-                └───domain
-                        PlaylistServiceTest.java       -- Playlist service tests
-                        SongServiceTest.java           -- Song service tests
-                        UserServiceTest.java           -- User service tests
-```
-
 # Task List with Estimated Time
 
-## **Frontend Development (React)**
+## **Frontend Development (React)** 
 
-### 1. Setup
+### 1. Setup --MONDAY v
 - **Tasks:**
   - Initialize React project.
   - Install necessary dependencies (React, React Router, WebSocket, etc.).
   - Set up project structure with folders for components, pages, and services.
 - **Estimated Time:** 1-2 hours
 
-### 2. Audio Player Component
+### 2. Audio Player Component --TUESDAY v
 - **Tasks:**
   - Create a functional `AudioPlayer` component.
   - Set up state for current track, isPlaying, etc.
@@ -419,15 +498,16 @@ src
   - Implement role-based access control for users (Admin/MEMBER).
 - **Estimated Time:** 4-5 hours
 
-### 8. Final Touches & Styling
+### 8. Final Touches & Styling --WEDNESDAY v
 - **Tasks:**
   - Style the components using CSS and Bootstrap.
   - Ensure a responsive design for different screen sizes.
   - Polish UI/UX with animations or transitions where necessary.
 - **Estimated Time:** 4-5 hours
 
+---
 
-## **Backend Development (Spring Boot)**
+## **Backend Development (Spring Boot)** --MONDAY v
 
 ### **1. Model Layer**
 - **Tasks:**
@@ -459,7 +539,7 @@ src
   - Implement role-based access control (Admin/MEMBER) for managing playlists and songs.
 - **Estimated Time:** 3-4 hours
 
-### **5. Testing**
+### **5. Testing** --MONDAY -> TUESDAY v
 - **Tasks:**
   - **Unit Tests:**
     - Write tests for the repository layer (mock data, test CRUD operations).
@@ -479,8 +559,9 @@ src
   - Ensure smooth integration between layers.
 - **Estimated Time:** 6-7 hours
 
+---
 
-## **Database Management (MySQL)**
+## **Database Management (MySQL)** --MONDAY v
 
 ### **1. Database Schema**
 - **Tasks:**
@@ -495,6 +576,5 @@ src
   - Ensure repository layer is connected to MySQL.
 - **Estimated Time:** 2-3 hours
 
----
 
 - **Total Time:** 50-66 hours
