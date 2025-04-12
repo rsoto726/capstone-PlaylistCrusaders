@@ -313,9 +313,12 @@ src
 │               │
 │               ├───data
 │               │       DataException.java        -- data layer custom exception
-│               │       PlaylistRepository.java   -- playlist repository
-│               │       SongRepository.java       -- song repository
-│               │       UserRepository.java       -- user repository
+│               │       PlaylistRepository.java   -- playlist repository interface
+│               │       SongRepository.java       -- song repository interface
+│               │       UserRepository.java       -- user repository interface
+│               │       PlaylistJdbcTemplateRepository.java
+│               │       SongJdbcTemplateRepository.java     
+│               │       UserJdbcTemplateRepository.java
 │               │
 │               ├───domain
 │               │       PlaylistService.java      -- business logic for playlists
