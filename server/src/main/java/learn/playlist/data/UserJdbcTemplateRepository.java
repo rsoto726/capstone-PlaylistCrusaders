@@ -101,7 +101,7 @@ public class UserJdbcTemplateRepository implements UserRepository {
 
     @Transactional
     @Override
-    public void update(User user) {
+    public boolean update(User user) {
 
         final String sql = "update user set "
                 + "username = ?, "
@@ -109,10 +109,11 @@ public class UserJdbcTemplateRepository implements UserRepository {
                 + "password = ? "
                 + "where user_id = ?";
 
-        jdbcTemplate.update(sql,
+        int rowsAffected = jdbcTemplate.update(sql,
                 user.getUsername(), user.getEmail(), user.getPassword(), user.getUserId());
 
         updateRoles(user);
+        return rowsAffected > 0;
     }
 
     @Transactional

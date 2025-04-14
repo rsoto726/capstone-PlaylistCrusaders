@@ -17,7 +17,7 @@ public interface UserRepository {
     User add(User user);
 
     @Transactional
-    void update(User user);
+    boolean update(User user);
 
     @Transactional
     boolean deleteById(int userId);
