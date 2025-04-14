@@ -10,6 +10,10 @@ public interface PlaylistRepository {
 
     List<Playlist> findByUserId(int userId);
 
+    List<Playlist> findByUserIdPublic(int userId);
+
+    List<Playlist> findByLikes(int userId);
+
     @Transactional
     Playlist findById(int playlistId);
 

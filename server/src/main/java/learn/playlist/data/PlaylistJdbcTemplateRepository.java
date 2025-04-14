@@ -34,6 +34,25 @@ public class PlaylistJdbcTemplateRepository implements PlaylistRepository {
         return jdbcTemplate.query(sql, new PlaylistMapper(), userId);
     }
 
+    @Override
+    public List<Playlist> findByUserIdPublic(int userId) {
+        final String sql = "select playlist_id, name, publish, date_created, date_published, thumbnail_url, user_id " +
+                "from playlist " +
+                "where publish = 1 " +
+                "and where user_id = ?;";
+        return jdbcTemplate.query(sql, new PlaylistMapper(), userId);
+    }
+
+    @Override
+    public List<Playlist> findByLikes(int userId) {
+        final String sql = "select p.playlist_id, p.name, p.publish, p.date_created, p.date_published, p.thumbnail_url, p.user_id " +
+                "from playlist p " +
+                "inner join likes l ON p.playlist_id = l.playlist_id " +
+                "where l.user_id = ?;";
+
+        return jdbcTemplate.query(sql, new PlaylistMapper(), userId);
+    }
+
     @Transactional
     @Override
     public Playlist findById(int playlistId) {
