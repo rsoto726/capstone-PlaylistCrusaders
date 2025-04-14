@@ -12,10 +12,10 @@ public class PlaylistMapper implements RowMapper<Playlist> {
     public Playlist mapRow(ResultSet resultSet, int i) throws SQLException {
         Playlist playlist = new Playlist();
         playlist.setPlaylistId(resultSet.getInt("playlist_id"));
-        playlist.setDescription(resultSet.getString("description"));
-        playlist.setName(resultSet.getString("name"));
-        playlist.setPublished(resultSet.getBoolean("published"));
+        playlist.setName(resultSet.getString("name"));;
+        playlist.setPublished(resultSet.getBoolean("publish"));
         playlist.setUserId(resultSet.getInt("user_id"));
+        playlist.setThumbnailUrl(resultSet.getString("thumbnail_url"));
         playlist.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
         playlist.setPublishedAt(resultSet.getTimestamp("publish_at").toLocalDateTime());
 

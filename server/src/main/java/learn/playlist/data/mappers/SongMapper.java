@@ -12,8 +12,6 @@ public class SongMapper implements RowMapper<Song> {
     public Song mapRow(ResultSet resultSet, int i) throws SQLException {
         Song song = new Song();
         song.setSongId(resultSet.getInt("song_id"));
-        song.setTitle(resultSet.getString("title"));
-        song.setImageUrl(resultSet.getString("image_url"));
         song.setUrl(resultSet.getString("url"));
         return song;
     }
