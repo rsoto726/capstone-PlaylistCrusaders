@@ -66,6 +66,7 @@ create table song(
 create table playlist_song(
 	playlist_id int not null,
     song_id int not null,
+    `index` int not null,
     constraint pk_playlist_song
 		primary key (playlist_id, song_id),
 	constraint fk_playlist_song_playlist_id
