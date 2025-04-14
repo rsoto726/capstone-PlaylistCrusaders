@@ -113,7 +113,8 @@ begin
     -- Insert playlists
     INSERT INTO playlist (name, publish, date_created, date_published, thumbnail_url, user_id) VALUES
         ('Alice\'s Public Playlist', 1, NOW(), NOW(), 'https://img.com/1.jpg', 1),
-        ('Bob\'s Private Playlist', 0, NOW(), NULL, 'https://img.com/2.jpg', 2);
+        ('Bob\'s Private Playlist', 0, NOW(), NULL, 'https://img.com/2.jpg', 2),
+		('Alice\'s Second Playlist', 1, NOW(), NOW(), 'https://img.com/3.jpg', 1);
 
     -- Add songs to playlists
     INSERT INTO playlist_song (playlist_id, song_id, `index`) VALUES

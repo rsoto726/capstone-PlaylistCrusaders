@@ -7,10 +7,12 @@ public class PlaylistSong {
     private int songId;
     private Playlist playlist;
     private Song song;
+    private int index;
 
-    public PlaylistSong(int playlistId, int songId) {
+    public PlaylistSong(int playlistId, int songId, int index) {
         this.playlistId = playlistId;
         this.songId = songId;
+        this.index = index;
     }
 
     public PlaylistSong() {
@@ -68,5 +70,13 @@ public class PlaylistSong {
     @Override
     public int hashCode() {
         return Objects.hash(playlistId, songId, playlist, song);
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }
