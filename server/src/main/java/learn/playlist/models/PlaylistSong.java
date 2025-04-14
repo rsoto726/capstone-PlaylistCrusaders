@@ -5,10 +5,15 @@ import java.util.Objects;
 public class PlaylistSong {
     private int playlistId;
     private int songId;
+    private Playlist playlist;
+    private Song song;
 
     public PlaylistSong(int playlistId, int songId) {
         this.playlistId = playlistId;
         this.songId = songId;
+    }
+
+    public PlaylistSong() {
     }
 
     public int getPlaylistId() {
@@ -27,16 +32,20 @@ public class PlaylistSong {
         this.songId = songId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        PlaylistSong that = (PlaylistSong) o;
-        return playlistId == that.playlistId && songId == that.songId;
+    public Playlist getPlaylist() {
+        return playlist;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(playlistId, songId);
+    public void setPlaylist(Playlist playlist) {
+        this.playlist = playlist;
+    }
+
+    public Song getSong() {
+        return song;
+    }
+
+    public void setSong(Song song) {
+        this.song = song;
     }
 
     @Override
@@ -44,6 +53,20 @@ public class PlaylistSong {
         return "PlaylistSong{" +
                 "playlistId=" + playlistId +
                 ", songId=" + songId +
+                ", playlist=" + playlist +
+                ", song=" + song +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PlaylistSong that = (PlaylistSong) o;
+        return playlistId == that.playlistId && songId == that.songId && Objects.equals(playlist, that.playlist) && Objects.equals(song, that.song);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(playlistId, songId, playlist, song);
     }
 }

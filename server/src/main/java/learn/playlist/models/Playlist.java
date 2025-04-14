@@ -9,17 +9,21 @@ public class Playlist {
     private String description;
     private boolean published;
     private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private LocalDateTime publishedAt;
     private int userId;
+    private User user;
 
-    public Playlist(int playlistId, String name, String description, boolean published, LocalDateTime createdAt, LocalDateTime modifiedAt, int userId) {
+    public Playlist(int playlistId, String name, String description, boolean published, LocalDateTime createdAt, LocalDateTime publishedAt, int userId, User user) {
         this.playlistId = playlistId;
         this.name = name;
         this.description = description;
         this.published = published;
         this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
+        this.publishedAt = publishedAt;
         this.userId = userId;
+    }
+
+    public Playlist() {
     }
 
     public int getPlaylistId() {
@@ -62,12 +66,12 @@ public class Playlist {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getModifiedAt() {
-        return modifiedAt;
+    public LocalDateTime getPublishedAt() {
+        return publishedAt;
     }
 
-    public void setModifiedAt(LocalDateTime modifiedAt) {
-        this.modifiedAt = modifiedAt;
+    public void setPublishedAt(LocalDateTime publishedAt) {
+        this.publishedAt = publishedAt;
     }
 
     public int getUserId() {
@@ -78,16 +82,12 @@ public class Playlist {
         this.userId = userId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Playlist playlist = (Playlist) o;
-        return playlistId == playlist.playlistId && published == playlist.published && userId == playlist.userId && Objects.equals(name, playlist.name) && Objects.equals(description, playlist.description) && Objects.equals(createdAt, playlist.createdAt) && Objects.equals(modifiedAt, playlist.modifiedAt);
+    public User getUser() {
+        return user;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(playlistId, name, description, published, createdAt, modifiedAt, userId);
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -98,8 +98,21 @@ public class Playlist {
                 ", description='" + description + '\'' +
                 ", published=" + published +
                 ", createdAt=" + createdAt +
-                ", modifiedAt=" + modifiedAt +
+                ", publishedAt=" + publishedAt +
                 ", userId=" + userId +
+                ", user=" + user +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Playlist playlist = (Playlist) o;
+        return playlistId == playlist.playlistId && published == playlist.published && userId == playlist.userId && Objects.equals(name, playlist.name) && Objects.equals(description, playlist.description) && Objects.equals(createdAt, playlist.createdAt) && Objects.equals(publishedAt, playlist.publishedAt) && Objects.equals(user, playlist.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(playlistId, name, description, published, createdAt, publishedAt, userId, user);
     }
 }

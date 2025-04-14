@@ -15,6 +15,9 @@ public class Song {
         this.imageUrl = imageUrl;
     }
 
+    public Song() {
+    }
+
     public int getSongId() {
         return songId;
     }
