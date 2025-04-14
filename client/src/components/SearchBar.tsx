@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate, useLocation } from 'react-router-dom';
-import './styles/SearchBar.css';
+import '../styles/SearchBar.css';
 
 const SearchBar: React.FC = () => {
       const navigate = useNavigate();

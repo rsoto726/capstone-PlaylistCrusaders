@@ -1,6 +1,6 @@
 import React, {useState, ChangeEvent, FormEvent} from "react";
 import { useNavigate } from 'react-router-dom';
-import './styles/Login.css'
+import '../styles/Login.css'
 interface FormState{
     email: string;
     password: string;

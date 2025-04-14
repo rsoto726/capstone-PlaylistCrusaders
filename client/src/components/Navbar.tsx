@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
-import './styles/Navbar.css';
+import '../styles/Navbar.css';
 
 const Navbar: React.FC = () => {
     const navigate = useNavigate();
