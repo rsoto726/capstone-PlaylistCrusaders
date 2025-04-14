@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './styles/App.css';
-import Header from './components/Header';
-import Home from './components/Home';
-import NotFound from './components/NotFound';
+import Header from './Header';
+import Home from './Home';
+import NotFound from './NotFound';
 import HomePage from './HomePage';
 import Login from './Login';
 import Register from './Register';
