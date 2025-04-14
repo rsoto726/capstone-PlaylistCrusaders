@@ -1,5 +1,7 @@
 package learn.playlist.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class User {
@@ -7,6 +9,8 @@ public class User {
     private String username;
     private String password;
     private String email;
+
+    private List<String> roles = new ArrayList<>();
 
 
     public User(int userId, String username, String password, String email) {
@@ -72,5 +76,13 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(userId, username, password, email);
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }
