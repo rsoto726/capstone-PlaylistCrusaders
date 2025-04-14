@@ -11,7 +11,7 @@ public interface UserRepository {
     User findByEmail(String email);
 
     @Transactional
-    User findById(String userId);
+    User findById(int userId);
 
     @Transactional
     User add(User user);

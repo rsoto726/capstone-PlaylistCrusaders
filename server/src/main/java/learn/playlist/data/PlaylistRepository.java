@@ -14,6 +14,8 @@ public interface PlaylistRepository {
 
     List<Playlist> findByLikes(int userId);
 
+    Playlist add(Playlist playlist);
+
     @Transactional
     Playlist findById(int playlistId);
 

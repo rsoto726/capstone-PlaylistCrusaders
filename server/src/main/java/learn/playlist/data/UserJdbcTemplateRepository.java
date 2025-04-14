@@ -57,7 +57,7 @@ public class UserJdbcTemplateRepository implements UserRepository {
 
     @Transactional
     @Override
-    public User findById(String userId) {
+    public User findById(int userId) {
 
         final String sql = "select user_id, username, email, password "
                 + "from user "
@@ -77,7 +77,7 @@ public class UserJdbcTemplateRepository implements UserRepository {
     @Override
     public User add(User user) {
 
-        final String sql = "insert into app_user (username, email, password) values (?, ?, ?);";
+        final String sql = "insert into user (username, email, password) values (?, ?, ?);";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
@@ -118,10 +118,33 @@ public class UserJdbcTemplateRepository implements UserRepository {
     @Transactional
     @Override
     public boolean deleteById(int userId) {
-        jdbcTemplate.update("delete from like where user_id = ?;", userId);
+        List<Integer> playlistIds = jdbcTemplate.queryForList(
+                "select playlist_id from playlist where user_id = ?;",
+                Integer.class,
+                userId
+        );
+
+        // Delete playlist_song entries for each playlist
+        for (int playlistId : playlistIds) {
+            jdbcTemplate.update("delete from playlist_song where playlist_id = ?;", playlistId);
+        }
+
+        // Delete likes for this user's playlists (optional but good practice)
+        for (int playlistId : playlistIds) {
+            jdbcTemplate.update("delete from `like` where playlist_id = ?;", playlistId);
+        }
+
+        // Delete user's likes
+        jdbcTemplate.update("delete from `like` where user_id = ?;", userId);
+
+        // Delete user roles
         jdbcTemplate.update("delete from user_role where user_id = ?;", userId);
+
+        // Delete user's playlists
         jdbcTemplate.update("delete from playlist where user_id = ?;", userId);
-        return jdbcTemplate.update("delete from user where user_id = ?;", userId) > 0;
+
+        // Delete user
+        return jdbcTemplate.update("delete from `user` where user_id = ?;", userId) > 0;
     }
 
     private void updateRoles(User user) {
