@@ -27,17 +27,17 @@ public class UserController {
         return service.findAll();
     }
 
-    @GetMapping("/id/{userId}")
+    @GetMapping("/{userId}")
     public User findById(@PathVariable int userId) {
         return service.findById(userId);
     }
 
-    @GetMapping("/email/{email}")
+    @GetMapping("/email")
     public User findByEmail(@RequestParam String email) {
         return service.findByEmail(email);
     }
 
-    @GetMapping("/username/{username}")
+    @GetMapping("/{username}")
     public User findByUsername(@PathVariable String username){
         return service.findByUsername(username);
     }

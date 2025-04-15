@@ -58,6 +58,17 @@ public class PlaylistJdbcTemplateRepository implements PlaylistRepository {
         return jdbcTemplate.query(sql, new PlaylistMapper(), userId);
     }
 
+    @Override
+    public List<Playlist> findByName(String name){
+        final String sql = "select playlist_id, name, publish, date_created, date_published, thumbnail_url, user_id " +
+                "from playlist " +
+                "where publish = 1 " +
+                "and name like CONCAT('%', ?, '%');";
+
+        return jdbcTemplate.query(sql, new PlaylistMapper(), name);
+    }
+
+
     @Transactional
     @Override
     public Playlist findById(int playlistId) {

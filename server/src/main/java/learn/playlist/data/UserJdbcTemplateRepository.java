@@ -1,6 +1,9 @@
 package learn.playlist.data;
 
+import learn.playlist.data.mappers.RoleMapper;
 import learn.playlist.data.mappers.UserMapper;
+import learn.playlist.models.Role;
+import learn.playlist.models.RoleName;
 import learn.playlist.models.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -32,6 +35,20 @@ public class UserJdbcTemplateRepository implements UserRepository {
         return users;
     }
 
+    @Override
+    public RoleName findUserRole(int userId){
+        final String sql = "select r.name " +
+                "from user_role ur " +
+                "inner join role r on ur.role_id = r.role_id " +
+                "where ur.user_id = ?";
+
+        Role role = jdbcTemplate.query(sql, new RoleMapper(), userId)
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        return role != null ? role.getRoleName() : null;
+    }
 
     @Transactional
     @Override

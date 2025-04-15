@@ -1,10 +1,26 @@
-import React from 'react'
+import React from 'react';
 
-// User name, suspend button, delete button(?)
-const UserCard = () => {
-  return (
-    <div>UserCard</div>
-  )
+type User = {
+  userId: number;
+  username: string;
+  email: string;
+  password: string;
+};
+
+interface UserCardProps {
+  user: User;
 }
 
-export default UserCard
+const UserCard: React.FC<UserCardProps> = ({ user }) => {
+  return (
+    <div className="user-card">
+      <h3>{user.username}</h3>
+      <p>Email: {user.email}</p>
+      <button>Suspend</button>
+      <button>Unsuspend</button>
+      <button>Delete</button>
+    </div>
+  );
+};
+
+export default UserCard;

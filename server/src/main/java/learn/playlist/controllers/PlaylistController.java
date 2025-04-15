@@ -48,6 +48,11 @@ public class PlaylistController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/name/{name}")
+    public List<Playlist> findByName(@PathVariable String name) {
+        System.out.println("Searching for "+name);
+        return service.findByName(name);};
+
     @PostMapping
     public ResponseEntity<Object> add(@RequestBody Playlist playlist, @RequestAttribute User user) {
         Playlist result = service.add(playlist, user);

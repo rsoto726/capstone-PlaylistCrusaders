@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import PlaylistCard from './PlaylistCard';
 import '../styles/HomePage.css';
-import AudioPlayer from './AudioPlayer';
 
 const sampleData = [
   { title: 'Chill Vibes', songs: ['Song one', 'Song two', 'Song three', 'Song four'] },
