@@ -20,7 +20,7 @@ export default function Login(){
         e.preventDefault();
       
         try {
-          const res = await fetch('http://localhost:8080/api/user', {
+          const res = await fetch('http://localhost:8080/api/user/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(form),
@@ -43,6 +43,7 @@ export default function Login(){
         }
       };
     return (
+      <div className="login-container">
         <form onSubmit={handleSubmit}>
           <h2>Login</h2>
           <input
@@ -51,6 +52,7 @@ export default function Login(){
             value={form.email}
             onChange={handleChange}
             required
+            className="input-container"
           />
           <input
             type="password"
@@ -78,5 +80,7 @@ export default function Login(){
             </button>
           </div>
         </form>
+      </div>
+        
       );
 }
