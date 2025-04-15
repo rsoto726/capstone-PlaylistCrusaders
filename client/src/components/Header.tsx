@@ -7,10 +7,10 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
+    <div className="header-container">
         <h1 onClick={()=>{navigate('/')}}>Header</h1>
-        <Navbar/>
         <SearchBar/>
+        <Navbar/>
     </div>
   )
 }
