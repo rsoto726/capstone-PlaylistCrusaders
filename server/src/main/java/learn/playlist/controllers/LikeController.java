@@ -23,17 +23,17 @@ public class LikeController {
     }
 
     @GetMapping("/count/{playlistId}")
-    public int countLikes(@PathVariable int playlistId){
+    public int countLikes(@PathVariable int playlistId) {
         return service.countLikesForPlaylist(playlistId);
     }
 
     @GetMapping("/find/{userId}")
-    public List<Integer> findPlaylistsFromUserLikes(@PathVariable int userId){
+    public List<Integer> findPlaylistsFromUserLikes(@PathVariable int userId) {
         return service.findLikedPlaylistFromUser(userId);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addLike(@RequestBody Likes like){
+    public ResponseEntity<Void> addLike(@RequestBody Likes like) {
         boolean success = service.addLike(like);
         if (success) {
             Map<String, Object> message = Map.of(
@@ -48,8 +48,8 @@ public class LikeController {
         }
     }
 
-    @DeleteMapping                       //?userId=1&playlistId=2  <= param something like this
-    public ResponseEntity<Void> deleteLike(@RequestParam int userId, @RequestParam int playlistId){
+    @DeleteMapping
+    public ResponseEntity<Void> deleteLike(@RequestParam int userId, @RequestParam int playlistId) {
         boolean success = service.removeLike(userId, playlistId);
         if (success) {
             Map<String, Object> message = Map.of(

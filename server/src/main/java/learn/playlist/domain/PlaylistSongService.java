@@ -2,7 +2,9 @@ package learn.playlist.domain;
 
 import learn.playlist.data.PlaylistSongRepository;
 import learn.playlist.models.PlaylistSong;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PlaylistSongService {
     private final PlaylistSongRepository repository;
 
