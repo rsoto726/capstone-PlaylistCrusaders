@@ -1,0 +1,38 @@
+.active-track-container {
+    background-color: #8673A1; /* Light pearl violet */
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .custom-progress {
+    height: 6px !important;
+  }
+  
+  .active-track-item {
+    background-color: #8673A1 !important; /* Light violet */
+    border: none !important;
+    margin-bottom: 5px;
+    border-radius: 4px;
+  }
+  
+  .track-item {
+    background-color: #f0e6ff;
+    border: none !important;
+    margin-bottom: 5px;
+    border-radius: 4px;
+  }
+  
+  /* Override Bootstrap's default active color */
+  .list-group-item.active {
+    background-color: #f0e6ff !important;
+    border-color: #f0e6ff !important;
+    color: #212529 !important; 
+  }
+  
+  .audio-player-container {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  

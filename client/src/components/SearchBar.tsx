@@ -12,20 +12,22 @@ const SearchBar: React.FC = () => {
         return null;
       }
 
-      const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+      const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        navigate(`/search?=${encodeURIComponent(query)}`)
+        navigate(`/search?query=${encodeURIComponent(query)}`);
       }
 
   return (
     <div className="search-bar-wrapper border-bottom py-3 px-4">
       <div className="search-bar-container d-flex justify-content-center align-items-center w-100 position-relative">
-        <InputGroup className="search-input">
-          <InputGroup.Text>
-          {FaSearch({})}          
-          </InputGroup.Text>
-          <Form.Control placeholder="Search" />
-        </InputGroup>
+        <form onSubmit = {handleSubmit}>
+          <InputGroup className="search-input">
+            <InputGroup.Text>
+            {FaSearch({})}          
+            </InputGroup.Text>
+            <Form.Control placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)}/>
+          </InputGroup>
+        </form>
         </div>
       </div>
   );
