@@ -4,9 +4,12 @@ const fetchWithCredentials = async (
     url: string,
     options: RequestInit = {}
 ) => {
+    const token = localStorage.getItem('token');
+
     const response = await fetch(`${BASE_URL}${url}`, {
         headers: {
             'Content-Type': 'application/json',
+            ...(token && { Authorization: `Bearer ${token}` }),
             ...(options.headers || {}),
         },
         ...options,
@@ -25,14 +28,19 @@ const fetchWithCredentials = async (
 export const getLoggedIn = () =>
     fetchWithCredentials('/loggedIn/', { method: 'GET' });
 
-export const loginUser = (
-    email: string,
-    password: string
-) =>
-    fetchWithCredentials('/login/', {
+export const loginUser = async (email: string, password: string) => {
+    const response = await fetchWithCredentials('/login/', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
     });
+
+    if (response.token) {
+        console.log(response.token);
+        localStorage.setItem('token', response.token);
+    }
+
+    return response;
+};
 
 export const logoutUser = () =>
     fetchWithCredentials('/logout/', { method: 'GET' });
