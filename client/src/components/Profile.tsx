@@ -9,6 +9,12 @@ interface User {
   roles: string[];
 }
 
+interface Playlist {
+  playlistId: number;
+  title: string;
+}
+
+
 const sampleData = [
   { title: 'Chill Vibes', songs: ['Song one', 'Song two', 'Song three', 'Song four'] },
   { title: 'Workout Mix', songs: ['Track 1', 'Track 2', 'Track 3'] },
@@ -19,28 +25,29 @@ const sampleData = [
 const Profile = () => {
   const { userId } = useParams<{ userId: string }>();
   const [user, setUser] = useState<User | null>(null);
+  const [likedPlaylists, setLikedPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    //console.log(userId);
-    const fetchUser = async () => {
+    const fetchUserAndLikes = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/api/user/id/${userId}`);
-        //console.log(res);
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data);
-        } else {
-          console.error('User not found');
-        }
+        const userRes = await fetch(`http://localhost:8080/api/user/id/${userId}`);
+        if (!userRes.ok) throw new Error('User not found');
+        const userData = await userRes.json();
+        setUser(userData);
+
+        const likesRes = await fetch(`http://localhost:8080/api/playlist/likes/${userId}`);
+        if (!likesRes.ok) throw new Error('Failed to fetch liked playlists');
+        const likedData = await likesRes.json();
+        setLikedPlaylists(likedData);
       } catch (err) {
-        console.error('Error fetching user:', err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    if (userId) fetchUser();
+    if (userId) fetchUserAndLikes();
   }, [userId]);
 
   if (loading) return <p>Loading profile...</p>;

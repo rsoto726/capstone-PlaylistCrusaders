@@ -52,7 +52,7 @@ public class PlaylistJdbcTemplateRepository implements PlaylistRepository {
     public List<Playlist> findByLikes(int userId) {
         final String sql = "select p.playlist_id, p.name, p.publish, p.date_created, p.date_published, p.thumbnail_url, p.user_id " +
                 "from playlist p " +
-                "inner join likes l ON p.playlist_id = l.playlist_id " +
+                "inner join `like` l ON p.playlist_id = l.playlist_id " +
                 "where l.user_id = ?;";
 
         return jdbcTemplate.query(sql, new PlaylistMapper(), userId);
