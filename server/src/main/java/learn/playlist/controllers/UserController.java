@@ -42,7 +42,7 @@ public class UserController {
         return service.findByUsername(username);
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<Object> add(@RequestBody User user){
         Result<User> result = service.add(user, user.getPassword());
         if(result.isSuccess()){

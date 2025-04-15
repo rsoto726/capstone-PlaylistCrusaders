@@ -18,6 +18,7 @@ public class UserService {
     public UserService(UserRepository repository, BCryptPasswordEncoder encoder) {
         this.repository = repository;
         this.encoder = encoder;
+        ensureAdmin();
     }
 
     public List<User> findAll(){return repository.findAll();};
@@ -132,5 +133,46 @@ public class UserService {
             return user;
         }
         return null;
+    }
+
+    private String generateValidRandomPassword() {
+        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String special = "!@#$^&";
+        String rest = "abcdefghijklmnopqrstuvwxyz0123456789";
+        String combined = upper + special + rest;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(upper.charAt((int)(Math.random() * upper.length())));
+        sb.append(special.charAt((int)(Math.random() * special.length())));
+
+        for (int i = 0; i < 8; i++) {
+            sb.append(combined.charAt((int)(Math.random() * combined.length())));
+        }
+
+        return sb.toString();
+    }
+
+    private void ensureAdmin() {
+
+        User user = repository.findByUsername("admin");
+
+        if (user == null) {
+
+            String randomPassword = generateValidRandomPassword();
+
+            user = new User();
+            user.setUsername("admin");
+            user.setEmail("admin@playlistcrusaders.com");
+            user.setPassword(randomPassword);
+            user.getRoles().add("ADMIN");
+
+            try {
+                Result<User> res = add(user, randomPassword); // 2. admin doesn't exist, add them
+                System.out.printf("%n%nRandom admin password: %s%n%n", randomPassword);
+                System.out.println(res.getMessages());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 }
