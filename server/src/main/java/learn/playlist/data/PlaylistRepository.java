@@ -16,6 +16,8 @@ public interface PlaylistRepository {
 
     Playlist add(Playlist playlist);
 
+    List<Playlist> findByName(String name);
+
     @Transactional
     Playlist findById(int playlistId);
 

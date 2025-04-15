@@ -31,6 +31,8 @@ public class PlaylistService {
         return repository.findByLikes(userId);
     }
 
+    public List<Playlist> findByName(String name) {return repository.findByName(name);};
+
     public Playlist findById(int playlistId) {
         return repository.findById(playlistId);
     }
