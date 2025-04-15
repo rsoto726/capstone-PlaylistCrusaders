@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class PlaylistMapper implements RowMapper<Playlist> {
     @Override
@@ -16,8 +17,12 @@ public class PlaylistMapper implements RowMapper<Playlist> {
         playlist.setPublished(resultSet.getBoolean("publish"));
         playlist.setUserId(resultSet.getInt("user_id"));
         playlist.setThumbnailUrl(resultSet.getString("thumbnail_url"));
-        playlist.setCreatedAt(resultSet.getTimestamp("date_created").toLocalDateTime());
-        playlist.setPublishedAt(resultSet.getTimestamp("date_published").toLocalDateTime());
+        Timestamp createdTimestamp = resultSet.getTimestamp("date_created");
+        Timestamp publishedTimestamp = resultSet.getTimestamp("date_published");
+
+        playlist.setCreatedAt(createdTimestamp != null ? createdTimestamp.toLocalDateTime() : null);
+        playlist.setPublishedAt(publishedTimestamp != null ? publishedTimestamp.toLocalDateTime() : null);
+
 
 //        UserMapper userMapper = new UserMapper();
 //        playlist.setUser(userMapper.mapRow(resultSet, i));
