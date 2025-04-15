@@ -1,5 +1,5 @@
 .active-track-container {
-    background-color: #8673A1; /* Light pearl violet */
+    background-color: #8673A1; /* pearl violet */
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 15px;
@@ -11,14 +11,14 @@
   }
   
   .active-track-item {
-    background-color: #8673A1 !important; /* Light violet */
+    background-color: #f0e6ff !important; /* Light violet */
     border: none !important;
     margin-bottom: 5px;
     border-radius: 4px;
   }
   
   .track-item {
-    background-color: #f0e6ff;
+    background-color: #f5f0fd;
     border: none !important;
     margin-bottom: 5px;
     border-radius: 4px;
@@ -34,5 +34,13 @@
   .audio-player-container {
     max-width: 400px;
     margin: 0 auto;
+  }
+  
+
+#video-player {
+    position: fixed !important; 
+    left: -9999px !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
   }
   
