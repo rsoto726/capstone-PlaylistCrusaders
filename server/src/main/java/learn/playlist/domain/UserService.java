@@ -3,6 +3,7 @@ package learn.playlist.domain;
 import learn.playlist.data.UserRepository;
 import learn.playlist.models.User;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +14,10 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserRepository repository;
-
-    public UserService(UserRepository repository) {
+    private final BCryptPasswordEncoder encoder;
+    public UserService(UserRepository repository, BCryptPasswordEncoder encoder) {
         this.repository = repository;
+        this.encoder = encoder;
     }
 
     public List<User> findAll(){return repository.findAll();};
@@ -26,12 +28,14 @@ public class UserService {
 
     public User findByEmail(String email){return repository.findByEmail(email);};
 
-    public Result<User> add(User user){
+    public Result<User> add(User user, String rawPassword){
         Result<User> result = validate(user);
 
         if (!result.isSuccess()) {
             return result;
         }
+        String hashedPassword = encoder.encode(rawPassword);
+        user.setPassword(hashedPassword);
 
         user=repository.add(user);
         result.setPayload(user);
@@ -120,5 +124,13 @@ public class UserService {
         boolean hasWhitespace = value.matches(".*\\s.*");
 
         return !(hasUppercase && hasSpecialChar) || hasWhitespace;
+    }
+
+    public User login(String email, String rawPassword) {
+        User user = repository.findByEmail(email);
+        if (user != null && encoder.matches(rawPassword, user.getPassword())) {
+            return user;
+        }
+        return null;
     }
 }

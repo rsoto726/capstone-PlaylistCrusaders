@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -48,12 +49,12 @@ class UserServiceTest {
     void shouldNotAddUserWhenInvalid() {
         User user = makeUser();
         user.setPassword("password");
-        Result<User> result = service.add(user);
+        Result<User> result = service.add(user, user.getPassword());
         assertEquals(ResultType.INVALID, result.getType());
 
         user.setUserId(0);
         user.setUsername("thistestnameiswaytoolongitsfailingforsure");
-        result = service.add(user);
+        result = service.add(user,user.getPassword());
         assertEquals(ResultType.INVALID, result.getType());
     }
 
@@ -62,9 +63,11 @@ class UserServiceTest {
         User expected = makeUser();
         User arg = makeUser();
         arg.setUserId(0);
+        String rawPassword = "Password123!";
+
 
         when(repository.add(arg)).thenReturn(expected);
-        Result<User> result = service.add(arg);
+        Result<User> result = service.add(arg,rawPassword);
         assertEquals(ResultType.SUCCESS, result.getType());
 
         assertEquals(expected, result.getPayload());
@@ -85,8 +88,6 @@ class UserServiceTest {
     @Test
     void shouldUpdateUserWhenValid() {
         User expected = makeUser();
-
-        service.add(expected);
 
         expected.setUsername("Update");
 
