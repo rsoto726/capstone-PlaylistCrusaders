@@ -3,11 +3,13 @@ package learn.playlist.domain;
 import learn.playlist.data.UserRepository;
 import learn.playlist.models.User;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
+@Service
 public class UserService {
     private final UserRepository repository;
 
@@ -71,27 +73,32 @@ public class UserService {
 
         if(isNullOrBlank(user.getEmail())){
             result.addMessage("email required", ResultType.INVALID);
+            return result;
         }
 
         if(isNullOrBlank(user.getUsername())){
             result.addMessage("username required", ResultType.INVALID);
+            return result;
         }
 
         if(isNullOrBlank(user.getPassword())){
             result.addMessage("password required", ResultType.INVALID);
+            return result;
         }
 
         if(isValidPassword(user.getPassword())){
             result.addMessage("password must contain an uppercase letter, and a special character", ResultType.INVALID);
         }
 
-        if(isValidLength(user.getUsername())){
+        if (!isValidLength(user.getUsername())) {
             result.addMessage("username must be 5-20 characters", ResultType.INVALID);
         }
 
-        if(isValidLength(user.getPassword())){
+        if (!isValidLength(user.getPassword())) {
             result.addMessage("password must be 5-20 characters", ResultType.INVALID);
         }
+
+
 
         return result;
     }
@@ -109,6 +116,6 @@ public class UserService {
         boolean hasSpecialChar = value.matches(".*[!@#$^&].*");
         boolean hasWhitespace = value.matches(".*\\s.*");
 
-        return hasUppercase && hasSpecialChar && !hasWhitespace;
+        return !(hasUppercase && hasSpecialChar) || hasWhitespace;
     }
 }

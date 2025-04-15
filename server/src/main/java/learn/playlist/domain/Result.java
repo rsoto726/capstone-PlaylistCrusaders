@@ -32,4 +32,13 @@ public class Result <T> {
         messages.add(message);
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "Result{" +
+                "messages=" + messages +
+                ", type=" + type +
+                ", payload=" + payload +
+                '}';
+    }
 }

@@ -2,9 +2,11 @@ package learn.playlist.domain;
 
 import learn.playlist.data.LikeRepository;
 import learn.playlist.models.Likes;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class LikeService {
     private final LikeRepository repository;
 
