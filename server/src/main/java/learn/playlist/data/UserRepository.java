@@ -3,7 +3,11 @@ package learn.playlist.data;
 import learn.playlist.models.User;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface UserRepository {
+    List<User> findAll();
+
     @Transactional
     User findByUsername(String username);
 

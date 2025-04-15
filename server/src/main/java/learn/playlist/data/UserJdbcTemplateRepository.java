@@ -19,6 +19,20 @@ public class UserJdbcTemplateRepository implements UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
+    public List<User> findAll() {
+        final String sql = "select user_id, username, email, password from user;";
+
+        List<User> users = jdbcTemplate.query(sql, new UserMapper());
+
+        for (User user : users) {
+            user.setRoles(getRolesByUserId(user.getUserId()));
+        }
+
+        return users;
+    }
+
+
     @Transactional
     @Override
     public User findByUsername(String username) {

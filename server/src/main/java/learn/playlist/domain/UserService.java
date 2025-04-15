@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -16,6 +17,8 @@ public class UserService {
     public UserService(UserRepository repository) {
         this.repository = repository;
     }
+
+    public List<User> findAll(){return repository.findAll();};
 
     public User findById(int userId){return repository.findById(userId);};
 
