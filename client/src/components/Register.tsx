@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css'
 
+// register user
 export default function Register() {
   const [form, setForm] = useState({ username: '', email: '', password: '' });
   const navigate = useNavigate();

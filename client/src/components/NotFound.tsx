@@ -1,8 +1,11 @@
 import React from 'react'
 
+// ¯⁠\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯ oops all 404
 const NotFound = () => {
   return (
-    <div>NotFound</div>
+    <div>
+      404 Page Not Found ¯⁠\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯
+    </div>
   )
 }
 

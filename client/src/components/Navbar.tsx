@@ -3,11 +3,12 @@ import { Button } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Navbar.css';
 
+// left site logo/name link to '/', search bar middle, login/register button right when logged out, profile name/profile pic link to profile when logged in
 const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
   
-    if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/') {
+    if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/forgot-password' /*|| location.pathname === '/'*/) {
       return null;
     }
   

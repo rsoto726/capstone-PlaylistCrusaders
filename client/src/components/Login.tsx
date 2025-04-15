@@ -6,6 +6,7 @@ interface FormState{
     password: string;
 }
 
+// login screen
 export default function Login(){
 
     const [form, setForm] = useState<FormState>({ email: '', password: '' });

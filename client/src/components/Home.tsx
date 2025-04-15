@@ -9,6 +9,7 @@ const sampleData = [
 ];
 const url = "http://localhost:8080"
 
+// home, display all public playlists
 const Home: React.FC = () => {
   const [playlists, setPlaylists] = useState([]);
 

@@ -1,8 +1,11 @@
 import React from 'react'
+import UserList from './UserList';
 
 const UserDisabler = () => {
   return (
-    <div>UserDisabler</div>
+    <div>
+      <UserList/>
+    </div>
   )
 }
 

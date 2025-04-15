@@ -6,7 +6,7 @@ interface PlaylistCardProps {
   songs: string[];
 }
 
-const PlaylistCard: React.FC<PlaylistCardProps> = ({ title, songs }) => {
+const PlaylistCard: React.FC<PlaylistCardProps> = ({ title, songs }) => {  
   return (
     <div className="playlist-card">
       <div className="playlist-image" />
