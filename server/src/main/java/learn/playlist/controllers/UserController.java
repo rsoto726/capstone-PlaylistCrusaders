@@ -74,7 +74,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
+    public ResponseEntity<Object> login(@RequestBody User user) {
         User loggedInUser = service.login(user.getEmail(), user.getPassword());
         if (loggedInUser == null) {
             return ResponseEntity.badRequest().body("Invalid email or password.");
@@ -84,5 +84,24 @@ public class UserController {
                 "token", token,
                 "email", loggedInUser.getEmail()
         ));
+    }
+
+    @PostMapping("/validate-email")
+    public ResponseEntity<Object> validateEmail(@RequestParam String email) {
+        User user = service.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Email not found.");
+        }
+        return ResponseEntity.ok("Email is valid.");
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody User user) {
+        Result<Boolean> result = service.resetPasswordByEmail(user.getEmail(), user.getPassword());
+        if (result.isSuccess()) {
+            return ResponseEntity.ok("Password reset successful.");
+        }
+
+        return ResponseEntity.badRequest().body(result.getMessages());
     }
 }

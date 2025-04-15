@@ -48,26 +48,35 @@ class UserServiceTest {
     @Test
     void shouldNotAddUserWhenInvalid() {
         User user = makeUser();
+
         user.setPassword("password");
         Result<User> result = service.add(user, user.getPassword());
         assertEquals(ResultType.INVALID, result.getType());
 
-        user.setUserId(0);
-        user.setUsername("thistestnameiswaytoolongitsfailingforsure");
-        result = service.add(user,user.getPassword());
+        user.setPassword("Password 123!");
+        result = service.add(user, user.getPassword());
+        assertEquals(ResultType.INVALID, result.getType());
+
+        user.setUsername("john");
+        user.setPassword("P@1");
+        result = service.add(user, user.getPassword());
+        assertEquals(ResultType.INVALID, result.getType());
+
+        user.setUsername("this_username_is_way_too_long_for_the_app");
+        user.setPassword("Password123!");
+        result = service.add(user, user.getPassword());
         assertEquals(ResultType.INVALID, result.getType());
     }
+
 
     @Test
     void shouldAddUserWhenValid() {
         User expected = makeUser();
         User arg = makeUser();
         arg.setUserId(0);
-        String rawPassword = "Password123!";
-
 
         when(repository.add(arg)).thenReturn(expected);
-        Result<User> result = service.add(arg,rawPassword);
+        Result<User> result = service.add(arg,arg.getPassword());
         assertEquals(ResultType.SUCCESS, result.getType());
 
         assertEquals(expected, result.getPayload());

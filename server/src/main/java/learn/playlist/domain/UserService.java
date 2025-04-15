@@ -97,7 +97,7 @@ public class UserService {
             return result;
         }
 
-        if(isValidPassword(user.getPassword())){
+        if(!isValidPassword(user.getPassword())){
             result.addMessage("password must contain an uppercase letter, and a special character", ResultType.INVALID);
         }
 
@@ -126,8 +126,39 @@ public class UserService {
         boolean hasUppercase = value.matches(".*[A-Z].*");
         boolean hasSpecialChar = value.matches(".*[!@#$^&].*");
         boolean hasWhitespace = value.matches(".*\\s.*");
+        boolean isValidLength = value.length() >= 5 && value.length() <= 20;
 
-        return !(hasUppercase && hasSpecialChar) || hasWhitespace;
+        return hasUppercase && hasSpecialChar && !hasWhitespace && isValidLength;
+    }
+
+
+    public Result<Boolean> resetPasswordByEmail(String email, String rawPassword) {
+        Result<Boolean> result = new Result<>();
+
+        if (rawPassword == null || rawPassword.isEmpty()) {
+            result.addMessage("Password cannot be null or empty.", ResultType.INVALID);
+            return result;
+        }
+        if (!isValidPassword(rawPassword)) {
+            result.addMessage("Password must be 5–20 characters long, include at least one uppercase letter, one digit, and one special character (!@#$%^&*).", ResultType.INVALID);
+            return result;
+        }
+
+        User user = repository.findByEmail(email);
+        if (user == null) {
+            result.addMessage("User not found.", ResultType.NOT_FOUND);
+            return result;
+        }
+
+        if (encoder.matches(rawPassword, user.getPassword())) {
+            result.addMessage("New password must be different from the current password.", ResultType.INVALID);
+            return result;
+        }
+
+        user.setPassword(encoder.encode(rawPassword));
+        boolean updated = repository.update(user);
+        result.setPayload(updated);
+        return result;
     }
 
     public User login(String email, String rawPassword) {

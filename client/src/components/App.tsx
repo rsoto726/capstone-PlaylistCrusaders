@@ -11,6 +11,7 @@ import PlaylistFullView from './PlaylistFullView';
 import ForgotPassword from './ForgotPassword';
 import Search from './Search';
 import Profile from './Profile';
+import ResetPassword from './ResetPassword';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path='/forgot-password' element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/playlist/:id" element={<PlaylistFullView />} />
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path='/search' element={<Search />} />
