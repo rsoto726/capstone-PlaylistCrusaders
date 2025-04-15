@@ -3,7 +3,6 @@ package learn.playlist.controllers;
 import learn.playlist.config.JwtUtil;
 import learn.playlist.domain.Result;
 import learn.playlist.domain.UserService;
-import learn.playlist.models.RoleName;
 import learn.playlist.models.User;
 import org.apache.catalina.valves.ErrorReportValve;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,7 @@ public class UserController {
         return service.findAll();
     }
 
-    @GetMapping("/id/{userId}")
+    @GetMapping("/{userId}")
     public User findById(@PathVariable int userId) {
         return service.findById(userId);
     }
@@ -38,13 +37,10 @@ public class UserController {
         return service.findByEmail(email);
     }
 
-    @GetMapping("/name/{username}")
+    @GetMapping("/{username}")
     public User findByUsername(@PathVariable String username){
         return service.findByUsername(username);
     }
-
-    @GetMapping("/role/{userId}")
-    public RoleName findUserRole(@PathVariable int userId){return service.findUserRole(userId);};
 
     @PostMapping("/register")
     public ResponseEntity<Object> add(@RequestBody User user){
