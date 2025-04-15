@@ -1,6 +1,7 @@
 package learn.playlist.domain;
 
 import learn.playlist.data.UserRepository;
+import learn.playlist.models.RoleName;
 import learn.playlist.models.User;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,6 +29,8 @@ public class UserService {
     public User findByUsername(String username){return repository.findByUsername(username);};
 
     public User findByEmail(String email){return repository.findByEmail(email);};
+
+    public RoleName findUserRole(int userId){return repository.findUserRole(userId);};
 
     public Result<User> add(User user, String rawPassword){
         Result<User> result = validate(user);

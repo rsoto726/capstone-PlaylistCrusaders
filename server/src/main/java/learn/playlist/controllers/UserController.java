@@ -3,6 +3,7 @@ package learn.playlist.controllers;
 import learn.playlist.config.JwtUtil;
 import learn.playlist.domain.Result;
 import learn.playlist.domain.UserService;
+import learn.playlist.models.RoleName;
 import learn.playlist.models.User;
 import org.apache.catalina.valves.ErrorReportValve;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,9 @@ public class UserController {
     public User findByUsername(@PathVariable String username){
         return service.findByUsername(username);
     }
+
+    @GetMapping("/role/{userId}")
+    public RoleName findUserRole(@PathVariable int userId){return service.findUserRole(userId);};
 
     @PostMapping("/register")
     public ResponseEntity<Object> add(@RequestBody User user){
