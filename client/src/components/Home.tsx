@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import PlaylistCard from './PlaylistCard';
 import '../styles/HomePage.css';
 import AudioPlayer from './AudioPlayer';
+
 const sampleData = [
   { title: 'Chill Vibes', songs: ['Song one', 'Song two', 'Song three', 'Song four'] },
   { title: 'Workout Mix', songs: ['Track 1', 'Track 2', 'Track 3'] },
@@ -25,7 +26,6 @@ const Home: React.FC = () => {
 
   return (
     <div className="container mt-3">
-      <AudioPlayer/>
       <div className="row">
         {sampleData.map((playlist, index) => (
           <div key={index} className="col-md-3">

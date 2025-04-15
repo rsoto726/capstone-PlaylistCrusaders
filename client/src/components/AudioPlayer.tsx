@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, ListGroup, ProgressBar } from "react-bootstrap";
+import { Button, ListGroup, } from "react-bootstrap";
 import { SkipBackwardFill, SkipForwardFill, PlayFill, PauseFill } from "react-bootstrap-icons";
 
 // Extract YouTube Video ID from the URL
