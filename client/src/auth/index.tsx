@@ -93,10 +93,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         username: string,
         email: string,
         password: string,
-        passwordVerify: string
     ) => {
         try {
-            await api.registerUser(username, email, password, passwordVerify);
+            await api.registerUser(username, email, password);
             authReducer('REGISTER_USER');
             navigate('/login');
         } catch (err: any) {

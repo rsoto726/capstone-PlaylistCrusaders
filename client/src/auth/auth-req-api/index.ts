@@ -1,11 +1,10 @@
-const BASE_URL = 'http://localhost:8080/auth';
+const BASE_URL = 'http://localhost:8080/api/user';
 
 const fetchWithCredentials = async (
     url: string,
     options: RequestInit = {}
 ) => {
     const response = await fetch(`${BASE_URL}${url}`, {
-        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
             ...(options.headers || {}),
@@ -42,7 +41,6 @@ export const registerUser = (
     username: string,
     email: string,
     password: string,
-    passwordVerify: string // "Re-enter password" to ensure user entered the intended password
 ) =>
     fetchWithCredentials('/register/', {
         method: 'POST',
@@ -50,7 +48,6 @@ export const registerUser = (
             username,
             email,
             password,
-            passwordVerify,
         }),
     });
 

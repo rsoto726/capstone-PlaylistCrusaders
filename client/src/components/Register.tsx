@@ -1,34 +1,27 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../auth";
 import '../styles/Login.css'
 
 // register user
 export default function Register() {
   const [form, setForm] = useState({ username: '', email: '', password: '' });
   const navigate = useNavigate();
+  const { auth } = useAuth();
 
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const res = await fetch('http://localhost:8080/api/user', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    });
-
-    if (res.ok) {
-      alert('Registered successfully!');
-      navigate('/login');  // Redirect to login after successful registration
-    } else {
-      const errorMessage = await res.text();
-      alert(`Registration failed: ${errorMessage}`);
-    }
+    await auth.registerUser(
+      form.username,
+      form.email,
+      form.password,
+    );
+    // No need to navigate manually; context handles redirection
   };
 
   return (
