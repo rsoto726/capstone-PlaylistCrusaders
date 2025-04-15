@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
       <div className="navbar-content d-flex align-items-center justify-content-between px-4 py-3">
         <div className="logo">🎵 MyPlaylist</div>
         <div className="ms-auto">
-          <Button variant="outline-primary" className="custom-button" onClick={handleLoginClick}>
+          <Button variant="btn btn-primary" className="custom-button" onClick={handleLoginClick}>
             Login / Register
           </Button>
         </div>

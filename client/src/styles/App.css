@@ -3,7 +3,8 @@
   max-width:100%;
   padding:0;
   margin:0;
-  border:1px solid gray;
+  /* Comment out border when done editing */
+  /* border:1px solid gray; */
 }
 
 html{

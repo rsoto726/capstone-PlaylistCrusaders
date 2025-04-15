@@ -20,7 +20,7 @@ export default function Login(){
         e.preventDefault();
       
         try {
-          const res = await fetch('http://localhost:8080', {
+          const res = await fetch('http://localhost:8080/api/user', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(form),
