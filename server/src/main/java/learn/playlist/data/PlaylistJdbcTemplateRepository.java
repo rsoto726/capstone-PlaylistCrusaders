@@ -72,7 +72,7 @@ public class PlaylistJdbcTemplateRepository implements PlaylistRepository {
     @Transactional
     @Override
     public Playlist findById(int playlistId) {
-        final String sql = "select playlist_id, name, publish, date_created, date_published, thumbnail_url, user_id " +
+        final String sql = "select playlist_id, `name`, publish, date_created, date_published, thumbnail_url, user_id " +
                 "from playlist " +
                 "where playlist_id = ?;";
         Playlist result = jdbcTemplate.query(sql, new PlaylistMapper(), playlistId).stream()
@@ -132,10 +132,12 @@ public class PlaylistJdbcTemplateRepository implements PlaylistRepository {
     }
 
     private void addSongs(Playlist playlist) {
-        final String sql = "select ps.playlist_id, ps.song_id, "
-                + " s.url"
-                + "from playlist_song ps"
+        final String sql = "select p.playlist_id, p.name, p.publish, p.date_created, p.date_published, p.thumbnail_url, p.user_id, "
+                + "ps.playlist_id, ps.song_id, "
+                + "s.url "
+                + "from playlist_song ps "
                 + "inner join song s on ps.song_id = s.song_id "
+                + "inner join playlist p on p.playlist_id = ps.playlist_id "
                 + "where ps.playlist_id = ?;";
         var playlistSongs = jdbcTemplate.query(sql, new PlaylistSongMapper(), playlist.getPlaylistId());
         playlist.setSongs(playlistSongs);
