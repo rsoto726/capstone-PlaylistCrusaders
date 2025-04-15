@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PlaylistCard from './PlaylistCard';
 import '../styles/HomePage.css';
 const sampleData = [
@@ -7,8 +7,20 @@ const sampleData = [
   { title: 'Focus Mode', songs: ['Ambient A', 'Ambient B', 'Ambient C'] },
   { title: 'Throwbacks', songs: ['Hit 1', 'Hit 2', 'Hit 3', 'Hit 4'] },
 ];
+const url = "http://localhost:8080"
 
 const Home: React.FC = () => {
+  const [playlists, setPlaylists] = useState([]);
+
+  useEffect(()=>{
+    fetch(`${url}/api/playlist/public`)
+      .then(r=>r.json())
+      .then(data=>{
+        console.log(data)
+        setPlaylists(data);
+      })
+  },[])
+
   return (
     <div className="container mt-3">
       <div className="row">
