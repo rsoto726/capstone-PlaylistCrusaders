@@ -47,7 +47,7 @@ const Profile = () => {
       try {
         const url = username 
           ? `/username/${username}` // someone else's profile
-          : `/profile`;             // own profile
+          : `/profile`;            // own profile
 
         const data = await fetchWithCredentials(url);
         setProfile(data);
