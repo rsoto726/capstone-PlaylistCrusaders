@@ -42,6 +42,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
 
   const playerContainerId = `video-player-${uuidv4()}-${playlist.playlistId}`;
 
+  // process video data
   useEffect(() => {
     const metadata = metadataMap[playlist.songs[currentIndex].songId];
     if (metadata && metadata.videoId !== videoId) {
@@ -50,12 +51,14 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
     }
   }, [currentIndex, playlist.songs, metadataMap, videoId]);
 
+  // stop inactive playlists
   useEffect(() => {
     if (activePlaylist !== playlist.playlistId && !!isPlayingState) {
       stopVideo();
     }
   }, [activePlaylist, playlist.playlistId]);
   
+  // create video player (very scary)
   useEffect(() => {
     if (videoId) {
       if (playerRef.current) {
@@ -77,9 +80,15 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
           onStateChange: (event: any) => {
             const playerState = event.data;
             if (playerState === window.YT.PlayerState.PLAYING) {
-              setIsPlayingState(true); 
+              setIsPlayingState(true);
+              setInterval(() => {
+                if (playerRef.current) {
+                  const currentTime = playerRef.current.getCurrentTime();
+                  setCurrentTime(currentTime);
+                }
+              }, 100); //100ms playhead reponse time
             } else if (playerState === window.YT.PlayerState.PAUSED) {
-              setIsPlayingState(false); 
+              setIsPlayingState(false);
             } else if (playerState === window.YT.PlayerState.ENDED) {
               console.log("Video ended — playing next song");
               nextVideo();
@@ -90,6 +99,8 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
     }
   }, [videoId, inactive]);
 
+
+  // player controls
   const playVideo = () => {
     if (playerRef.current) {
       console.log(`Playing video: ${videoId}`);
@@ -166,13 +177,14 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
             <h5>{metadataMap[playlist.songs[currentIndex].songId]?.title || 'No title'}</h5>
             <p className="text-muted">YouTube Track {currentIndex + 1}</p>
 
+         {/* seek bar */}
             <input
               type="range"
               min={0}
               max={duration}
               value={currentTime}
               onChange={handleSeek}
-              className="form-range w-100"
+              className="custom-range w-100"
             />
 
             <div className="d-flex justify-content-between mt-2 mb-3">

@@ -12,37 +12,34 @@ const youtubeApiReadyPromise = new Promise<void>((resolve) => {
   youtubeApiReadyResolver = resolve;
 });
 (window as any).onYouTubeIframeAPIReady = () => {
-  console.log("✅ YouTube Iframe API is ready");
   youtubeApiReadyResolver();
 };
 
+// load api now for audio player (scary)
 const loadYouTubeAPI = () => {
   return new Promise<void>((resolve, reject) => {
     if ((window as any).YT?.Player) {
-      console.log("🧠 YouTube API already loaded");
       resolve();
     } else if (!document.getElementById("youtube-iframe-api")) {
-      console.log("📦 Loading YouTube API...");
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
       tag.id = "youtube-iframe-api";
       tag.async = true;
       tag.onload = () => {
-        console.log("📦 YouTube API loaded successfully");
         resolve();
       };
       tag.onerror = () => {
-        console.error("❌ Failed to load YouTube API");
+        console.error("Failed to load YouTube API");
         reject(new Error("Failed to load YouTube API"));
       };
       document.body.appendChild(tag);
     } else {
-      console.log("⏳ YouTube API is already loading...");
       resolve();
     }
   });
 };
 
+// ? break youtube url into usable parts (useless right now, save for url submitter)
 const extractVideoId = (url: string): string | null => {
   const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|v\/|e(?:mbed)?\/))([\w-]{11})/;
   const match = url.match(regex);
@@ -80,6 +77,7 @@ const PlaylistContainer: React.FC<Props> = ({ playlist, activePlaylist }) => {
   const [metadataMap, setMetadataMap] = useState<Record<number, VideoMetadata>>({});
   const [apiLoaded, setApiLoaded] = useState<boolean>(false);
 
+  // make sure youtube api is ready, then coalesce metadata
   useEffect(() => {
     const fetchMetadataSequentially = async () => {
       await loadYouTubeAPI();
@@ -92,7 +90,7 @@ const PlaylistContainer: React.FC<Props> = ({ playlist, activePlaylist }) => {
         const videoId = extractVideoId(song.song.url);
 
         if (!videoId) {
-          console.warn(`⚠️ No video ID found for song URL: ${song.song.url}`);
+          console.warn(`No video ID found for song URL: ${song.song.url}`);
           currentIndex++;
           continue;
         }
