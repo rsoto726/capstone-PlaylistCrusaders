@@ -12,6 +12,7 @@ const Header = () => {
 
   useEffect(() => {
     auth.getLoggedIn();
+    
   }, []);
   
 
