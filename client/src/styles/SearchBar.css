@@ -17,3 +17,6 @@
     cursor: pointer;
   }
   
+  .search-input{
+    width: 150rem;
+  }

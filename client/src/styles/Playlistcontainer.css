@@ -120,3 +120,20 @@
     background-color: #f0f0f0;
   }
   
+  .playlist-scroll-container {
+    overflow-x: auto;
+    padding: 1rem;
+  }
+  
+  .playlist-row-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+  }
+  
+  .playlist-card-wrapper {
+    flex: 0 0 auto;
+    width: 520px;
+  }
+  
+  

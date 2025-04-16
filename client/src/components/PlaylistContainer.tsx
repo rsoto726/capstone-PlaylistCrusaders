@@ -37,16 +37,22 @@ const PlaylistContainer: React.FC<Props> = ({playlists, isOwnProfile}) => {
 
 
   return (
-    <div>
-      <div className="row">
+    <div className="playlist-scroll-container">
+      <div className="playlist-row-scroll">
         {playlists.map((playlist) => (
-          <div key={playlist.playlistId} className="col-md-3">
-            <PlaylistCard playlist={playlist} activePlaylist={activePlaylist} setActivePlaylist={setActivePlaylist} isOwnProfile={isOwnProfile}/>
+          <div key={playlist.playlistId} className="playlist-card-wrapper">
+            <PlaylistCard
+              playlist={playlist}
+              activePlaylist={activePlaylist}
+              setActivePlaylist={setActivePlaylist}
+              isOwnProfile={isOwnProfile}
+            />
           </div>
         ))}
       </div>
     </div>
   )
+  
 }
 
 export default PlaylistContainer

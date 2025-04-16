@@ -304,7 +304,7 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
   }
 
   return (
-    <div>
+    <>
       <div className="playlist-card" onClick={handlePlaylistClick}>
       <div className="playlist-row">
         <div className="playlist-col-left">
@@ -349,7 +349,7 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
         }
 
       </div>
-    </div>
+    </>
   );
 };
 
