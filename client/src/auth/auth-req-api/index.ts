@@ -26,7 +26,7 @@ const fetchWithCredentials = async (
 // AUTH FUNCTIONS
 
 export const getLoggedIn = () =>
-    fetchWithCredentials('/loggedIn/', { method: 'GET' });
+    fetchWithCredentials('/loggedin/', { method: 'GET' });
 
 export const loginUser = async (email: string, password: string) => {
     const response = await fetchWithCredentials('/login/', {

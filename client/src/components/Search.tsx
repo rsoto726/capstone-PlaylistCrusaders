@@ -1,15 +1,28 @@
 import React, {useState, useEffect} from 'react'
 import {useLocation} from 'react-router-dom';
+import PlaylistContainer from './PlaylistContainer';
+
+type Song = {
+  songId: number;
+  url: string;
+  title: string;
+  videoId: string;
+  thumbnail: string;
+};
 
 type Playlist = {
+  playlistId: number;
+  name: string;
+  thumbnailUrl: string;
+  published: boolean;
+  createdAt: string;
+  publishedAt: string | null;
+  songs: Array<{
     playlistId: number;
-    name: string;
-    description: string;
-    publish: boolean;
-    dateCreated: string;
-    datePublished: string;
-    thumbnailUrl: string;
-    userId: number;
+    songId: number;
+    song: Song;
+    index: number;
+  }>;
 };
 
 // search result
@@ -36,7 +49,13 @@ const Search = () => {
 
   return (
     <div>
-        <h1>Search Results for: {query}</h1>
+        <h3 className='mt-2 ml-2'>Search results for: <span style={{fontStyle : "italic"}}>{query}</span></h3>
+        {playlists.length > 0  ? (
+          <PlaylistContainer playlists={playlists}/>
+        ) : (
+          <h2>{"No results found :{"}</h2>
+        )}
+        
     </div>
   )
 }

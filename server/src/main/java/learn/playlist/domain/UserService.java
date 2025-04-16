@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,6 +41,10 @@ public class UserService {
         }
         String hashedPassword = encoder.encode(rawPassword);
         user.setPassword(hashedPassword);
+
+        List<String> roles = new ArrayList<>(user.getRoles());
+        roles.add("USER");
+        user.setRoles(roles);
 
         user=repository.add(user);
         result.setPayload(user);

@@ -32,6 +32,9 @@ class SongJdbcTemplateRepositoryTest {
     void shouldCreateSong() {
         Song song = new Song();
         song.setUrl("https://soundcloud.com/example-song3");
+        song.setTitle("New Title");
+        song.setVideoId("aOIW1ks");
+        song.setThumbnail("/image3.jpg");
         assertTrue(repository.add(song).getSongId() > 0);
     }
 
