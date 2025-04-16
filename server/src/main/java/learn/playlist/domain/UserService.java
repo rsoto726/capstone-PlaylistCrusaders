@@ -163,6 +163,7 @@ public class UserService {
 
     public User login(String email, String rawPassword) {
         User user = repository.findByEmail(email);
+
         if (user != null && encoder.matches(rawPassword, user.getPassword())) {
             return user;
         }

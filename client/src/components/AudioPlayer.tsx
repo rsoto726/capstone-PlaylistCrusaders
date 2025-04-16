@@ -52,6 +52,8 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   }, [currentIndex, playlist.songs, metadataMap, videoId]);
 
   // stop inactive playlists
+  // when track becomes inactive, it stays lit up. clicking on it will make it not play as it's already active, have to press "play" button
+  // ? small issue, not too important, maybe fix later
   useEffect(() => {
     if (activePlaylist !== playlist.playlistId && !!isPlayingState) {
       stopVideo();
@@ -60,13 +62,15 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   
   // create video player (very scary)
   useEffect(() => {
+    // If we already have a player, destroy it before initializing a new one
+    if (playerRef.current) {
+      playerRef.current.stopVideo?.();
+      playerRef.current.destroy?.();
+    }
+  
     if (videoId) {
-      if (playerRef.current) {
-        playerRef.current.stopVideo?.();
-        playerRef.current.destroy?.();
-      }
-
       console.log(`Initializing YouTube player for videoId: ${videoId}`);
+  
       playerRef.current = new window.YT.Player(playerContainerId, {
         videoId,
         events: {
@@ -74,19 +78,20 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
             setDuration(event.target.getDuration());
             setPlayerReady(true);
             if (!inactive) {
-              playVideo(); 
+              playVideo();
             }
           },
           onStateChange: (event: any) => {
             const playerState = event.data;
             if (playerState === window.YT.PlayerState.PLAYING) {
               setIsPlayingState(true);
+              // Start updating the playhead when video is playing
               setInterval(() => {
-                if (playerRef.current) {
+                if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
                   const currentTime = playerRef.current.getCurrentTime();
                   setCurrentTime(currentTime);
                 }
-              }, 100); //100ms playhead reponse time
+              }, 100); // Update every 100ms (can be adjusted)
             } else if (playerState === window.YT.PlayerState.PAUSED) {
               setIsPlayingState(false);
             } else if (playerState === window.YT.PlayerState.ENDED) {
@@ -98,6 +103,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
       });
     }
   }, [videoId, inactive]);
+  
 
 
   // player controls

@@ -3,13 +3,13 @@ import React, {
     useContext,
     useEffect,
     useState,
-    ReactNode
+    ReactNode,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from './auth-req-api';
 
 interface User {
-    id: number;
+    userId: number;
     username: string;
     email: string;
 }
@@ -29,14 +29,14 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-let authMethods: any = {};
+let authMethods: any = {}; // This can be improved with better typing
 
 export const AuthActionType = {
     GET_LOGGED_IN: 'GET_LOGGED_IN',
     LOGIN_USER: 'LOGIN_USER',
     LOGOUT_USER: 'LOGOUT_USER',
     REGISTER_USER: 'REGISTER_USER',
-    ERROR: 'ERROR'
+    ERROR: 'ERROR',
 } as const;
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
@@ -45,10 +45,26 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         user: null,
         loggedIn: false,
         errorMessages: [],
-        visitor: 'NONE'
+        visitor: 'NONE',
     });
+
     useEffect(() => {
-        getLoggedIn();
+        const verifySession = async () => {
+            try {
+                const sessionUser = await api.checkSession();
+                if (sessionUser) {
+                    authReducer('GET_LOGGED_IN', {
+                        user: sessionUser,
+                        loggedIn: true,
+                        visitor: 'USER',
+                    });
+                }
+            } catch (err: any) {
+                authReducer('ERROR', { errorMessages: [err.message] });
+            }
+        };
+
+        verifySession();
     }, []);
 
     const authReducer = (
@@ -66,20 +82,18 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     const getLoggedIn = async () => {
         try {
             const data = await api.getLoggedIn();
-            console.log(data);
             authReducer('GET_LOGGED_IN', {
                 loggedIn: data.loggedIn,
                 user: data.user,
             });
         } catch (err: any) {
-            authReducer('ERROR', { errorMessages: err.message });
+            authReducer('ERROR', { errorMessages: [err.message] });
         }
     };
 
     const loginUser = async (email: string, password: string) => {
         try {
             const data = await api.loginUser(email, password);
-            console.log(data);
             authReducer('LOGIN_USER', {
                 user: data.user,
                 loggedIn: true,
@@ -87,7 +101,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
             });
             navigate('/');
         } catch (err: any) {
-            authReducer('ERROR', { errorMessages: err.message });
+            authReducer('ERROR', { errorMessages: [err.message] });
         }
     };
 
@@ -101,30 +115,26 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
             authReducer('REGISTER_USER');
             navigate('/login');
         } catch (err: any) {
-            authReducer('ERROR', { errorMessages: err.message });
+            authReducer('ERROR', { errorMessages: [err.message] });
         }
     };
 
-    const logoutUser = async () => {
-        try {
-            console.log("Logging out");
-            await api.logoutUser();
-            authReducer('LOGOUT_USER', {
-                user: null,
-                loggedIn: false,
-                visitor: 'NONE',
-            });
-            navigate('/');
-        } catch (err: any) {
-            authReducer('ERROR', { errorMessages: err.message });
-        }
+    const logoutUser = () => {
+        api.logoutUser();
+        authReducer('LOGOUT_USER', {
+            user: null,
+            loggedIn: false,
+            visitor: 'NONE',
+        });
+        navigate('/');
     };
 
     authMethods = {
         getLoggedIn,
         loginUser,
         registerUser,
-        logoutUser
+        logoutUser,
+        checkSession: api.checkSession,
     };
 
     return (

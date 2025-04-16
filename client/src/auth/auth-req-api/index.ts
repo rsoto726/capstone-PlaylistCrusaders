@@ -16,7 +16,6 @@ const fetchWithCredentials = async (
     });
 
     if (!response.ok) {
-        console.log(response);
         const errorBody = await response.json().catch(() => ({}));
         throw new Error(errorBody.message || `HTTP error ${response.status}`);
     }
@@ -36,11 +35,34 @@ export const loginUser = async (email: string, password: string) => {
     });
 
     if (response.token) {
-        console.log(response.token);
         localStorage.setItem('token', response.token);
     }
 
     return response;
+};
+
+export const checkSession = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        return null; // No token, not logged in
+    }
+
+    try {
+        const response = await fetchWithCredentials('/loggedin/', {
+            method: 'GET',
+        });
+
+        if (response?.token) {
+            localStorage.setItem('token', response.token); //valid token
+            return response;
+        }
+
+        localStorage.removeItem('token');  // bad token
+        return null;
+    } catch (error) {
+        console.error('Error verifying token:', error);
+        return null;
+    }
 };
 
 export const logoutUser = () =>
@@ -65,6 +87,7 @@ const apis = {
     loginUser,
     logoutUser,
     registerUser,
+    checkSession,
 };
 
 export default apis;

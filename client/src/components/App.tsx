@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthContextProvider } from '../auth';
 import '../styles/App.css';
@@ -13,7 +13,9 @@ import Search from './Search';
 import Profile from './Profile';
 import ResetPassword from './ResetPassword';
 
-function App() {
+
+function App() {  
+
   return (
     <div className="app">
       <Router>
