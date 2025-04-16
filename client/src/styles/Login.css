@@ -59,7 +59,7 @@
   }
   
   /* Button styling */
-  button {
+  .login-links button {
     width: 100%;
     padding: 12px;
     background-color: #007bff;
@@ -71,7 +71,7 @@
     margin-top: 1.4rem;
   }
   
-  button:hover {
+  .login-links button:hover {
     background-color: #0056b3;
   }
   

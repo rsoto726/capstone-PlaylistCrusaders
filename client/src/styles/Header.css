@@ -3,3 +3,15 @@
     letter-spacing: 0.2rem;
     cursor: pointer;
 }
+
+.nav-links {
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-links button {
+    justify-content: center;
+    align-items: center;
+}

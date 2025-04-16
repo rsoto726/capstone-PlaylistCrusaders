@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent, useContext } from "react";
+import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../auth";
 import '../styles/Login.css'
@@ -43,7 +44,7 @@ export default function Login() {
           required
         />
         <button type="submit">Login</button>
-        <div style={{ marginTop: '10px' }}>
+        <div className="login-links" style={{ marginTop: '10px' }}>
           <button
             type="button"
             className="link-button"

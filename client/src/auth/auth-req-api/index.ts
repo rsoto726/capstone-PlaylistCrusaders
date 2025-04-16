@@ -16,6 +16,7 @@ const fetchWithCredentials = async (
     });
 
     if (!response.ok) {
+        console.log(response);
         const errorBody = await response.json().catch(() => ({}));
         throw new Error(errorBody.message || `HTTP error ${response.status}`);
     }
@@ -43,7 +44,7 @@ export const loginUser = async (email: string, password: string) => {
 };
 
 export const logoutUser = () =>
-    fetchWithCredentials('/logout/', { method: 'GET' });
+    localStorage.removeItem('token');
 
 export const registerUser = (
     username: string,

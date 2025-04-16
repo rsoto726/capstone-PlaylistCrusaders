@@ -87,12 +87,13 @@ public class UserController {
     }
 
     @GetMapping("/loggedIn")
-    public ResponseEntity<?> getLoggedInUser(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<?> getLoggedInUser(@RequestHeader(value = "Authorization", required = false) String authHeader) {
         System.out.println("GET LOGGED IN CALLED");
         try {
             System.out.println(authHeader);
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                return new ResponseEntity<>("Missing or invalid Authorization header", HttpStatus.UNAUTHORIZED);
+                // No token provided – treat as not logged in
+                return ResponseEntity.ok(null);
             }
 
             String token = authHeader.substring(7); // remove "Bearer "

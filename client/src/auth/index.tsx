@@ -107,6 +107,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
     const logoutUser = async () => {
         try {
+            console.log("Logging out");
             await api.logoutUser();
             authReducer('LOGOUT_USER', {
                 user: null,
