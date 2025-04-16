@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Form, Container, Row, Col, ListGroup, Button, ButtonGroup } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth';
-import { checkSession } from '../auth/auth-req-api/index';
+import { checkSession, fetchWithCredentials } from '../auth/auth-req-api/index';
 
 type Song = {
   songId: number;
@@ -95,10 +95,18 @@ const PlaylistEdit = () => {
     setPlaylist({ ...playlist, songs: newSongs });
   };
 
-  const handleSave = () => {
-    // TODO: Send updated playlist (including new song order) to backend
+  const handleSave = async () => {
     console.log("Saving playlist:", playlist);
-    alert("TODO: save songs, playlist_songs, and playlist");
+    fetchWithCredentials(`/playlist/${numericPlaylistId}`, {
+      method: 'PUT',
+      body: JSON.stringify(playlist),
+    })
+      .then((response) => {
+        if (!response) { //update returns no content
+          navigate('/profile');
+        }
+      })
+      .catch(console.log);
   };
 
   return (
