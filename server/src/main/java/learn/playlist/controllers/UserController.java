@@ -158,4 +158,14 @@ public class UserController {
 
         return ResponseEntity.badRequest().body(result.getMessages());
     }
+    @PutMapping("/{userId}/role")
+    public ResponseEntity<?> updateUserRole(@PathVariable int userId, @RequestBody Map<String, String> body) {
+        String newRole = body.get("role");
+        Result<User> result = service.updateRole(userId, newRole);
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result.getPayload());
+        }
+        return ErrorResponse.build(result);
+    }
+
 }

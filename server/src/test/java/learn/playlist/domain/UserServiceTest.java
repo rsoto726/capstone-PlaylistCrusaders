@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -106,6 +108,43 @@ class UserServiceTest {
 
         assertEquals(expected, result.getPayload());
     }
+
+    @Test
+    void shouldUpdateUserRole() {
+
+        User existingUser = makeUser();
+        existingUser.setRoles(List.of("USER"));
+        String newRole = "ADMIN";
+        when(repository.findById(existingUser.getUserId())).thenReturn(existingUser);
+        when(repository.update(existingUser)).thenReturn(true);
+        Result<User> result = service.updateRole(existingUser.getUserId(), newRole);
+        assertEquals(ResultType.SUCCESS, result.getType());
+        assertEquals(newRole, result.getPayload().getRoles().get(0));
+    }
+
+    @Test
+    void shouldNotUpdateUserRole_WhenUserNotFound() {
+        int userId = 1;
+        String role = "ADMIN";
+        when(repository.findById(userId)).thenReturn(null);
+        Result<User> result = service.updateRole(userId, role);
+        assertEquals(ResultType.NOT_FOUND, result.getType());
+        assertEquals("User not found.", result.getMessages().get(0));
+    }
+
+    @Test
+    void shouldNotUpdateUserRole_WhenUpdateFails() {
+        User existingUser = makeUser();
+        existingUser.setRoles(List.of("USER"));
+        String newRole = "ADMIN";
+
+        when(repository.findById(existingUser.getUserId())).thenReturn(existingUser);
+        when(repository.update(existingUser)).thenReturn(false);
+        Result<User> result = service.updateRole(existingUser.getUserId(), newRole);
+        assertEquals(ResultType.INVALID, result.getType());
+        assertEquals("Update failed", result.getMessages().get(0));
+    }
+
 
     @Test
     void shouldDeleteUserById() {

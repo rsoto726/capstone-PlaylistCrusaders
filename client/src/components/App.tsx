@@ -12,7 +12,7 @@ import ForgotPassword from './ForgotPassword';
 import Search from './Search';
 import Profile from './Profile';
 import ResetPassword from './ResetPassword';
-
+import AdminUserManagement from './AdminUserManagement';
 
 function App() {  
 
@@ -29,6 +29,7 @@ function App() {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/playlist/:id" element={<PlaylistFullView />} />
             <Route path="/profile/" element={<Profile />} />
+            <Route path="/admin" element={<AdminUserManagement />} />
             <Route path="/profile/:username" element={<Profile />} />
             <Route path='/search' element={<Search />} />
             <Route path="*" element={<NotFound />} />

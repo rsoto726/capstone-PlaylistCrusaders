@@ -1,32 +1,45 @@
 const BASE_URL = 'http://localhost:8080/api/user';
 
+
 const fetchWithCredentials = async (
     url: string,
     options: RequestInit = {}
-) => {
+  ): Promise<any> => {
     const token = localStorage.getItem('token');
-
+  
     const response = await fetch(`${BASE_URL}${url}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-            ...(options.headers || {}),
-        },
-        ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` }),
+        ...(options.headers || {}),
+      },
+      ...options,
     });
-
-    if (!response.ok) {
-        const errorBody = await response.json().catch(() => ({}));
-        // If it's an array of messages, throw it directly
-        if (Array.isArray(errorBody)) {
-            throw errorBody;
-        } else {
-            throw [errorBody.message || `HTTP error ${response.status}`];
-        }
+  
+    // Handle 204 No Content
+    if (response.status === 204) {
+      return null;
     }
-
-    return response.json();
-};
+  
+    const text = await response.text();
+  
+    if (!response.ok) {
+      let errorBody: any = {};
+      try {
+        errorBody = text ? JSON.parse(text) : {};
+      } catch {
+        // ignore parsing error, leave errorBody as {}
+      }
+  
+      const message = typeof errorBody === 'object' && 'message' in errorBody
+        ? errorBody.message
+        : `HTTP error ${response.status}`;
+  
+      throw new Error(message);
+    }
+  
+    return text ? JSON.parse(text) : null;
+  };
 
 // AUTH FUNCTIONS
 
