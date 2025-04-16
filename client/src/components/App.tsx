@@ -12,12 +12,8 @@ import ForgotPassword from './ForgotPassword';
 import Search from './Search';
 import Profile from './Profile';
 import ResetPassword from './ResetPassword';
-<<<<<<< HEAD
 import PlaylistEdit from './PlaylistEdit';
-
-=======
 import AdminUserManagement from './AdminUserManagement';
->>>>>>> c79398e0acf5d68f4af46b26a9464d458cf8a604
 
 function App() {  
 
