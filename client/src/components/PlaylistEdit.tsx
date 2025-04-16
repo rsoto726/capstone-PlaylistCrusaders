@@ -121,8 +121,6 @@ const PlaylistEdit = () => {
         thumbnail: data.thumbnail_url
       };
 
-      console.log(newSong);
-
       const init = {
         method: "POST",
         headers: {
@@ -140,7 +138,14 @@ const PlaylistEdit = () => {
         })
         .then((data) => {
           if (data.songId) {
-            console.log(data);
+            const updatedSongs = [
+              ...playlist.songs,
+              data
+            ];
+            setPlaylist({
+              ...playlist,
+              songs: updatedSongs,
+            });
           }
           else {
             alert(data);
