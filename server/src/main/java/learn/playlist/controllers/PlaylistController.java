@@ -1,6 +1,8 @@
 package learn.playlist.controllers;
 
+import learn.playlist.config.JwtUtil;
 import learn.playlist.domain.PlaylistService;
+import learn.playlist.domain.UserService;
 import learn.playlist.models.Playlist;
 import learn.playlist.models.User;
 import org.springframework.http.HttpStatus;
@@ -14,9 +16,11 @@ import java.util.List;
 @RequestMapping("/api/playlist")
 public class PlaylistController {
     private final PlaylistService service;
+    private final UserService userService;
 
-    public PlaylistController(PlaylistService service) {
+    public PlaylistController(PlaylistService service, UserService userService) {
         this.service = service;
+        this.userService = userService;
     }
 
     @GetMapping("/public")
@@ -53,7 +57,10 @@ public class PlaylistController {
         return service.findByName(name);};
 
     @PostMapping
-    public ResponseEntity<Object> add(@RequestBody Playlist playlist, @RequestAttribute User user) {
+    public ResponseEntity<Object> add(@RequestBody Playlist playlist, @RequestHeader(value = "Authorization", required = true) String authHeader) {
+        String token = authHeader.substring(7); // remove "Bearer "
+        String email = JwtUtil.extractEmail(token);
+        User user = userService.findByEmail(email);
         Playlist result = service.add(playlist, user);
         if (result != null) {
             return new ResponseEntity<>(result, HttpStatus.CREATED);
