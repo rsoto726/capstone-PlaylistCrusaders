@@ -24,6 +24,7 @@ public class SongController {
 
     @PostMapping
     public ResponseEntity<Object> add(@RequestBody Song song) {
+        System.out.println(song);
         Result<Song> result = service.add(song);
         if (result.isSuccess()) {
             return new ResponseEntity<>(result.getPayload(), HttpStatus.CREATED);
