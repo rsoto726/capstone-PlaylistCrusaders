@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent, useContext } from "react";
 import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../auth";
 import '../styles/Login.css'
@@ -24,44 +25,36 @@ export default function Login() {
     await auth.loginUser(form.email, form.password);
   };
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit}>
-        <h2>Login</h2>
-        <input
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-          className="input-container"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Login</button>
-        <div className="login-links" style={{ marginTop: '10px' }}>
-          <button
-            type="button"
-            className="link-button"
-            onClick={() => navigate('/register')}
-          >
-            No Account? Register
-          </button>
-          <button
-            type="button"
-            className="link-button"
-            onClick={() => navigate('/forgot-password')}
-          >
-            Forgot Password?
-          </button>
-        </div>
-      </form>
-    </div>
+    <div className="login-page">
+      <div className="login-container">
+        <form onSubmit={handleSubmit}>
+          <h2>Login</h2>
+          <input
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+            className="input-container"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+          <Button type="submit" variant="primary" size="lg" className="w-100 mt-4">
+            Login
+          </Button>
 
+          <div className="login-links">
+            <Link className="link" to="/register">No Account? Register</Link>
+            <Link className="link" to="/forgot-password">Forgot Password?</Link>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }

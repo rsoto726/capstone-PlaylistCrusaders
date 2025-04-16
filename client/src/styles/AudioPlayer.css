@@ -1,6 +1,6 @@
 .active-track-container {
     background-color: #8673A1; /* pearl violet */
-    padding: 15px;
+    padding: 1rem 2rem 0.5rem 2rem ;
     border-radius: 8px;
     margin-bottom: 15px;
     width: 100%;
@@ -15,6 +15,19 @@
     border: none !important;
     margin-bottom: 5px;
     border-radius: 4px;
+  }
+
+  .active-track-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .audio-track-thumbnail{
+    width: 6rem;
+    height: 6rem;
+    object-fit: cover;
+    margin-right: 2rem;
   }
   
   .track-item {
@@ -67,7 +80,7 @@
   appearance: none;
   width: 20px;
   height: 20px;
-  background: #007bff;
+  background: #492f6d;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -81,7 +94,7 @@
 .custom-range::-moz-range-thumb {
   width: 20px;
   height: 20px;
-  background: #007bff;
+  background: #e0e0e0;
   border-radius: 50%;
   cursor: pointer;
 }

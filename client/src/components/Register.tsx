@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from "../auth";
-import '../styles/Login.css'
+import { Button } from 'react-bootstrap';
+import '../styles/Login.css';
 
 // register user
 export default function Register() {
@@ -25,40 +26,42 @@ export default function Register() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Register</h2>
-      <input
-        name="username"
-        placeholder="Username"
-        value={form.username}
-        onChange={handleChange}
-        required
-      />
-      <input
-        name="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        value={form.password}
-        onChange={handleChange}
-        required
-      />
-      <button type="submit">Register</button>
-      <div style={{ marginTop: '10px' }}>
-        <button
-          type="button"
-          className="link-button"
-          onClick={() => navigate('/login')}
-        >
-          Have an Account? Login
-        </button>
+    <div className='login-page'>
+      <div className="login-container">
+        <form onSubmit={handleSubmit}>
+          <h2>Register</h2>
+          <input
+            name="username"
+            placeholder="Username"
+            value={form.username}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="email"
+            placeholder="Email"
+            className='mt-3'
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            className='mt-3'
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+          <Button type="submit" variant="primary" size="lg" className="w-100 mt-3">
+            Register
+          </Button>
+          <div className="login-links mt-3 text-center">
+            <Link className="link" to="/login">Have an Account? Login</Link>
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
   );
 }

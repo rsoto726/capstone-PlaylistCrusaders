@@ -1,4 +1,6 @@
 @import './Header.css';
+@import './AudioPlayer.css';
+@import './Playlistcontainer.css';
 
 *{
   box-sizing: border-box; 

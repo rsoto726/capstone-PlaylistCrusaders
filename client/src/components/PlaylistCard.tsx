@@ -135,16 +135,26 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, handlePlaylis
       })
   },[])
 
-
   return (
     <div>
       <div className="playlist-card" onClick={handlePlaylistClick}>
-        <img className="playlist-image" src={playlist.thumbnailUrl} alt="Playlist Thumbnail" />
-        <h3 className="playlist-title">{playlist.name}</h3>
-        <h4 className="playlist-creator">
+      <div className="playlist-row">
+        <div className="playlist-col-left">
           <button className="like-button">♡</button>
-          {playlistUser ? `by ${playlistUser.username}` : "Loading creator..."}
-        </h4>
+          <h3 className="playlist-title">{playlist.name}</h3>
+          <h4 className="playlist-creator">
+            {playlistUser ? `by ${playlistUser.username}` : "Loading creator..."}
+          </h4>
+        </div>
+        <div className="playlist-col-right">
+          <img
+            className="playlist-image"
+            src={playlist.thumbnailUrl}
+            alt="Playlist Thumbnail"
+          />
+        </div>
+      </div>
+
         {playlist.songs.length===0? <div>empty playlist</div>
           :apiLoaded && (
             <AudioPlayer

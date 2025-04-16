@@ -180,7 +180,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
       ) : (
         <>
           <div className="active-track-container">
-            <h5>{metadataMap[playlist.songs[currentIndex].songId]?.title || 'No title'}</h5>
+            <h5 className="active-track-title">{metadataMap[playlist.songs[currentIndex].songId]?.title || 'No title'}</h5>
 
          {/* seek bar */}
             <input
@@ -229,15 +229,9 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
                 >
                   <div className="d-flex align-items-center w-100">
                     <img 
+                      className="audio-track-thumbnail"
                       src={metadata.thumbnail} 
                       alt="thumb" 
-                      style={{ 
-                        width: 50, 
-                        height: 50, 
-                        objectFit: 'cover', 
-                        borderRadius: 4, 
-                        marginRight: 10 
-                      }} 
                     />
 
                     <div className="d-flex flex-column justify-content-center w-100" >
