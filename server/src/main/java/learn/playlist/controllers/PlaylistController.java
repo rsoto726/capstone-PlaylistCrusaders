@@ -69,9 +69,16 @@ public class PlaylistController {
     }
 
     @PutMapping("/{playlistId}")
-    public ResponseEntity<Object> update(@PathVariable int playlistId, @RequestBody Playlist playlist, @RequestAttribute User user) {
+    public ResponseEntity<Object> update(@PathVariable int playlistId, @RequestBody Playlist playlist, @RequestHeader(value = "Authorization", required = true) String authHeader) {
         if (playlistId != playlist.getPlaylistId()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        String token = authHeader.substring(7); // remove "Bearer "
+        String email = JwtUtil.extractEmail(token);
+        User user = userService.findByEmail(email);
+
+        if (!user.getEmail().trim().equalsIgnoreCase(email.trim())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
         boolean success = service.update(playlist, user);
