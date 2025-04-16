@@ -22,7 +22,7 @@ public class SongJdbcTemplateRepository implements SongRepository {
 
     @Override
     public Song findByUrl(String url) {
-        final String sql = "select song_id, url, thumbnail, videoId, title from song where url = ?;";
+        final String sql = "select song_id, url, thumbnail, video_id, title from song where url = ?;";
         Song result = jdbcTemplate.query(sql, new SongMapper(), url).stream()
                 .findAny().orElse(null);
         return result;
@@ -37,11 +37,15 @@ public class SongJdbcTemplateRepository implements SongRepository {
             return exists;
         }
 
-        final String sql = "insert into song (url) values (?);";
+        final String sql = "insert into song (url, title, video_id, thumbnail) VALUES (?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
         int rowsAffected = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, song.getUrl());
+            ps.setString(2, song.getTitle());
+            ps.setString(3, song.getVideoId());
+            ps.setString(4, song.getThumbnail());
             return ps;
         }, keyHolder);
 

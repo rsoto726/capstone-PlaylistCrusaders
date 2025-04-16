@@ -80,25 +80,30 @@ create table playlist_song(
         references song(song_id)
 );
 
-delimiter //
-create procedure set_known_good_state()
-begin
-	SET SQL_SAFE_UPDATES = 0;
-	DELETE FROM playlist_song;
+DELIMITER //
+CREATE PROCEDURE set_known_good_state()
+BEGIN
+    SET SQL_SAFE_UPDATES = 0;
+
+    -- Clear dependent tables first
+    DELETE FROM playlist_song;
     DELETE FROM `like`;
     DELETE FROM playlist;
-    alter table playlist auto_increment = 1;
     DELETE FROM user_role;
     DELETE FROM `user`;
-    alter table `user` auto_increment = 1;
-    DELETE FROM role;
-    alter table role auto_increment = 1;
     DELETE FROM song;
-    alter table song auto_increment = 1;
+    DELETE FROM role;
+
+    -- Reset auto-increments
+    ALTER TABLE playlist AUTO_INCREMENT = 1;
+    ALTER TABLE `user` AUTO_INCREMENT = 1;
+    ALTER TABLE role AUTO_INCREMENT = 1;
+    ALTER TABLE song AUTO_INCREMENT = 1;
 
     -- Re-insert roles
     INSERT INTO role(`name`) VALUES ('USER'), ('ADMIN'), ('DISABLED');
-    
+
+    -- Re-insert users
     INSERT INTO `user` (username, email, `password`) VALUES 
         ('alice', 'alice@example.com', 'Password123!'),
         ('bob', 'bob@example.com', 'SecurePass456!');
@@ -108,16 +113,16 @@ begin
         (1, 1), -- alice is USER
         (2, 2); -- bob is ADMIN
 
-    -- Insert songs
-    INSERT INTO song (url) VALUES 
-        ('https://soundcloud.com/example-song1'),
-        ('https://soundcloud.com/example-song2');
+    -- Insert songs with required fields
+    INSERT INTO song (url, title, video_id, thumbnail) VALUES 
+        ('https://soundcloud.com/example-song1', 'Song 1', 'vid123', 'thumb1.jpg'),
+        ('https://soundcloud.com/example-song2', 'Song 2', 'vid456', 'thumb2.jpg');
 
     -- Insert playlists
     INSERT INTO playlist (name, publish, date_created, date_published, thumbnail_url, user_id) VALUES
         ('Alice\'s Public Playlist', 1, NOW(), NOW(), 'https://img.com/1.jpg', 1),
         ('Bob\'s Private Playlist', 0, NOW(), NULL, 'https://img.com/2.jpg', 2),
-		('Alice\'s Second Playlist', 1, NOW(), NOW(), 'https://img.com/3.jpg', 1);
+        ('Alice\'s Second Playlist', 1, NOW(), NOW(), 'https://img.com/3.jpg', 1);
 
     -- Add songs to playlists
     INSERT INTO playlist_song (playlist_id, song_id, `index`) VALUES
@@ -128,7 +133,8 @@ begin
     -- Likes
     INSERT INTO `like` (user_id, playlist_id) VALUES
         (2, 1); -- bob likes alice's playlist
-	SET SQL_SAFE_UPDATES = 1;
+
+    SET SQL_SAFE_UPDATES = 1;
 END //
 
 DELIMITER ;
