@@ -43,11 +43,6 @@
   
   /* HomePage.css */
 
-.container {
-    max-width: 960px;
-    margin: 0 auto;
-  }
-  
   .row {
     display: flex;
     flex-wrap: wrap;
@@ -59,39 +54,4 @@
     flex: 0 0 calc(50% - 1.5rem);
     max-width: calc(50% - 1.5rem);
   }
-  
-  .playlist-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1rem;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease;
-    height: 100%;
-  }
-  
-  .playlist-card:hover {
-    transform: scale(1.02);
-  }
-  
-  .playlist-image {
-    width: 100%;
-    height: 150px;
-    background: #ccc;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-  }
-  
-  .playlist-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-  
-  .song-list {
-    list-style: none;
-    padding-left: 0;
-    color: #666;
-    font-size: 0.95rem;
-    margin: 0;
-  }
-  
+

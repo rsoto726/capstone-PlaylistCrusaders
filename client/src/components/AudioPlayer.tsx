@@ -39,6 +39,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   const [videoId, setVideoId] = useState<string | null>(null);
   const [isPlayingState, setIsPlayingState] = useState<boolean>(false);
   const [inactive, setInactive] = useState<boolean>(true);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const playerContainerId = `video-player-${uuidv4()}-${playlist.playlistId}`;
 
@@ -46,7 +47,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   useEffect(() => {
     const metadata = metadataMap[playlist.songs[currentIndex].songId];
     if (metadata && metadata.videoId !== videoId) {
-      console.log(`Updating videoId for song: ${playlist.songs[currentIndex].songId} (Index: ${currentIndex})`);
+      // console.log(`Updating videoId for song: ${playlist.songs[currentIndex].songId} (Index: ${currentIndex})`);
       setVideoId(metadata.videoId);
     }
   }, [currentIndex, playlist.songs, metadataMap, videoId]);
@@ -75,30 +76,51 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
         videoId,
         events: {
           onReady: (event: any) => {
-            setDuration(event.target.getDuration());
-            setPlayerReady(true);
-            if (!inactive) {
-              playVideo();
-            }
+            const waitForDuration = () => {
+              const duration = event.target.getDuration();
+              if (duration > 0) {
+                setDuration(duration);
+                setPlayerReady(true);
+                if (!inactive) {
+                  playVideo();
+                }
+              } else {
+                setTimeout(waitForDuration, 100);
+              }
+            };
+          
+            waitForDuration();
           },
           onStateChange: (event: any) => {
             const playerState = event.data;
+          
             if (playerState === window.YT.PlayerState.PLAYING) {
               setIsPlayingState(true);
-              // Start updating the playhead when video is playing
-              setInterval(() => {
-                if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
-                  const currentTime = playerRef.current.getCurrentTime();
-                  setCurrentTime(currentTime);
+          
+              // Clear previous interval if it exists
+              if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+              }
+          
+              // Start updating time
+              intervalRef.current = setInterval(() => {
+                if (playerRef.current?.getCurrentTime) {
+                  setCurrentTime(playerRef.current.getCurrentTime());
                 }
-              }, 100); // Update every 100ms (can be adjusted)
-            } else if (playerState === window.YT.PlayerState.PAUSED) {
+              }, 200);
+            } else if (playerState === window.YT.PlayerState.PAUSED || playerState === window.YT.PlayerState.ENDED) {
               setIsPlayingState(false);
-            } else if (playerState === window.YT.PlayerState.ENDED) {
+              if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+              }
+            }
+          
+            if (playerState === window.YT.PlayerState.ENDED) {
               console.log("Video ended — playing next song");
               nextVideo();
             }
-          },
+          }
+          
         },
       });
     }
@@ -147,13 +169,13 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTime = parseFloat(e.target.value);
-    if (playerRef.current) {
+    if (playerRef.current && playerReady) {
       console.log(`Seeking to new time: ${newTime} seconds`);
       playerRef.current.seekTo(newTime, true);
       setCurrentTime(newTime);
     }
   };
-
+  
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
@@ -167,7 +189,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   };
 
   return (
-    <div className="container mt-5 audio-player-container" onClick={handleInteraction}>
+    <div className="container mt-3 audio-player-container" onClick={handleInteraction}>
       <div
         id={playerContainerId}
         style={{ width: '0', height: '0', visibility: 'hidden', position: 'absolute' }}

@@ -16,6 +16,8 @@ public class LikeService {
 
     public int countLikesForPlaylist(int playlistId){return repository.countLikesForPlaylist(playlistId);};
 
+    public boolean findIfUserLikedPlaylist(int userId, int playlistId){return repository.findUserPlaylist(userId, playlistId);};
+
     public List<Integer> findLikedPlaylistFromUser(int userId){return repository.findLikedPlaylistIdsByUser(userId);};
 
     public boolean addLike(Likes likes) {return repository.add(likes);}

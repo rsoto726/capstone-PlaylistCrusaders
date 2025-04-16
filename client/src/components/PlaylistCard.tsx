@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AudioPlayer from './AudioPlayer';
+import { Client } from '@stomp/stompjs';
+const SockJS = require('sockjs-client');
 
 type VideoMetadata = {
   title: string;
@@ -84,6 +86,35 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, handlePlaylis
   const [metadataMap, setMetadataMap] = useState<Record<number, VideoMetadata>>({});
   const [apiLoaded, setApiLoaded] = useState<boolean>(false);
   const [playlistUser, setPlaylistUser] = useState<User | null>(null);
+  const [active, setActive] = useState<boolean>(false);
+  const [likeCount, setLikeCount] = useState<number>(0);
+
+  useEffect(() => {
+    const socket = new SockJS('http://localhost:8080/ws');
+    const stompClient = new Client({
+      webSocketFactory: () => socket,
+      onConnect: () => {
+        console.log("websocket connected")
+        stompClient.subscribe('/topic/likes', (message) => {
+          const data = JSON.parse(message.body);
+          if (data.playlistId === playlist.playlistId) {
+            console.log('Like updated for playlist:', playlist.playlistId);
+            getLikeCount();
+          }
+        });
+      },
+      onStompError: (error) => {
+        console.error('Error in WebSocket connection:', error);
+      }
+    });
+
+    stompClient.activate();
+
+    return () => {
+      stompClient.deactivate();
+    };
+  }, [playlist]);
+
   // make sure youtube api is ready, then coalesce metadata
   useEffect(() => {
     const fetchMetadataSequentially = async () => {
@@ -103,7 +134,7 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, handlePlaylis
         }
 
         await new Promise<void>((resolve) => {
-          console.log(song.song.title, song.song.videoId);
+          // console.log(song.song.title, song.song.videoId);
           setMetadataMap((prev) => ({
             ...prev,
             [song.songId]: {
@@ -126,6 +157,41 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, handlePlaylis
     fetchMetadataSequentially();
   }, [playlist]);
 
+  // check if playlist is already liked
+  useEffect(() => {
+    const fetchLike = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/like/find/${playlist.userId}/${playlist.playlistId}`);
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        const data = await response.json();
+        
+        setActive(data);
+      } catch (error) {
+        console.error('Fetch error:', error);
+      }
+    };
+  
+    fetchLike();
+  }, [playlist.userId, playlist.playlistId]); 
+
+  // get like count
+  useEffect(()=>{
+    getLikeCount();
+  },[])
+
+  const getLikeCount = () => {
+    fetch(`http://localhost:8080/api/like/count/${playlist.playlistId}`)
+    .then(r=>r.json())
+    .then(data=>{
+      setLikeCount(data);
+    })
+  }
+
+  // get user data (name)
   useEffect(()=>{
     fetch(`http://localhost:8080/api/user/id/${playlist.userId}`)
       .then(r=>r.json())
@@ -135,18 +201,72 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, handlePlaylis
       })
   },[])
 
+  const handleLikeButton = () => {
+    if(active){
+      removeLike();
+    }else{
+      addLike();
+    }
+  };
+
+  const removeLike = () => {
+    fetch(`http://localhost:8080/api/like?userId=${playlist.userId}&playlistId=${playlist.playlistId}`, {
+      method: 'DELETE',
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log('Like removed successfully');
+        setActive(false);
+      } else {
+        console.error('Failed to remove like');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  };
+
+  const addLike = () => {
+    fetch('http://localhost:8080/api/like', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: playlist.userId,
+        playlistId: playlist.playlistId,
+      }),
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log('Like added successfully');
+        setActive(true);
+      } else {
+        console.error('Failed to add like');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+  
+
   return (
     <div>
       <div className="playlist-card" onClick={handlePlaylistClick}>
       <div className="playlist-row">
         <div className="playlist-col-left">
-          <button className="like-button">♡</button>
+          <div className="like-button-container">
+            <button className="like-button" onClick={handleLikeButton}>{active?"❤️":"🖤"}</button>
+            <p className="like-counter">{likeCount}</p>
+          </div>
           <h3 className="playlist-title">{playlist.name}</h3>
           <h4 className="playlist-creator">
             {playlistUser ? `by ${playlistUser.username}` : "Loading creator..."}
           </h4>
         </div>
         <div className="playlist-col-right">
+          <button className="playlist-dropdown">...</button>
           <img
             className="playlist-image"
             src={playlist.thumbnailUrl}

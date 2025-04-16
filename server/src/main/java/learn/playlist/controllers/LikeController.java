@@ -32,6 +32,11 @@ public class LikeController {
         return service.findLikedPlaylistFromUser(userId);
     }
 
+    @GetMapping("/find/{userId}/{playlistId}")
+    public boolean findIfUserLikedPlaylist(@PathVariable int userId, @PathVariable int playlistId){
+        return service.findIfUserLikedPlaylist(userId, playlistId);
+    }
+
     @PostMapping
     public ResponseEntity<Void> addLike(@RequestBody Likes like) {
         boolean success = service.addLike(like);

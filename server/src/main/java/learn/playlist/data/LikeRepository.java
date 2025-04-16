@@ -9,6 +9,8 @@ public interface LikeRepository {
 
     List<Integer> findLikedPlaylistIdsByUser(int userId);
 
+    boolean findUserPlaylist(int userId, int playlistId);
+
     boolean add(Likes likes);
 
     boolean deleteByKey(int userId, int playlistId);

@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class LikeJdbcTemplateRepository implements LikeRepository {
@@ -23,6 +24,15 @@ public class LikeJdbcTemplateRepository implements LikeRepository {
     public List<Integer> findLikedPlaylistIdsByUser(int userId) {
         final String sql = "select playlist_id from `like` where user_id = ?;";
         return jdbcTemplate.queryForList(sql, Integer.class, userId);
+    }
+
+    @Override
+    public boolean findUserPlaylist(int userId, int playlistId){
+        final String sql = "select * from `like` "+
+                "where like.user_id = ? "+
+                "and like.playlist_id = ?";
+        List<Map<String, Object>> results = jdbcTemplate.queryForList(sql, userId, playlistId);
+        return !results.isEmpty();
     }
 
     @Override
