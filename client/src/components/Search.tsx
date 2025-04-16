@@ -52,7 +52,7 @@ const Search = () => {
     <div className='container'>
         <h3 className='mt-2 ml-2'>Search results for: <span style={{fontStyle : "italic"}}>{query}</span></h3>
         {playlists.length > 0  ? (
-          <PlaylistContainer playlists={playlists}/>
+          <PlaylistContainer playlists={playlists} isOwnProfile={false}/>
         ) : (
           <h2>{"No results found :{"}</h2>
         )}

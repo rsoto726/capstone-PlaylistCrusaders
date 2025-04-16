@@ -55,8 +55,8 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   // when track becomes inactive, it stays lit up. clicking on it will make it not play as it's already active, have to press "play" button
   // ? small issue, not too important, maybe fix later
   useEffect(() => {
-    console.log("Active Playlist: ", activePlaylist); 
-    console.log("Current Playlist ID: ", playlist.playlistId); 
+    // console.log("Active Playlist: ", activePlaylist); 
+    // console.log("Current Playlist ID: ", playlist.playlistId);
     if (activePlaylist !== playlist.playlistId && !!isPlayingState) {
       stopVideo();
     }
@@ -71,7 +71,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
     }
   
     if (videoId) {
-      console.log(`Initializing YouTube player for videoId: ${videoId}`);
+      // console.log(`Initializing YouTube player for videoId: ${videoId}`);
   
       playerRef.current = new window.YT.Player(playerContainerId, {
         videoId,

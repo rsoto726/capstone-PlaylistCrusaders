@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import AudioPlayer from './AudioPlayer';
 import { Client } from '@stomp/stompjs';
 import { fetchWithCredentials } from '../auth/auth-req-api/index';
+import {useNavigate} from 'react-router-dom';
+
 const SockJS = require('sockjs-client');
 
 type VideoMetadata = {
@@ -81,15 +83,18 @@ type Props = {
   playlist: Playlist;
   activePlaylist: number;
   setActivePlaylist: any;
+  isOwnProfile: boolean;
 };
 
-const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlaylist }) => {
+const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlaylist, isOwnProfile }) => {
   const [metadataMap, setMetadataMap] = useState<Record<number, VideoMetadata>>({});
   const [apiLoaded, setApiLoaded] = useState<boolean>(false);
   const [playlistUser, setPlaylistUser] = useState<User | null>(null);
   const [active, setActive] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
-
+  const [roles,setRoles] = useState<string[]| null>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
 
   // make sure youtube api is ready, then coalesce metadata
   useEffect(() => {
@@ -126,7 +131,7 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
         currentIndex++;
       }
 
-      console.log(`All metadata fetched for Playlist ID: ${playlist.playlistId}`);
+      // console.log(`All metadata fetched for Playlist ID: ${playlist.playlistId}`);
       setApiLoaded(true);
     };
 
@@ -180,6 +185,7 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
   // get like count
   useEffect(()=>{
     getLikeCount();
+    fetchRole();
   },[])
 
   const getLikeCount = () => {
@@ -195,7 +201,6 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
     fetch(`http://localhost:8080/api/user/id/${playlist.userId}`)
       .then(r=>r.json())
       .then((data)=>{
-        console.log(data);
         setPlaylistUser(data);
       })
   },[])
@@ -244,12 +249,59 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
         console.error('Error:', error);
       });
   };
+
+  const fetchRole = async () => {
+        try {
+          const data = await fetchWithCredentials(`/user/profile`);
+          setRoles(data.roles);
+        } catch (err) {
+          console.error("Error fetching profile:", err);
+        } 
+      };
+  
   
   const handlePlaylistClick = () => {
     console.log(playlist);
     console.log(playlist.playlistId);
     setActivePlaylist(playlist.playlistId);
   };
+
+  const toggleDropdown = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowDropdown((prev) => !prev);
+  };
+
+
+  const handleEdit = () => {
+    setShowDropdown(false);
+    navigate(`/edit/${playlist.playlistId}`)
+  };
+
+  const handleDelete = () => {
+    setShowDropdown(false);
+    const confirmDelete = window.confirm("Are you sure you want to delete this playlist?");
+    if (!confirmDelete) return;
+
+    deletePlaylist();
+  };
+
+  const deletePlaylist = async() => {
+    try{
+      const r = await fetchWithCredentials(`/playlist/${playlist.playlistId}`,{
+        method:"DELETE",
+        });
+    
+        if (r==null) {
+          alert("Playlist deleted successfully.");
+          window.location.reload();
+        } else {
+          alert("Failed to delete playlist.");
+        }
+      } catch (err) {
+        console.error("Error deleting playlist:", err);
+        alert("An error occurred while deleting.");
+      }
+  }
 
   return (
     <div>
@@ -266,7 +318,17 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
           </h4>
         </div>
         <div className="playlist-col-right">
-          <button className="playlist-dropdown">...</button>
+          {(roles?.includes("ADMIN") || isOwnProfile) && (
+            <>
+              <button className="playlist-dropdown" onClick={toggleDropdown}>⋯</button>
+              {showDropdown && (
+                <div className="dropdown-menu">
+                  <button onClick={handleEdit}>Edit</button>
+                  <button onClick={handleDelete}>Delete</button>
+                </div>
+              )}
+            </>
+          )}
           <img
             className="playlist-image"
             src={playlist.thumbnailUrl}

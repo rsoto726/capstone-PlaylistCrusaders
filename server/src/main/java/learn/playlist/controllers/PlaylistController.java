@@ -83,7 +83,11 @@ public class PlaylistController {
     }
 
     @DeleteMapping("/{playlistId}")
-    public ResponseEntity<Void> delete(@PathVariable int playlistId, @RequestAttribute User user) {
+    public ResponseEntity<Void> delete(@PathVariable int playlistId, @RequestHeader(value = "Authorization", required = true) String authHeader) {
+        String token = authHeader.substring(7); // remove "Bearer "
+        String email = JwtUtil.extractEmail(token);
+        User user = userService.findByEmail(email);
+
         boolean success = service.deleteById(playlistId, user);
         if (success) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

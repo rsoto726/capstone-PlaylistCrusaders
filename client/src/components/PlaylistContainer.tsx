@@ -27,10 +27,11 @@ type Playlist = {
 
 type Props = {
   playlists: Playlist[];
+  isOwnProfile: boolean;
 };
 
 
-const PlaylistContainer: React.FC<Props> = ({playlists}) => {
+const PlaylistContainer: React.FC<Props> = ({playlists, isOwnProfile}) => {
   const [activePlaylist, setActivePlaylist] = useState<number>(0);
 
 
@@ -40,7 +41,7 @@ const PlaylistContainer: React.FC<Props> = ({playlists}) => {
       <div className="row">
         {playlists.map((playlist) => (
           <div key={playlist.playlistId} className="col-md-3">
-            <PlaylistCard playlist={playlist} activePlaylist={activePlaylist} setActivePlaylist={setActivePlaylist}/>
+            <PlaylistCard playlist={playlist} activePlaylist={activePlaylist} setActivePlaylist={setActivePlaylist} isOwnProfile={isOwnProfile}/>
           </div>
         ))}
       </div>

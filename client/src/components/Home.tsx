@@ -58,7 +58,7 @@ const Home: React.FC = () => {
   return (
     <div className="container mt-3">
       <div className="row">
-        <PlaylistContainer playlists={playlists}/>
+        <PlaylistContainer playlists={playlists} isOwnProfile={false}/>
       </div>
     </div>
   );

@@ -6,7 +6,6 @@ const fetchWithCredentials = async (
     options: RequestInit = {}
   ): Promise<any> => {
     const token = localStorage.getItem('token');
-    console.log(token);
     const response = await fetch(`${BASE_URL}${url}`, {
       headers: {
         ...(options.headers || {}),
