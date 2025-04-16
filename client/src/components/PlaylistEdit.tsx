@@ -95,6 +95,65 @@ const PlaylistEdit = () => {
     setPlaylist({ ...playlist, songs: newSongs });
   };
 
+  const handleAddSong = async () => {
+    const url = window.prompt("Enter YouTube video URL:");
+
+    if (!url) return;
+
+    const videoIdMatch = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})(?:&|$)/);
+    if (!videoIdMatch) {
+      alert("Invalid YouTube URL.");
+      return;
+    }
+
+    const videoId = videoIdMatch[1];
+
+    try {
+      const oEmbedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+      const res = await fetch(oEmbedUrl);
+      const data = await res.json();
+      console.log(data);
+
+      const newSong = {
+        url: `https://www.youtube.com/watch?v=${videoId}`,
+        title: data.title,
+        videoId: videoId,
+        thumbnail: data.thumbnail_url
+      };
+
+      console.log(newSong);
+
+      const init = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newSong),
+      };
+      fetch("http://localhost:8080/api/song", init)
+        .then((response) => {
+          if (response.status === 201 || response.status === 400) {
+            return response.json();
+          } else {
+            return Promise.reject(`Unexpected Status Code: ${response.status}`);
+          }
+        })
+        .then((data) => {
+          if (data.songId) {
+            console.log(data);
+          }
+          else {
+            alert(data);
+          }
+        })
+        .catch(console.log);
+
+    } catch (err) {
+      alert("Failed to fetch video metadata.");
+      console.error(err);
+    }
+  }
+
   const handleSave = async () => {
     console.log("Saving playlist:", playlist);
     fetchWithCredentials(`/playlist/${numericPlaylistId}`, {
@@ -141,7 +200,7 @@ const PlaylistEdit = () => {
               />
             </Col>
             <Col xs="auto" className="pt-4">
-              <Button variant="dark" size="lg" onClick={() => alert("TODO: add song to editing view")}>
+              <Button variant="dark" size="lg" onClick={handleAddSong}>
                 +
               </Button>
             </Col>
