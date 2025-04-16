@@ -1,151 +1,137 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Button, ListGroup, } from "react-bootstrap";
-import { SkipBackwardFill, SkipForwardFill, PlayFill, PauseFill } from "react-bootstrap-icons";
+import React, { useRef, useState, useEffect } from 'react';
+import { Button, ListGroup } from 'react-bootstrap';
+import { SkipBackwardFill, SkipForwardFill, PlayFill, PauseFill } from 'react-bootstrap-icons';
+import { v4 as uuidv4 } from 'uuid';
 
-// Extract YouTube Video ID from the URL
-const extractVideoId = (url: string): string | null => {
-  const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|v\/|e(?:mbed)?\/))([\w-]{11})/;
-  const match = url.match(regex);
-  return match ? match[1] : null;
+type Playlist = {
+  playlistId: number;
+  name: string;
+  thumbnailUrl: string;
+  published: boolean;
+  createdAt: string;
+  publishedAt: string | null;
+  songs: Array<{
+    playlistId: number;
+    songId: number;
+    song: { url: string };
+    index: number;
+  }>;
 };
 
-interface VideoMetadata {
+type VideoMetadata = {
   title: string;
   thumbnail: string;
-}
+  videoId: string;
+};
 
-const AudioPlayer: React.FC = () => {
+type Props = {
+  playlist: Playlist;
+  metadataMap: Record<number, VideoMetadata>;
+  activePlaylist: number;
+};
+
+const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist }) => {
   const playerRef = useRef<any>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [videoIds, setVideoIds] = useState<string[]>([]);
-  const [newVideoUrl, setNewVideoUrl] = useState<string>("");
-  const [videos, setVideos] = useState<string[]>([]);
-  const [playerLoaded, setPlayerLoaded] = useState<boolean>(false);
-  const [videoMetadata, setVideoMetadata] = useState<VideoMetadata>({
-    title: "",
-    thumbnail: "",
-  });
-  const [thumbnails, setThumbnails] = useState<string[]>([]);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [playerReady, setPlayerReady] = useState<boolean>(false);
+  const [videoId, setVideoId] = useState<string | null>(null);
+  const [isPlayingState, setIsPlayingState] = useState<boolean>(false);
+  const [inactive, setInactive] = useState<boolean>(true);
+
+  const playerContainerId = `video-player-${uuidv4()}-${playlist.playlistId}`;
 
   useEffect(() => {
-    if (videos.length === 0) return;
+    const metadata = metadataMap[playlist.songs[currentIndex].songId];
+    if (metadata && metadata.videoId !== videoId) {
+      console.log(`Updating videoId for song: ${playlist.songs[currentIndex].songId} (Index: ${currentIndex})`);
+      setVideoId(metadata.videoId);
+    }
+  }, [currentIndex, playlist.songs, metadataMap, videoId]);
 
-    const script = document.createElement("script");
-    script.src = "https://www.youtube.com/iframe_api";
-    document.body.appendChild(script);
-
-    const ids = videos
-      .map(extractVideoId)
-      .filter((id): id is string => id !== null);
-    setVideoIds(ids);
-    
-    window.onYouTubeIframeAPIReady = () => {
-      if (!playerRef.current) {
-        playerRef.current = new window.YT.Player("video-player", {
-          height: "390",
-          width: "640",
-          videoId: ids[currentIndex],
-          events: {
-            onReady: onPlayerReady,
-            onStateChange: onPlayerStateChange,
-          },
-        });
+  useEffect(() => {
+    if (activePlaylist !== playlist.playlistId) {
+      stopVideo();
+    }
+  }, [activePlaylist, playlist.playlistId]);
+  
+  useEffect(() => {
+    if (videoId) {
+      if (playerRef.current) {
+        playerRef.current.stopVideo();
+        playerRef.current.destroy();
       }
-    };
 
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [videos, currentIndex]);
-
-  const onPlayerReady = () => {
-    setPlayerLoaded(true);
-
-    if (playerRef.current) {
-      const videoId = playerRef.current.getVideoData().video_id;
-      const title = playerRef.current.getVideoData().title;
-      const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-
-      setThumbnails((prev) => [...prev, thumbnailUrl]);
-      setVideoMetadata({
-        title: title || "Unknown Title",
-        thumbnail: thumbnailUrl,
+      console.log(`Initializing YouTube player for videoId: ${videoId}`);
+      playerRef.current = new window.YT.Player(playerContainerId, {
+        videoId,
+        events: {
+          onReady: (event: any) => {
+            setDuration(event.target.getDuration());
+            setPlayerReady(true);
+            if (!inactive) {
+              playVideo(); 
+            }
+          },
+          onStateChange: (event: any) => {
+            const playerState = event.data;
+            if (playerState === window.YT.PlayerState.PLAYING) {
+              setIsPlayingState(true); 
+            } else if (playerState === window.YT.PlayerState.PAUSED) {
+              setIsPlayingState(false); 
+            } else if (playerState === window.YT.PlayerState.ENDED) {
+              console.log("Video ended — playing next song");
+              nextVideo();
+            }
+          },
+        },
       });
-
-      playerRef.current.loadVideoById(videoIds[currentIndex]);
-
-      intervalRef.current = setInterval(() => {
-        if (playerRef.current && playerRef.current.getDuration) {
-          const currentTime = playerRef.current.getCurrentTime();
-          setCurrentTime(currentTime);
-          setDuration(playerRef.current.getDuration());
-        }
-      }, 1000);
     }
-  };
-
-  const onPlayerStateChange = (event: any) => {
-    if (event.data === window.YT.PlayerState.ENDED) {
-      nextVideo();
-    }
-  };
+  }, [videoId, inactive]);
 
   const playVideo = () => {
-    if (playerRef.current) playerRef.current.playVideo();
+    if (playerRef.current) {
+      console.log(`Playing video: ${videoId}`);
+      playerRef.current.playVideo();
+      setIsPlayingState(true);
+    }
   };
 
   const pauseVideo = () => {
-    if (playerRef.current) playerRef.current.pauseVideo();
+    if (playerRef.current) {
+      console.log(`Pausing video: ${videoId}`);
+      playerRef.current.pauseVideo();
+      setIsPlayingState(false);
+    }
   };
 
   const stopVideo = () => {
-    if (playerRef.current) playerRef.current.stopVideo();
+    if (playerRef.current) {
+      console.log(`Stopping video: ${videoId}`);
+      playerRef.current.stopVideo();
+      setIsPlayingState(false);
+    }
   };
 
   const nextVideo = () => {
-    const nextIndex = (currentIndex + 1) % videoIds.length;
+    const nextIndex = (currentIndex + 1) % playlist.songs.length;
+    console.log(`Moving to next song - Song ID: ${playlist.songs[nextIndex].songId} (Index: ${nextIndex})`);
     setCurrentIndex(nextIndex);
-    if (playerRef.current) {
-      const nextId = videoIds[nextIndex];
-      playerRef.current.loadVideoById(nextId);
-      const thumbnailUrl = `https://img.youtube.com/vi/${nextId}/maxresdefault.jpg`;
-      setVideoMetadata({
-        title: playerRef.current.getVideoData().title || "Unknown Title",
-        thumbnail: thumbnailUrl,
-      });
-    }
+    setCurrentTime(0); 
   };
 
   const prevVideo = () => {
-    const prevIndex = (currentIndex - 1 + videoIds.length) % videoIds.length;
+    const prevIndex = (currentIndex - 1 + playlist.songs.length) % playlist.songs.length;
+    console.log(`Moving to previous song - Song ID: ${playlist.songs[prevIndex].songId} (Index: ${prevIndex})`);
     setCurrentIndex(prevIndex);
-    if (playerRef.current) {
-      const prevId = videoIds[prevIndex];
-      playerRef.current.loadVideoById(prevId);
-      const thumbnailUrl = `https://img.youtube.com/vi/${prevId}/maxresdefault.jpg`;
-      setVideoMetadata({
-        title: playerRef.current.getVideoData().title || "Unknown Title",
-        thumbnail: thumbnailUrl,
-      });
-    }
-  };
-
-  const addVideoUrl = () => {
-    const videoId = extractVideoId(newVideoUrl);
-    if (videoId) {
-      setVideos((prev) => [...prev, newVideoUrl]);
-      setNewVideoUrl("");
-    } else {
-      alert("Invalid YouTube URL");
-    }
+    setCurrentTime(0); 
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTime = parseFloat(e.target.value);
     if (playerRef.current) {
+      console.log(`Seeking to new time: ${newTime} seconds`);
       playerRef.current.seekTo(newTime, true);
       setCurrentTime(newTime);
     }
@@ -154,69 +140,109 @@ const AudioPlayer: React.FC = () => {
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
-  
+
+  const handleInteraction = () => {
+    if (inactive) {
+      setInactive(false);
+    }
+  };
 
   return (
-    <div className="container mt-5 audio-player-container">
-      <div id="video-player" style={{ width: 0, height: 0, visibility: "hidden", position: "absolute" }} />
-
-      <div className="active-track-container">
-        <h5>{videoMetadata.title || "No title"}</h5>
-        <p className="text-muted">YouTube Track {currentIndex + 1}</p>
-
-        <input
-          type="range"
-          min={0}
-          max={duration}
-          value={currentTime}
-          onChange={handleSeek}
-          className="form-range w-100"
-        />
-
-        <div className="d-flex justify-content-between mt-2 mb-3">
-          <small>{formatTime(currentTime)}</small>
-          <small>{formatTime(duration)}</small>
+    <div className="container mt-5 audio-player-container" onClick={handleInteraction}>
+      <div
+        id={playerContainerId}
+        style={{ width: '0', height: '0', visibility: 'hidden', position: 'absolute' }}
+      />
+      {!playerReady ? (
+        <div className="text-center py-5">
+          <span className="spinner-border" />
+          <p className="mt-2">Loading player...</p>
         </div>
+      ) : (
+        <>
+          <div className="active-track-container">
+            <h5>{metadataMap[playlist.songs[currentIndex].songId]?.title || 'No title'}</h5>
+            <p className="text-muted">YouTube Track {currentIndex + 1}</p>
 
-        <div className="d-flex justify-content-between">
-          <Button variant="link" onClick={prevVideo}>
-            <SkipBackwardFill />
-          </Button>
-          <Button variant="link" onClick={() => (playerRef.current?.getPlayerState() === 1 ? pauseVideo() : playVideo())}>
-            {playerRef.current?.getPlayerState() === 1 ? <PauseFill size={24} /> : <PlayFill size={24} />}
-          </Button>
-          <Button variant="link" onClick={nextVideo}>
-            <SkipForwardFill />
-          </Button>
-        </div>
-      </div>
+            <input
+              type="range"
+              min={0}
+              max={duration}
+              value={currentTime}
+              onChange={handleSeek}
+              className="form-range w-100"
+            />
 
-      <ListGroup className="mt-3">
-        {videoIds.map((id, idx) => (
-          <ListGroup.Item
-            key={id}
-            action
-            active={idx === currentIndex}
-            onClick={() => {
-              setCurrentIndex(idx);
-              setCurrentTime(0);
-            }}
-            className={idx === currentIndex ? "active-track-item" : "track-item"}
-          >
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <div>{`Track ${idx + 1}`}</div>
-                <small className="text-muted">{id}</small>
-              </div>
+            <div className="d-flex justify-content-between mt-2 mb-3">
+              <small>{formatTime(currentTime)}</small>
               <small>{formatTime(duration)}</small>
             </div>
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
-    </div>
 
+            <div className="d-flex justify-content-between">
+              <Button variant="link" onClick={prevVideo}>
+                <SkipBackwardFill />
+              </Button>
+              <Button variant="link" onClick={() => (isPlayingState ? pauseVideo() : playVideo())}>
+                {isPlayingState ? <PauseFill size={24} /> : <PlayFill size={24} />}
+              </Button>
+              <Button variant="link" onClick={nextVideo}>
+                <SkipForwardFill />
+              </Button>
+            </div>
+          </div>
+
+          {/*// TODO inline css replace with css file later  */}
+          <ListGroup className="mt-3" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+            {playlist.songs.map((song, idx) => {
+              const metadata = metadataMap[song.songId];
+
+              return (
+                <ListGroup.Item
+                  key={song.songId}
+                  action
+                  active={idx === currentIndex}
+                  onClick={() => {
+                    setCurrentIndex(idx);
+                    setCurrentTime(0);
+                  }}
+                  className={idx === currentIndex ? 'active-track-item' : 'track-item'}
+                >
+                  <div className="d-flex align-items-center w-100">
+                    <img 
+                      src={metadata.thumbnail} 
+                      alt="thumb" 
+                      style={{ 
+                        width: 50, 
+                        height: 50, 
+                        objectFit: 'cover', 
+                        borderRadius: 4, 
+                        marginRight: 10 
+                      }} 
+                    />
+
+                    <div className="d-flex flex-column justify-content-center w-100">
+                      <div 
+                        style={{ 
+                          whiteSpace: 'nowrap', 
+                          overflow: 'hidden', 
+                          textOverflow: 'ellipsis' ,
+                          width: '80%'
+                        }}
+                      >
+                        {metadata?.title || `Track ${idx + 1}`}
+                      </div>
+                      <small className="text-muted">{formatTime(duration)}</small>
+                    </div>
+                  </div>
+                </ListGroup.Item>
+              );
+            })}
+          </ListGroup>
+        </>
+      )}
+    </div>
   );
 };
 

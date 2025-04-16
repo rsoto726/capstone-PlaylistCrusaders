@@ -50,7 +50,6 @@ public class PlaylistController {
 
     @GetMapping("/name/{name}")
     public List<Playlist> findByName(@PathVariable String name) {
-        System.out.println("Searching for "+name);
         return service.findByName(name);};
 
     @PostMapping

@@ -1,34 +1,62 @@
-import React, {useState, useEffect} from 'react';
-import PlaylistCard from './PlaylistCard';
+import React, { useState, useEffect } from 'react';
+import PlaylistContainer from './PlaylistContainer';
 import '../styles/HomePage.css';
 
-const sampleData = [
-  { title: 'Chill Vibes', songs: ['Song one', 'Song two', 'Song three', 'Song four'] },
-  { title: 'Workout Mix', songs: ['Track 1', 'Track 2', 'Track 3'] },
-  { title: 'Focus Mode', songs: ['Ambient A', 'Ambient B', 'Ambient C'] },
-  { title: 'Throwbacks', songs: ['Hit 1', 'Hit 2', 'Hit 3', 'Hit 4'] },
-];
-const url = "http://localhost:8080"
+const url = "http://localhost:8080";
 
-// home, display all public playlists
+type Playlist = {
+  playlistId: number;
+  name: string;
+  thumbnailUrl: string;
+  published: boolean;
+  createdAt: string;
+  publishedAt: string | null;
+  songs: Array<{
+    playlistId: number;
+    songId: number;
+    song: { url: string };
+    index: number;
+  }>;
+};
+
+// Home, display all public playlists
 const Home: React.FC = () => {
-  const [playlists, setPlaylists] = useState([]);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activePlaylist, setActivePlaylist] = useState<number>(0);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetch(`${url}/api/playlist/public`)
-      .then(r=>r.json())
-      .then(data=>{
-        console.log(data)
-        setPlaylists(data);
+      .then(r => {
+        if (!r.ok) throw new Error("Failed to fetch playlists.");
+        return r.json();
       })
-  },[])
+      .then(data => {
+        console.log(data);
+        setPlaylists(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setError("Something went wrong.");
+        setLoading(false);
+      });
+  }, []);
+
+  const handlePlaylistClick = (playlistId: number) => {
+    setActivePlaylist(playlistId);
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="container mt-3">
       <div className="row">
-        {sampleData.map((playlist, index) => (
-          <div key={index} className="col-md-3">
-            <PlaylistCard title={playlist.title} songs={playlist.songs} />
+        {playlists.map((playlist) => (
+          <div key={playlist.playlistId} className="col-md-3" onClick={() => handlePlaylistClick(playlist.playlistId)}>
+            <PlaylistContainer playlist={playlist} activePlaylist={activePlaylist} />
           </div>
         ))}
       </div>

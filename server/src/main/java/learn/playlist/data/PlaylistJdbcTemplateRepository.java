@@ -28,7 +28,13 @@ public class PlaylistJdbcTemplateRepository implements PlaylistRepository {
                 "from playlist " +
                 "where publish = 1 " +
                 "limit 1000;";
-        return jdbcTemplate.query(sql, new PlaylistMapper());
+        List<Playlist> results = jdbcTemplate.query(sql, new PlaylistMapper());
+        for (Playlist result : results) {
+            if (result != null) {
+                addSongs(result);
+            }
+        }
+        return results;
     }
 
     @Override
@@ -36,7 +42,13 @@ public class PlaylistJdbcTemplateRepository implements PlaylistRepository {
         final String sql = "select playlist_id, name, publish, date_created, date_published, thumbnail_url, user_id " +
                 "from playlist " +
                 "where user_id = ?;";
-        return jdbcTemplate.query(sql, new PlaylistMapper(), userId);
+        List<Playlist> results = jdbcTemplate.query(sql, new PlaylistMapper(), userId);
+        for (Playlist result : results) {
+            if (result != null) {
+                addSongs(result);
+            }
+        }
+        return results;
     }
 
     @Override
@@ -44,8 +56,14 @@ public class PlaylistJdbcTemplateRepository implements PlaylistRepository {
         final String sql = "select playlist_id, name, publish, date_created, date_published, thumbnail_url, user_id " +
                 "from playlist " +
                 "where publish = 1 " +
-                "and where user_id = ?;";
-        return jdbcTemplate.query(sql, new PlaylistMapper(), userId);
+                "and user_id = ?;";
+        List<Playlist> results = jdbcTemplate.query(sql, new PlaylistMapper(), userId);
+        for (Playlist result : results) {
+            if (result != null) {
+                addSongs(result);
+            }
+        }
+        return results;
     }
 
     @Override
@@ -55,7 +73,13 @@ public class PlaylistJdbcTemplateRepository implements PlaylistRepository {
                 "inner join `like` l ON p.playlist_id = l.playlist_id " +
                 "where l.user_id = ?;";
 
-        return jdbcTemplate.query(sql, new PlaylistMapper(), userId);
+        List<Playlist> results = jdbcTemplate.query(sql, new PlaylistMapper(), userId);
+        for (Playlist result : results) {
+            if (result != null) {
+                addSongs(result);
+            }
+        }
+        return results;
     }
 
     @Override
@@ -65,7 +89,13 @@ public class PlaylistJdbcTemplateRepository implements PlaylistRepository {
                 "where publish = 1 " +
                 "and name like CONCAT('%', ?, '%');";
 
-        return jdbcTemplate.query(sql, new PlaylistMapper(), name);
+        List<Playlist> results =  jdbcTemplate.query(sql, new PlaylistMapper(), name);
+        for (Playlist result : results) {
+            if (result != null) {
+                addSongs(result);
+            }
+        }
+        return results;
     }
 
 
