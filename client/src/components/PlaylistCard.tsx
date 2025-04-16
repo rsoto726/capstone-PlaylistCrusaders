@@ -80,10 +80,10 @@ type Playlist = {
 type Props = {
   playlist: Playlist;
   activePlaylist: number;
-  handlePlaylistClick: any;
+  setActivePlaylist: any;
 };
 
-const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, handlePlaylistClick }) => {
+const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlaylist }) => {
   const [metadataMap, setMetadataMap] = useState<Record<number, VideoMetadata>>({});
   const [apiLoaded, setApiLoaded] = useState<boolean>(false);
   const [playlistUser, setPlaylistUser] = useState<User | null>(null);
@@ -245,7 +245,11 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, handlePlaylis
       });
   };
   
-  
+  const handlePlaylistClick = () => {
+    console.log(playlist);
+    console.log(playlist.playlistId);
+    setActivePlaylist(playlist.playlistId);
+  };
 
   return (
     <div>
