@@ -82,6 +82,13 @@ public class UserController {
             notFound.addMessage("Invalid email or password", ResultType.INVALID);
             return ErrorResponse.build(notFound);
         }
+
+        if (loggedInUser.getRoles().contains("DISABLED")) {
+            Result<User> disabled = new Result<>();
+            disabled.addMessage("Your account is disabled. Please contact support.", ResultType.INVALID);
+            return ErrorResponse.build(disabled);
+        }
+
         String token = JwtUtil.generateToken(loggedInUser.getEmail());
         return ResponseEntity.ok(Map.of(
                 "token", token,

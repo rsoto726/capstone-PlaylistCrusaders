@@ -3,7 +3,8 @@ import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../auth";
-import '../styles/Login.css'
+import '../styles/Login.css';
+
 interface FormState {
   email: string;
   password: string;
@@ -12,8 +13,8 @@ interface FormState {
 // login screen
 export default function Login() {
   const { auth } = useAuth();
-
   const [form, setForm] = useState<FormState>({ email: '', password: '' });
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -22,8 +23,18 @@ export default function Login() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await auth.loginUser(form.email, form.password);
-  };
+
+    try {
+        await auth.loginUser(form.email, form.password);
+    } catch (error: any) {
+        if (error.response && error.response.status === 400) {
+            alert('Your account is disabled. Please contact support.');
+        } else {
+            alert('Invalid email or password.');
+        }
+    }
+};
+
   return (
     <div className="login-page">
       <div className="login-container">
@@ -48,6 +59,8 @@ export default function Login() {
           <Button type="submit" variant="primary" size="lg" className="w-100 mt-4">
             Login
           </Button>
+
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
 
           <div className="login-links">
             <Link className="link" to="/register">No Account? Register</Link>
