@@ -24,7 +24,7 @@ const Header = () => {
   };
 
   const handleProfileClick = () => {
-    console.log("TODO: go to users profile");
+    navigate(`/profile/`);
   };
 
   const handleLogoutClick = () => {

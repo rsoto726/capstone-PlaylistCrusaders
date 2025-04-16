@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import PlaylistContainer from './PlaylistContainer';
 import '../styles/HomePage.css';
 
@@ -32,7 +32,6 @@ const Home: React.FC = () => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activePlaylist, setActivePlaylist] = useState<number>(0);
 
   useEffect(() => {
     fetch(`${url}/api/playlist/public`)
@@ -52,21 +51,13 @@ const Home: React.FC = () => {
       });
   }, []);
 
-  const handlePlaylistClick = (playlistId: number) => {
-    setActivePlaylist(playlistId);
-  };
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div className="container mt-3">
       <div className="row">
-        {playlists.map((playlist) => (
-          <div key={playlist.playlistId} className="col-md-3" onClick={() => handlePlaylistClick(playlist.playlistId)}>
-            <PlaylistContainer playlist={playlist} activePlaylist={activePlaylist} />
-          </div>
-        ))}
+        <PlaylistContainer playlists={playlists}/>
       </div>
     </div>
   );

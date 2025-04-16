@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import PlaylistCard from './PlaylistCard';
+import PlaylistContainer from './PlaylistContainer';
+import { fetchWithCredentials } from '../auth/auth-req-api/index'; // adjust path as needed
 
 interface User {
   userId: number;
@@ -9,61 +10,105 @@ interface User {
   roles: string[];
 }
 
-interface Playlist {
-  playlistId: number;
+type Song = {
+  songId: number;
+  url: string;
   title: string;
-}
+  videoId: string;
+  thumbnail: string;
+};
 
+type Playlist = {
+  playlistId: number;
+  name: string;
+  thumbnailUrl: string;
+  published: boolean;
+  createdAt: string;
+  publishedAt: string | null;
+  songs: Array<{
+    playlistId: number;
+    songId: number;
+    song: Song;
+    index: number;
+  }>;
+};
 
-const sampleData = [
-  { title: 'Chill Vibes', songs: ['Song one', 'Song two', 'Song three', 'Song four'] },
-  { title: 'Workout Mix', songs: ['Track 1', 'Track 2', 'Track 3'] },
-  { title: 'Focus Mode', songs: ['Ambient A', 'Ambient B', 'Ambient C'] },
-  { title: 'Throwbacks', songs: ['Hit 1', 'Hit 2', 'Hit 3', 'Hit 4'] },
-];
+const baseUrl = "http://localhost:8080";
 
 const Profile = () => {
-  const { userId } = useParams<{ userId: string }>();
-  const [user, setUser] = useState<User | null>(null);
+  const { username } = useParams<{ username: string }>();
+  const [profile, setProfile] = useState<User | null>(null);
+  const [userPlaylists, setUserPlaylists] = useState<Playlist[]>([]);
   const [likedPlaylists, setLikedPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserAndLikes = async () => {
+    const fetchProfile = async () => {
       try {
-        const userRes = await fetch(`http://localhost:8080/api/user/id/${userId}`);
-        if (!userRes.ok) throw new Error('User not found');
-        const userData = await userRes.json();
-        setUser(userData);
+        const url = username 
+          ? `/username/${username}` // someone else's profile
+          : `/profile`;             // own profile
 
-        const likesRes = await fetch(`http://localhost:8080/api/playlist/likes/${userId}`);
-        if (!likesRes.ok) throw new Error('Failed to fetch liked playlists');
-        const likedData = await likesRes.json();
-        setLikedPlaylists(likedData);
+        const data = await fetchWithCredentials(url);
+        setProfile(data);
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching profile:", err);
+      } 
+    };
+
+    fetchProfile();
+  }, [username]);
+
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      if (!profile) return;
+
+      try {
+        // Fetching user and liked playlists concurrently
+        const [userPlaylistsResponse, likedPlaylistsResponse] = await Promise.all([
+          fetch(`${baseUrl}/api/playlist/user/${profile.userId}`).then((r) => r.json()),
+          fetch(`${baseUrl}/api/playlist/likes/${profile.userId}`).then((r) => r.json())
+        ]);
+
+        console.log(userPlaylists);
+        console.log(likedPlaylistsResponse);
+        setUserPlaylists(userPlaylistsResponse);
+        setLikedPlaylists(likedPlaylistsResponse);
+      } catch (err) {
+        console.error("Error fetching playlists:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    if (userId) fetchUserAndLikes();
-  }, [userId]);
+    fetchPlaylists();
+  }, [profile]);
 
   if (loading) return <p>Loading profile...</p>;
-  if (!user) return <p>User not found.</p>;
+  if (!profile) return <p>User not found.</p>;
 
   return (
     <div className="container mt-3">
       <div className="mb-4">
-        <h2>{user.username}'s Profile</h2>
+        <h2>{profile.username}'s Profile</h2>
       </div>
-      <div className="row">
-        {sampleData.map((playlist, index) => (
-          <div key={index} className="col-md-3">
-            <PlaylistCard title={playlist.title} songs={playlist.songs} />
-          </div>
-        ))}
+
+      <div>
+        <h3>User Playlists</h3>
+        {userPlaylists.length ? (
+          <PlaylistContainer playlists={userPlaylists} />
+        ) : (
+          <p>No playlists found.</p>
+        )}
+      </div>
+
+      <div>
+        <h3>Liked Playlists</h3>
+        {likedPlaylists.length ? (
+          <PlaylistContainer playlists={likedPlaylists} />
+        ) : (
+          <p>No liked playlists found.</p>
+        )}
       </div>
     </div>
   );

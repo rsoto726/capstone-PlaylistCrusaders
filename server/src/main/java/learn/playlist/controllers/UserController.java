@@ -86,9 +86,31 @@ public class UserController {
         ));
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<?> getOwnProfile(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+//        System.out.println("GETTING PROFILE");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return new ResponseEntity<>("Missing or invalid Authorization header", HttpStatus.UNAUTHORIZED);
+        }
+
+        String token = authHeader.substring(7);
+        try {
+            String email = JwtUtil.extractEmail(token);
+            User user = service.findByEmail(email);
+            if (user == null) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Invalid or expired token", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
     @GetMapping("/loggedin")
     public ResponseEntity<?> getLoggedInUser(@RequestHeader(value = "Authorization", required = false) String authHeader) {
-        System.out.println("GET LOGGED IN CALLED");
+//        System.out.println("GET LOGGED IN CALLED");
         try {
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 // No token provided – treat as not logged in

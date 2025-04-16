@@ -54,6 +54,7 @@ export const checkSession = async () => {
 
         if (response?.token) {
             localStorage.setItem('token', response.token); //valid token
+            
             return response;
         }
 
@@ -91,3 +92,4 @@ const apis = {
 };
 
 export default apis;
+export { fetchWithCredentials };
