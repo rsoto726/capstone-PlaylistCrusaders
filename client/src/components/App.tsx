@@ -12,6 +12,7 @@ import ForgotPassword from './ForgotPassword';
 import Search from './Search';
 import Profile from './Profile';
 import ResetPassword from './ResetPassword';
+import PlaylistEdit from './PlaylistEdit';
 
 
 function App() {  
@@ -31,6 +32,7 @@ function App() {
             <Route path="/profile/" element={<Profile />} />
             <Route path="/profile/:username" element={<Profile />} />
             <Route path='/search' element={<Search />} />
+            <Route path='/edit' element = {<PlaylistEdit />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthContextProvider>
