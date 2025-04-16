@@ -164,7 +164,7 @@ public class PlaylistJdbcTemplateRepository implements PlaylistRepository {
     private void addSongs(Playlist playlist) {
         final String sql = "select p.playlist_id, p.name, p.publish, p.date_created, p.date_published, p.thumbnail_url, p.user_id, "
                 + "ps.playlist_id, ps.song_id, "
-                + "s.url "
+                + "s.url, s.video_id, s.title, s.thumbnail "
                 + "from playlist_song ps "
                 + "inner join song s on ps.song_id = s.song_id "
                 + "inner join playlist p on p.playlist_id = ps.playlist_id "

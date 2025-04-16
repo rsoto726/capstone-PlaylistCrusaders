@@ -60,7 +60,10 @@ create table `like`(
 
 create table song(
 	song_id int primary key auto_increment,
-    url varchar(500) not null
+    url varchar(500) not null,
+    title varChar(200) not null,
+    video_id varChar(20) not null,
+    thumbnail varChar(100) not null
 );
 
 create table playlist_song(

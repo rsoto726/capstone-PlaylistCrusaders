@@ -51,7 +51,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   }, [currentIndex, playlist.songs, metadataMap, videoId]);
 
   useEffect(() => {
-    if (activePlaylist !== playlist.playlistId) {
+    if (activePlaylist !== playlist.playlistId && !!isPlayingState) {
       stopVideo();
     }
   }, [activePlaylist, playlist.playlistId]);
@@ -59,8 +59,8 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   useEffect(() => {
     if (videoId) {
       if (playerRef.current) {
-        playerRef.current.stopVideo();
-        playerRef.current.destroy();
+        playerRef.current.stopVideo?.();
+        playerRef.current.destroy?.();
       }
 
       console.log(`Initializing YouTube player for videoId: ${videoId}`);
@@ -107,7 +107,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   };
 
   const stopVideo = () => {
-    if (playerRef.current) {
+    if (playerRef.current && typeof playerRef.current.stopVideo === 'function') {
       console.log(`Stopping video: ${videoId}`);
       playerRef.current.stopVideo();
       setIsPlayingState(false);

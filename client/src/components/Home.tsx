@@ -4,6 +4,14 @@ import '../styles/HomePage.css';
 
 const url = "http://localhost:8080";
 
+type Song = {
+  songId: number;
+  url: string;
+  title: string;
+  videoId: string;
+  thumbnail: string;
+};
+
 type Playlist = {
   playlistId: number;
   name: string;
@@ -14,7 +22,7 @@ type Playlist = {
   songs: Array<{
     playlistId: number;
     songId: number;
-    song: { url: string };
+    song: Song;
     index: number;
   }>;
 };

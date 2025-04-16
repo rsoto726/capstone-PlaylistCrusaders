@@ -22,7 +22,7 @@ public class SongJdbcTemplateRepository implements SongRepository {
 
     @Override
     public Song findByUrl(String url) {
-        final String sql = "select song_id, url from song where url = ?;";
+        final String sql = "select song_id, url, thumbnail, videoId, title from song where url = ?;";
         Song result = jdbcTemplate.query(sql, new SongMapper(), url).stream()
                 .findAny().orElse(null);
         return result;
