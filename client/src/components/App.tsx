@@ -33,7 +33,7 @@ function App() {
             <Route path="/admin" element={<AdminUserManagement />} />
             <Route path="/profile/:username" element={<Profile />} />
             <Route path='/search' element={<Search />} />
-            <Route path='/edit' element = {<PlaylistEdit />} />
+            <Route path='/edit/:playlistId' element = {<PlaylistEdit />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthContextProvider>
