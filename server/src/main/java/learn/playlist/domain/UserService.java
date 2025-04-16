@@ -39,6 +39,12 @@ public class UserService {
         if (!result.isSuccess()) {
             return result;
         }
+
+        if (repository.findByEmail(user.getEmail()) != null || repository.findByUsername(user.getUsername()) != null) {
+            result.addMessage("User with these credentials already in use.", ResultType.INVALID);
+            return result;
+        }
+
         String hashedPassword = encoder.encode(rawPassword);
         user.setPassword(hashedPassword);
 

@@ -17,7 +17,12 @@ const fetchWithCredentials = async (
 
     if (!response.ok) {
         const errorBody = await response.json().catch(() => ({}));
-        throw new Error(errorBody.message || `HTTP error ${response.status}`);
+        // If it's an array of messages, throw it directly
+        if (Array.isArray(errorBody)) {
+            throw errorBody;
+        } else {
+            throw [errorBody.message || `HTTP error ${response.status}`];
+        }
     }
 
     return response.json();
@@ -33,7 +38,6 @@ export const loginUser = async (email: string, password: string) => {
         method: 'POST',
         body: JSON.stringify({ email, password }),
     });
-
     if (response.token) {
         localStorage.setItem('token', response.token);
     }
@@ -81,7 +85,8 @@ export const registerUser = (
             email,
             password,
         }),
-    });
+    }
+);
 
 const apis = {
     getLoggedIn,

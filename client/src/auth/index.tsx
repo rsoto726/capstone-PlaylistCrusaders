@@ -102,7 +102,19 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
             });
             navigate('/');
         } catch (err: any) {
-            authReducer('ERROR', { errorMessages: [err.message] });
+            let messages: string[] = [];
+
+            if (Array.isArray(err)) {
+                messages = err;
+            } else if (err?.message) {
+                messages = [err.message];
+            } else {
+                messages = ['An unexpected error occurred.'];
+            }
+
+            authReducer('ERROR', { errorMessages: messages });
+
+            alert(messages.join('\n'));
         }
     };
 
@@ -116,7 +128,19 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
             authReducer('REGISTER_USER');
             navigate('/login');
         } catch (err: any) {
-            authReducer('ERROR', { errorMessages: [err.message] });
+            let messages: string[] = [];
+
+            if (Array.isArray(err)) {
+                messages = err;
+            } else if (err?.message) {
+                messages = [err.message];
+            } else {
+                messages = ['An unexpected error occurred.'];
+            }
+
+            authReducer('ERROR', { errorMessages: messages });
+            
+            alert(messages.join('\n'));
         }
     };
 

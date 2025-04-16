@@ -2,6 +2,7 @@ package learn.playlist.controllers;
 
 import learn.playlist.config.JwtUtil;
 import learn.playlist.domain.Result;
+import learn.playlist.domain.ResultType;
 import learn.playlist.domain.UserService;
 import learn.playlist.models.User;
 import org.apache.catalina.valves.ErrorReportValve;
@@ -77,7 +78,9 @@ public class UserController {
     public ResponseEntity<Object> login(@RequestBody User user) {
         User loggedInUser = service.login(user.getEmail(), user.getPassword());
         if (loggedInUser == null) {
-            return ResponseEntity.badRequest().body("Invalid email or password.");
+            Result<User> notFound = new Result<>();
+            notFound.addMessage("Invalid email or password", ResultType.INVALID);
+            return ErrorResponse.build(notFound);
         }
         String token = JwtUtil.generateToken(loggedInUser.getEmail());
         return ResponseEntity.ok(Map.of(
