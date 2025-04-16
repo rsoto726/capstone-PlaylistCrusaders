@@ -221,4 +221,22 @@ public class UserService {
             }
         }
     }
+    public Result<User> updateRole(int userId, String role) {
+        Result<User> result = new Result<>();
+        User user = repository.findById(userId);
+        if (user == null) {
+            result.addMessage("User not found.", ResultType.NOT_FOUND);
+            return result;
+        }
+
+        user.setRoles(List.of(role));
+        if (repository.update(user)) {
+            result.setPayload(user);
+        } else {
+            result.addMessage("Update failed", ResultType.INVALID);
+        }
+
+        return result;
+    }
+
 }

@@ -12,8 +12,12 @@ import ForgotPassword from './ForgotPassword';
 import Search from './Search';
 import Profile from './Profile';
 import ResetPassword from './ResetPassword';
+<<<<<<< HEAD
 import PlaylistEdit from './PlaylistEdit';
 
+=======
+import AdminUserManagement from './AdminUserManagement';
+>>>>>>> c79398e0acf5d68f4af46b26a9464d458cf8a604
 
 function App() {  
 
@@ -30,6 +34,7 @@ function App() {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/playlist/:id" element={<PlaylistFullView />} />
             <Route path="/profile/" element={<Profile />} />
+            <Route path="/admin" element={<AdminUserManagement />} />
             <Route path="/profile/:username" element={<Profile />} />
             <Route path='/search' element={<Search />} />
             <Route path='/edit' element = {<PlaylistEdit />} />

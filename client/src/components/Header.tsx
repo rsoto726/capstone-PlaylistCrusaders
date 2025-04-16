@@ -94,6 +94,11 @@ const Header = () => {
 
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={handleProfileClick}>Profile</Dropdown.Item>
+                  {auth.user?.roles?.includes('ADMIN') && (
+                  <Dropdown.Item onClick={() => navigate('/admin/')}>
+                    Admin Panel
+                  </Dropdown.Item>
+                    )}
                   <Dropdown.Item onClick={handleLogoutClick}>Logout</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
