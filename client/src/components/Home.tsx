@@ -14,6 +14,7 @@ type Song = {
 
 type Playlist = {
   playlistId: number;
+  userId: number;
   name: string;
   thumbnailUrl: string;
   published: boolean;

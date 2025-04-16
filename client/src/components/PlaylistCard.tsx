@@ -54,8 +54,14 @@ type Song = {
   thumbnail: string;
 };
 
+type User = {
+  userId: number;
+  username: string;
+}
+
 type Playlist = {
   playlistId: number;
+  userId: number;
   name: string;
   thumbnailUrl: string;
   published: boolean;
@@ -76,7 +82,7 @@ type Props = {
 const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist }) => {
   const [metadataMap, setMetadataMap] = useState<Record<number, VideoMetadata>>({});
   const [apiLoaded, setApiLoaded] = useState<boolean>(false);
-
+  const [playlistUser, setPlaylistUser] = useState<User | null>(null);
   // make sure youtube api is ready, then coalesce metadata
   useEffect(() => {
     const fetchMetadataSequentially = async () => {
@@ -119,20 +125,36 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist }) => {
     fetchMetadataSequentially();
   }, [playlist]);
 
+  useEffect(()=>{
+    fetch(`http://localhost:8080/api/user/id/${playlist.userId}`)
+      .then(r=>r.json())
+      .then((data)=>{
+        console.log(data);
+        setPlaylistUser(data);
+      })
+  },[])
+
 
   return (
     <div>
       <div className="playlist-card">
         <img className="playlist-image" src={playlist.thumbnailUrl} alt="Playlist Thumbnail" />
-        <div className="playlist-title">{playlist.name}</div>
-        {apiLoaded && (
-          <AudioPlayer
-            key={playlist.playlistId}
-            playlist={playlist}
-            metadataMap={metadataMap}
-            activePlaylist={activePlaylist}
-          />
-        )}
+        <h3 className="playlist-title">{playlist.name}</h3>
+        <h4 className="playlist-creator">
+          <button className="like-button">♡</button>
+          {playlistUser ? `by ${playlistUser.username}` : "Loading creator..."}
+        </h4>
+        {playlist.songs.length===0? <div>empty playlist</div>
+          :apiLoaded && (
+            <AudioPlayer
+              key={playlist.playlistId}
+              playlist={playlist}
+              metadataMap={metadataMap}
+              activePlaylist={activePlaylist}
+            />
+          )
+        }
+
       </div>
     </div>
   );
