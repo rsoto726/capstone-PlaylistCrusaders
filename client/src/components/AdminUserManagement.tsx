@@ -16,7 +16,7 @@ const AdminUserManagement: React.FC = () => {
   useEffect(() => {
     const fetchLoggedInUser = async () => {
       try {
-        const user = await fetchWithCredentials('/loggedin');
+        const user = await fetchWithCredentials('/user/loggedin');
         setLoggedInUser(user);
       } catch (err) {
         console.error('Error fetching logged-in user:', err);
@@ -33,7 +33,7 @@ const AdminUserManagement: React.FC = () => {
       if (!loggedInUser || !loggedInUser.roles.includes('ADMIN')) return;
 
       try {
-        const data: User[] = await fetchWithCredentials('/');
+        const data: User[] = await fetchWithCredentials('/user');
         const filtered = data.filter(user => user.userId !== loggedInUser.userId);
         setUsers(filtered);
       } catch (err) {
@@ -48,7 +48,7 @@ const AdminUserManagement: React.FC = () => {
     const newRole = currentRole === 'DISABLED' ? 'USER' : 'DISABLED';
 
     try {
-      await fetchWithCredentials(`/${userId}/role`, {
+      await fetchWithCredentials(`/user/${userId}/role`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role: newRole }),
@@ -68,7 +68,7 @@ const AdminUserManagement: React.FC = () => {
     try {
       console.log(`Deleting user with ID: ${userId}`);
 
-      const response = await fetchWithCredentials(`/${userId}`, {
+      const response = await fetchWithCredentials(`/user/${userId}`, {
         method: 'DELETE',
       });
 

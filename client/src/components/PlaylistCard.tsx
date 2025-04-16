@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AudioPlayer from './AudioPlayer';
 import { Client } from '@stomp/stompjs';
+import { fetchWithCredentials } from '../auth/auth-req-api/index';
 const SockJS = require('sockjs-client');
 
 type VideoMetadata = {
@@ -89,31 +90,6 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, handlePlaylis
   const [active, setActive] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
 
-  useEffect(() => {
-    const socket = new SockJS('http://localhost:8080/ws');
-    const stompClient = new Client({
-      webSocketFactory: () => socket,
-      onConnect: () => {
-        console.log("websocket connected")
-        stompClient.subscribe('/topic/likes', (message) => {
-          const data = JSON.parse(message.body);
-          if (data.playlistId === playlist.playlistId) {
-            console.log('Like updated for playlist:', playlist.playlistId);
-            getLikeCount();
-          }
-        });
-      },
-      onStompError: (error) => {
-        console.error('Error in WebSocket connection:', error);
-      }
-    });
-
-    stompClient.activate();
-
-    return () => {
-      stompClient.deactivate();
-    };
-  }, [playlist]);
 
   // make sure youtube api is ready, then coalesce metadata
   useEffect(() => {
@@ -157,26 +133,49 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, handlePlaylis
     fetchMetadataSequentially();
   }, [playlist]);
 
+  // websocket like listener
+  useEffect(() => {
+    const socket = new SockJS('http://localhost:8080/ws');
+    const stompClient = new Client({
+      webSocketFactory: () => socket,
+      onConnect: () => {
+        console.log("websocket connected")
+        stompClient.subscribe('/topic/likes', (message) => {
+          const data = JSON.parse(message.body);
+          if (data.playlistId === playlist.playlistId) {
+            console.log('Like updated for playlist:', playlist.playlistId);
+            getLikeCount();
+            fetchLike();
+          }
+        });
+      },
+      onStompError: (error) => {
+        console.error('Error in WebSocket connection:', error);
+      }
+    });
+
+    stompClient.activate();
+
+    return () => {
+      stompClient.deactivate();
+    };
+  }, [playlist]);
+
   // check if playlist is already liked
   useEffect(() => {
-    const fetchLike = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/api/like/find/${playlist.userId}/${playlist.playlistId}`);
-        
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-  
-        const data = await response.json();
-        
-        setActive(data);
-      } catch (error) {
-        console.error('Fetch error:', error);
-      }
-    };
-  
     fetchLike();
-  }, [playlist.userId, playlist.playlistId]); 
+  }, [playlist.playlistId]); 
+
+  const fetchLike = async () => {
+    try {
+      const response = await fetchWithCredentials(`/like/find/user/${playlist.playlistId}`);
+  
+      setActive(response);
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  };
+  
 
   // get like count
   useEffect(()=>{
@@ -210,45 +209,42 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, handlePlaylis
   };
 
   const removeLike = () => {
-    fetch(`http://localhost:8080/api/like?userId=${playlist.userId}&playlistId=${playlist.playlistId}`, {
+    fetchWithCredentials(`/like/${playlist.playlistId}`, {
       method: 'DELETE',
     })
-    .then(response => {
-      if (response.ok) {
-        console.log('Like removed successfully');
-        setActive(false);
-      } else {
-        console.error('Failed to remove like');
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+      .then(response => {
+        if (response.ok) {
+          console.log('Like removed successfully');
+          setActive(false);
+        } else {
+          console.error('Failed to remove like');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   };
 
   const addLike = () => {
-    fetch('http://localhost:8080/api/like', {
+    fetchWithCredentials('/like', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({
-        userId: playlist.userId,
         playlistId: playlist.playlistId,
       }),
     })
-    .then(response => {
-      if (response.ok) {
-        console.log('Like added successfully');
-        setActive(true);
-      } else {
-        console.error('Failed to add like');
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-  }
+      .then(response => {
+        if (response.ok) {
+          console.log('Like added successfully');
+          setActive(true);
+        } else {
+          console.error('Failed to add like');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  };
+  
   
 
   return (

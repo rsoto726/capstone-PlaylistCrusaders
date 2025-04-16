@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8080/api/user';
+const BASE_URL = 'http://localhost:8080/api';
 
 
 const fetchWithCredentials = async (
@@ -6,13 +6,13 @@ const fetchWithCredentials = async (
     options: RequestInit = {}
   ): Promise<any> => {
     const token = localStorage.getItem('token');
-  
+    console.log(token);
     const response = await fetch(`${BASE_URL}${url}`, {
       headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` }),
         ...(options.headers || {}),
-      },
+        ...(token && { Authorization: `Bearer ${token}` }),
+        'Content-Type': 'application/json',
+      },      
       ...options,
     });
   
@@ -44,10 +44,10 @@ const fetchWithCredentials = async (
 // AUTH FUNCTIONS
 
 export const getLoggedIn = () =>
-    fetchWithCredentials('/loggedin/', { method: 'GET' });
+    fetchWithCredentials('/user/loggedin/', { method: 'GET' });
 
 export const loginUser = async (email: string, password: string) => {
-    const response = await fetchWithCredentials('/login/', {
+    const response = await fetchWithCredentials('/user/login/', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
     });
@@ -65,7 +65,7 @@ export const checkSession = async () => {
     }
 
     try {
-        const response = await fetchWithCredentials('/loggedin/', {
+        const response = await fetchWithCredentials('/user/loggedin/', {
             method: 'GET',
         });
 
@@ -91,7 +91,7 @@ export const registerUser = (
     email: string,
     password: string,
 ) =>
-    fetchWithCredentials('/register/', {
+    fetchWithCredentials('/user/register/', {
         method: 'POST',
         body: JSON.stringify({
             username,

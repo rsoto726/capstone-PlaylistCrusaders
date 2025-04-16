@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PlaylistContainer from './PlaylistContainer';
-import { fetchWithCredentials } from '../auth/auth-req-api/index'; // adjust path as needed
+import { fetchWithCredentials } from '../auth/auth-req-api/index';
 
 interface User {
   userId: number;
@@ -47,8 +47,8 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const url = username 
-          ? `/username/${username}` // someone else's profile
-          : `/profile`;            // own profile
+          ? `/user/username/${username}` // someone else's profile
+          : `/user/profile`;            // own profile
 
         const data = await fetchWithCredentials(url);
         setProfile(data);
@@ -67,7 +67,7 @@ const Profile = () => {
       try {
         // Fetching user and liked playlists concurrently
         const url = username ? `${profile.userId}/public` : `${profile.userId}`;
-
+        console.log(profile);
         const [userPlaylistsResponse, likedPlaylistsResponse] = await Promise.all([
           fetch(`${baseUrl}/api/playlist/user/${url}`).then((r) => r.json()),
           fetch(`${baseUrl}/api/playlist/likes/${profile.userId}`).then((r) => r.json())
@@ -77,6 +77,7 @@ const Profile = () => {
         console.log(likedPlaylistsResponse);
         setUserPlaylists(userPlaylistsResponse);
         setLikedPlaylists(likedPlaylistsResponse);
+        console.log(likedPlaylistsResponse);
       } catch (err) {
         console.error("Error fetching playlists:", err);
       } finally {
