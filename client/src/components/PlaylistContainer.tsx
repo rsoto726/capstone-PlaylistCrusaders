@@ -34,6 +34,7 @@ const PlaylistContainer: React.FC<Props> = ({playlists}) => {
   const [activePlaylist, setActivePlaylist] = useState<number>(0);
 
   const handlePlaylistClick = (playlistId: number) => {
+    console.log(playlistId);
     setActivePlaylist(playlistId);
   };
 
@@ -42,7 +43,7 @@ const PlaylistContainer: React.FC<Props> = ({playlists}) => {
       <div className="row">
         {playlists.map((playlist) => (
           <div key={playlist.playlistId} className="col-md-3">
-            <PlaylistCard playlist={playlist} activePlaylist={activePlaylist}/>
+            <PlaylistCard playlist={playlist} activePlaylist={activePlaylist} handlePlaylistClick={handlePlaylistClick}/>
           </div>
         ))}
       </div>
