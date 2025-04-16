@@ -178,6 +178,10 @@ public class UserService {
         if (user != null && encoder.matches(rawPassword, user.getPassword())) {
             return user;
         }
+
+        if (user.getRoles().contains("DISABLED")) {
+            return null;
+        }
         return null;
     }
 

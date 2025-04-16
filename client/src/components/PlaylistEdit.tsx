@@ -1,5 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Container, Row, Col, ListGroup, Button, ButtonGroup } from 'react-bootstrap';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth';
+import { checkSession } from '../auth/auth-req-api/index';
+
+type Song = {
+  songId: number;
+  title: string;
+  url: string;
+  videoId: string;
+};
 
 type Playlist = {
   playlistId: number;
@@ -8,45 +18,58 @@ type Playlist = {
   published: boolean;
   createdAt: string;
   publishedAt: string | null;
-  songs: Array<{
-    playlistId: number;
-    songId: number;
-    song: { url: string };
-    index: number;
-  }>;
-};
-
-const samplePlaylist: Playlist = {
-  playlistId: 1,
-  name: "Chill Vibes",
-  thumbnailUrl: "https://i.pinimg.com/736x/27/67/00/27670025c5edfa3f044359ecfaaffbd6.jpg",
-  published: false,
-  createdAt: "2025-04-01T10:00:00Z",
-  publishedAt: null,
-  songs: [
-    {
-      playlistId: 1,
-      songId: 101,
-      song: { url: "https://example.com/song1.mp3" },
-      index: 0,
-    },
-    {
-      playlistId: 1,
-      songId: 102,
-      song: { url: "https://example.com/song2.mp3" },
-      index: 1,
-    },
-    {
-      playlistId: 1,
-      songId: 103,
-      song: { url: "https://example.com/song3.mp3" },
-      index: 2,
-    },
-  ],
+  songs: Song[];
 };
 
 const PlaylistEdit = () => {
-  const [playlist, setPlaylist] = useState<Playlist>(samplePlaylist);
+  const { auth } = useAuth();
+  const [playlist, setPlaylist] = useState<Playlist | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { playlistId } = useParams<{ playlistId: string }>();
+  const numericPlaylistId = playlistId ? parseInt(playlistId, 10) : null;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchPlaylist = async () => {
+      try {
+        const authRes = await checkSession();
+
+        //Not logged in
+        if (!authRes.userId) {
+          navigate("/")
+        }
+        const res = await fetch(`http://localhost:8080/api/playlist/${numericPlaylistId}`);
+        if (!res.ok) throw new Error('Failed to fetch playlist');
+        const data = await res.json();
+        //console.log(data.userId);
+
+        //Not your playlist so get out
+        if (authRes.userId !== data.userId) {
+          navigate("/");
+        }
+
+        const sortedSongs = [...data.songs]
+          .sort((a, b) => a.index - b.index)
+          .map(entry => entry.song);
+        data.songs = sortedSongs;
+        //console.log(data);
+        setPlaylist(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (numericPlaylistId) {
+      fetchPlaylist();
+    }
+  }, [numericPlaylistId]);
+
+  if (!numericPlaylistId) return <p>Error: Invalid playlist ID</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error || !playlist) return <p>Error: {error || 'Playlist not found.'}</p>;
 
   const handleThumbnailClick = () => {
     const newUrl = window.prompt("Enter new image URL:", playlist.thumbnailUrl);
@@ -56,33 +79,25 @@ const PlaylistEdit = () => {
   };
 
   const moveSong = (index: number, direction: 'up' | 'down') => {
-    const newSongs = [...playlist.songs].sort((a, b) => a.index - b.index);
+    const newSongs = [...playlist.songs];
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
 
     if (targetIndex < 0 || targetIndex >= newSongs.length) return;
 
-    // Swap indices
-    const temp = newSongs[index].index;
-    newSongs[index].index = newSongs[targetIndex].index;
-    newSongs[targetIndex].index = temp;
+    // Swap songs
+    [newSongs[index], newSongs[targetIndex]] = [newSongs[targetIndex], newSongs[index]];
 
     setPlaylist({ ...playlist, songs: newSongs });
   };
 
   const deleteSong = (index: number) => {
-    let newSongs = [...playlist.songs].sort((a, b) => a.index - b.index);
-    newSongs.splice(index, 1);
-
-    // Reindex
-    newSongs = newSongs.map((song, idx) => ({
-      ...song,
-      index: idx,
-    }));
-
+    const newSongs = playlist.songs.filter((_, i) => i !== index);
     setPlaylist({ ...playlist, songs: newSongs });
   };
 
   const handleSave = () => {
+    // TODO: Send updated playlist (including new song order) to backend
+    console.log("Saving playlist:", playlist);
     alert("TODO: save songs, playlist_songs, and playlist");
   };
 
@@ -118,7 +133,7 @@ const PlaylistEdit = () => {
               />
             </Col>
             <Col xs="auto" className="pt-4">
-              <Button variant="dark" size="lg" onClick={() => {alert("TODO: add song to editing view")}}>
+              <Button variant="dark" size="lg" onClick={() => alert("TODO: add song to editing view")}>
                 +
               </Button>
             </Col>
@@ -136,40 +151,38 @@ const PlaylistEdit = () => {
 
       <h4 className="mb-3">Songs</h4>
       <ListGroup>
-        {playlist.songs
-          .sort((a, b) => a.index - b.index)
-          .map((songEntry, idx) => (
-            <ListGroup.Item key={songEntry.songId} className="d-flex justify-content-between align-items-center">
-              <div>
-                <strong>{idx + 1}.</strong>{' '}
-                <a href={songEntry.song.url} target="_blank" rel="noopener noreferrer">
-                  {songEntry.song.url}
-                </a>
-              </div>
-              <ButtonGroup size="lg">
-                <Button
-                  variant="outline-secondary"
-                  onClick={() => moveSong(idx, 'up')}
-                  disabled={idx === 0}
-                >
-                  ↑
-                </Button>
-                <Button
-                  variant="outline-secondary"
-                  onClick={() => moveSong(idx, 'down')}
-                  disabled={idx === playlist.songs.length - 1}
-                >
-                  ↓
-                </Button>
-                <Button
-                  variant="outline-danger"
-                  onClick={() => deleteSong(idx)}
-                >
-                  ✕
-                </Button>
-              </ButtonGroup>
-            </ListGroup.Item>
-          ))}
+        {playlist.songs.map((song, idx) => (
+          <ListGroup.Item key={song.songId} className="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{idx + 1}.</strong>{' '}
+              <a href={song.url} target="_blank" rel="noopener noreferrer">
+                {song.title}
+              </a>
+            </div>
+            <ButtonGroup size="lg">
+              <Button
+                variant="outline-secondary"
+                onClick={() => moveSong(idx, 'up')}
+                disabled={idx === 0}
+              >
+                ↑
+              </Button>
+              <Button
+                variant="outline-secondary"
+                onClick={() => moveSong(idx, 'down')}
+                disabled={idx === playlist.songs.length - 1}
+              >
+                ↓
+              </Button>
+              <Button
+                variant="outline-danger"
+                onClick={() => deleteSong(idx)}
+              >
+                ✕
+              </Button>
+            </ButtonGroup>
+          </ListGroup.Item>
+        ))}
       </ListGroup>
     </Container>
   );
