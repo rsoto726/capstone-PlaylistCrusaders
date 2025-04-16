@@ -66,6 +66,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     const getLoggedIn = async () => {
         try {
             const data = await api.getLoggedIn();
+            console.log(data);
             authReducer('GET_LOGGED_IN', {
                 loggedIn: data.loggedIn,
                 user: data.user,
@@ -78,6 +79,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     const loginUser = async (email: string, password: string) => {
         try {
             const data = await api.loginUser(email, password);
+            console.log(data);
             authReducer('LOGIN_USER', {
                 user: data.user,
                 loggedIn: true,

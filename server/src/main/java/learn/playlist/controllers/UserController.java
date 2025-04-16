@@ -82,8 +82,36 @@ public class UserController {
         String token = JwtUtil.generateToken(loggedInUser.getEmail());
         return ResponseEntity.ok(Map.of(
                 "token", token,
-                "email", loggedInUser.getEmail()
+                "user", loggedInUser
         ));
+    }
+
+    @GetMapping("/loggedIn")
+    public ResponseEntity<?> getLoggedInUser(@RequestHeader("Authorization") String authHeader) {
+        System.out.println("GET LOGGED IN CALLED");
+        try {
+            System.out.println(authHeader);
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return new ResponseEntity<>("Missing or invalid Authorization header", HttpStatus.UNAUTHORIZED);
+            }
+
+            String token = authHeader.substring(7); // remove "Bearer "
+            String email = JwtUtil.extractEmail(token);
+
+            User user = service.findByEmail(email);
+            if (user == null) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+
+            return ResponseEntity.ok(Map.of(
+                    "userId", user.getUserId(),
+                    "username", user.getUsername(),
+                    "email", user.getEmail(),
+                    "roles", user.getRoles()
+            ));
+        } catch (Exception e) {
+            return new ResponseEntity<>("Invalid or expired token", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @PostMapping("/validate-email")
