@@ -181,7 +181,6 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
         <>
           <div className="active-track-container">
             <h5>{metadataMap[playlist.songs[currentIndex].songId]?.title || 'No title'}</h5>
-            <p className="text-muted">YouTube Track {currentIndex + 1}</p>
 
          {/* seek bar */}
             <input
@@ -212,7 +211,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
           </div>
 
           {/*// TODO inline css replace with css file later  */}
-          <ListGroup className="mt-3" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+          <ListGroup className="mt-3" style={{ maxHeight: '200px', overflowY: 'auto', overflowX: 'hidden' }}>
             {playlist.songs.map((song, idx) => {
               const metadata = metadataMap[song.songId];
 
@@ -226,6 +225,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
                     setCurrentTime(0);
                   }}
                   className={idx === currentIndex ? 'active-track-item' : 'track-item'}
+                  
                 >
                   <div className="d-flex align-items-center w-100">
                     <img 
@@ -240,7 +240,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
                       }} 
                     />
 
-                    <div className="d-flex flex-column justify-content-center w-100">
+                    <div className="d-flex flex-column justify-content-center w-100" >
                       <div 
                         style={{ 
                           whiteSpace: 'nowrap', 

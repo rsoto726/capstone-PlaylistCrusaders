@@ -20,6 +20,7 @@ type Song = {
 
 type Playlist = {
   playlistId: number;
+  userId: number;
   name: string;
   thumbnailUrl: string;
   published: boolean;
@@ -65,8 +66,10 @@ const Profile = () => {
 
       try {
         // Fetching user and liked playlists concurrently
+        const url = username ? `${profile.userId}/public` : `${profile.userId}`;
+
         const [userPlaylistsResponse, likedPlaylistsResponse] = await Promise.all([
-          fetch(`${baseUrl}/api/playlist/user/${profile.userId}`).then((r) => r.json()),
+          fetch(`${baseUrl}/api/playlist/user/${url}`).then((r) => r.json()),
           fetch(`${baseUrl}/api/playlist/likes/${profile.userId}`).then((r) => r.json())
         ]);
 
