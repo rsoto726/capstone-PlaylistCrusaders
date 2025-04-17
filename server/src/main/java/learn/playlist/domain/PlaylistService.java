@@ -75,7 +75,14 @@ public class PlaylistService {
             return false;
         }
 
-        if (!user.getRoles().contains("ADMIN")) {
+//        bypass user check as admin
+        if(user.getRoles().contains("ADMIN")){
+            return repository.deleteById(playlistId);
+        }
+
+//        check if playlist is user's
+        Playlist playlist = repository.findById(playlistId);
+        if (user.getUserId()!=playlist.getUserId()) {
             return false;
         }
 

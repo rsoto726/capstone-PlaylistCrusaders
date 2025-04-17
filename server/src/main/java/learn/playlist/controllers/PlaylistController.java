@@ -95,6 +95,9 @@ public class PlaylistController {
         String email = JwtUtil.extractEmail(token);
         User user = userService.findByEmail(email);
 
+        System.out.println(user);
+        System.out.println(playlistId);
+
         boolean success = service.deleteById(playlistId, user);
         if (success) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

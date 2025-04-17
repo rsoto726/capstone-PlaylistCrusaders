@@ -100,7 +100,7 @@ const Profile = () => {
       <div>
         <h3>User Playlists</h3>
         {userPlaylists.length ? (
-          <PlaylistContainer playlists={userPlaylists} isOwnProfile={!!username}/>
+          <PlaylistContainer playlists={userPlaylists} isOwnProfile={!username}/>
         ) : (
           <p>No playlists found.</p>
         )}
