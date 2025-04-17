@@ -90,9 +90,20 @@ const PlaylistEdit = () => {
     setPlaylist({ ...playlist, songs: newSongs });
   };
 
-  const deleteSong = (index: number) => {
-    const newSongs = playlist.songs.filter((_, i) => i !== index);
-    setPlaylist({ ...playlist, songs: newSongs });
+  const deleteSong = (index: number, title: string, songId: number) => {
+    if (window.confirm(`Are you sure you want to delete song ${title}? This cannot be undone.`)) {
+
+      const init = {
+        method: "DELETE"
+      };
+      fetch(`http://localhost:8080/api/playlist-song?playlistId=${numericPlaylistId}&songId=${songId}`, init)
+        .then((response) => {
+          if (response.status === 204) {
+            const newSongs = playlist.songs.filter((_, i) => i !== index);
+            setPlaylist({ ...playlist, songs: newSongs });
+          }
+        })
+    }
   };
 
   const handleAddSong = async () => {
@@ -266,7 +277,7 @@ const PlaylistEdit = () => {
               </Button>
               <Button
                 variant="outline-danger"
-                onClick={() => deleteSong(idx)}
+                onClick={() => deleteSong(idx, song.title, song.songId)}
               >
                 ✕
               </Button>
