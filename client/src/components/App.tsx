@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthContextProvider } from '../auth';
 import '../styles/App.css';
@@ -14,8 +14,28 @@ import Profile from './Profile';
 import ResetPassword from './ResetPassword';
 import PlaylistEdit from './PlaylistEdit';
 import AdminUserManagement from './AdminUserManagement';
+import { Moon, Sun } from 'react-bootstrap-icons';
 
 function App() {  
+  const [darkMode, setDarkMode] = useState<boolean>(false);
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme');
+    setDarkMode(storedTheme === 'dark');
+  }, []);
+
+  const toggleLightMode = () => {
+    setDarkMode(prevState => {
+      const newMode = !prevState;
+      localStorage.setItem('theme', newMode ? 'dark' : 'light');
+      return newMode;
+    });
+  };
+
+  useEffect(() => {
+    const theme = darkMode ? 'dark' : 'light';
+    document.body.classList.toggle('dark-mode', darkMode);
+  }, [darkMode]);
 
   return (
     <div className="app">
@@ -37,11 +57,12 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthContextProvider>
-
       </Router>
+
+      <button className="theme-toggle-button" onClick={toggleLightMode}>
+        {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+      </button>
     </div>
-
-
   );
 }
 
