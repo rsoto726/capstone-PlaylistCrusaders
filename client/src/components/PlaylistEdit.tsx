@@ -29,7 +29,9 @@ const PlaylistEdit = () => {
   const { playlistId } = useParams<{ playlistId: string }>();
   const numericPlaylistId = playlistId ? parseInt(playlistId, 10) : null;
   const navigate = useNavigate();
-
+  useEffect(()=>{
+    console.log(playlist);
+  },[playlist])
   useEffect(() => {
     const fetchPlaylist = async () => {
       try {
@@ -202,6 +204,8 @@ const PlaylistEdit = () => {
       .catch(console.log);
   };
 
+
+
   return (
     <Container className="py-4">
       <Row className="align-items-center mb-4">
@@ -235,7 +239,7 @@ const PlaylistEdit = () => {
             </Col>
             <Col xs="auto" className="pt-4">
               <Button variant="dark" size="lg" onClick={handleAddSong}>
-                +
+                + Add Song
               </Button>
             </Col>
           </Form.Group>
@@ -248,6 +252,16 @@ const PlaylistEdit = () => {
             Save Changes
           </Button>
         </Col>
+        <Form.Group className="mt-3">
+        <Form.Check 
+          type="checkbox"
+          label="Publish Playlist"
+          checked={playlist.published}
+          onChange={(e) =>
+            setPlaylist({ ...playlist, published: e.target.checked })
+          }
+        />
+      </Form.Group>
       </Row>
 
       <h4 className="mb-3">Songs</h4>
