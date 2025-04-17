@@ -56,7 +56,7 @@ export default function Login() {
             onChange={handleChange}
             required
           />
-          <Button type="submit" variant="primary" size="lg" className="w-100 mt-4">
+          <Button type="submit" variant="primary" size="lg" className="login-buttons w-100 mt-4">
             Login
           </Button>
 

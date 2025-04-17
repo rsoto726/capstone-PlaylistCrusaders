@@ -130,20 +130,14 @@
     background-color: #666;
   }
 
-  .login-button {
-  width: 100%;
-  padding: 14px;
-  font-size: 18px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 20px;
+.login-buttons {
+  background-color: #8673a1;
+  border-color: #8673a1;
 }
 
-.login-button:hover {
-  background-color: #0056b3;
+.login-buttons:hover {
+  background-color: #7b6699;
+  border-color: #7b6699;
 }
 
 .login-links {
