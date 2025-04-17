@@ -159,3 +159,11 @@
   color: #0056b3;
   text-decoration: underline;
 }
+
+body.dark-mode .link {
+  color: #00A4FF;
+}
+
+body.dark-mode .link:hover {
+  color: #1987F2;
+}

@@ -130,6 +130,8 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         } catch (err: any) {
             let messages: string[] = [];
 
+            console.log(err);
+
             if (Array.isArray(err)) {
                 messages = err;
             } else if (err?.message) {
