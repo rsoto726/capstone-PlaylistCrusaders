@@ -1,0 +1,45 @@
+/* styles/Navbar.css */
+
+.custom-navbar {
+    background-color: #f8f9fa;
+    padding: 1rem 0;
+}
+  
+.navbar-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+  
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+  
+.ms-auto {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;  /* Stack elements vertically */
+    align-items: flex-end;   /* Align elements to the right */
+}
+
+.custom-button {
+    /* Specific button styles here */
+    margin-bottom: 10px;  /* Space between the buttons */
+}
+
+.additional-action {
+    margin-top: 10px;  /* Adds space between the button and the new element below */
+}
+
+.signup-link {
+    font-size: 0.9rem;
+    text-decoration: underline;
+    color: purple;
+}
+
+.signup-link:hover {
+    color: purple; /* Change the hover color */
+}

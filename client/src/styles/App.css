@@ -1,0 +1,94 @@
+@import './Header.css';
+@import './AudioPlayer.css';
+@import './Playlistcontainer.css';
+@import './NotFound.css';
+@import './Loader.css';
+
+*{
+  box-sizing: border-box; 
+  max-width:100%;
+  padding:0;
+  margin:0;
+  /* Comment out border when done editing */
+  /* border:1px solid gray; */
+}
+
+html{
+  font-size:62.5%;
+}
+
+body{
+  font-size:1.8rem;
+  line-height: 1.5;
+  background-color: lightgray;
+  transition: background-color 0.5s ease;
+}
+
+body.dark-mode{
+  background-color:#333333; 
+  color:white;
+}
+
+.theme-toggle-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+body.dark-mode .theme-toggle-button {
+  background-color: #333;
+  color: white;
+}
+
+body.dark-mode .search-bar-wrapper {
+  background-color: #333333;
+  border-bottom: 1px solid #111 !important;;
+}
+
+body.dark-mode .playlist-card {
+  background-color: #666;
+}
+
+body.dark-mode h2 {
+  color: white;
+}
+
+body.dark-mode .edit-text {
+  color: whitesmoke;
+}
+
+body.dark-mode .form-check-label {
+  color: whitesmoke;
+}
+
+body.dark-mode .list-group-item {
+  background-color: #f0e6ff;
+}
+
+body.dark-mode .list-group-item strong {
+  color: #666;
+}
+
+body.dark-mode tr {
+  color: whitesmoke;
+}
+
+h1{
+  font-size:3.6rem;
+}
+h2{
+  font-size:3.4rem;
+  letter-spacing: 3px;
+  text-align: center;
+}
+h3{
+  font-size:2.4rem;
+}

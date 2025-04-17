@@ -1,0 +1,36 @@
+.logo {
+    font-size: 3rem;
+    letter-spacing: 0.2rem;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-style:bold;
+    color: rgb(241, 215, 64)!important;
+    text-shadow: 
+    -1.5px -1.5px 0 rgb(47, 0, 47),  
+     1.5px -1.5px 0 rgb(47, 0, 47),
+    -1.5px  1.5px 0 rgb(47, 0, 47),
+     1.5px  1.5px 0 rgb(47, 0, 47); 
+}
+
+.nav-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-links button {
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-dropdown-menu{
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    min-width: 150px;
+    z-index: 1000;
+}

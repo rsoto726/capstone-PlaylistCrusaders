@@ -1,0 +1,22 @@
+/* SearchBar.css */
+
+.search-bar-wrapper {
+    background-color: #fff;
+  }
+  
+  .search-bar-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+  
+  .hamburger {
+    cursor: pointer;
+  }
+  
+  .search-input{
+    width: 150rem;
+  }

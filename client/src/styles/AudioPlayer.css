@@ -1,0 +1,108 @@
+.active-track-container {
+    background-color: #8673A1!important; /* pearl violet */
+    padding: 1rem 2rem 0.5rem 2rem ;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .custom-progress {
+    height: 6px !important;
+  }
+
+  .audio-player-button {
+    color: rgb(47, 0, 47);
+  }
+
+  .audio-player-button:hover {
+    color: rgb(255, 255, 255);
+  }
+  
+  .active-track-item {
+    background-color:  #8673A1 !important; /* Light violet */
+    border: none !important;
+    margin-bottom: 5px;
+    border-radius: 4px;
+  }
+
+  .active-track-title {
+    font-size:1.5rem;
+    color:black;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    cursor:default;
+  }
+
+  .audio-player-text {
+    cursor:default;
+  }
+
+  .audio-track-thumbnail{
+    width: 6rem;
+    height: 6rem;
+    object-fit: cover;
+    margin-right: 2rem;
+  }
+  
+  .track-item {
+    background-color: #f5f0fd;
+    border: none !important;
+    margin-bottom: 5px;
+    border-radius: 4px;
+  }
+  
+  /* Override Bootstrap's default active color */
+  .list-group-item.active {
+    background-color: #f0e6ff !important;
+    border-color: #f0e6ff !important;
+    color: #212529 !important; 
+  }
+  
+  .audio-player-container {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+
+#video-player {
+    position: fixed !important; 
+    left: -9999px !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+  }
+  
+  /* seek bar */
+.custom-range::-webkit-slider-thumb {
+  background: rgb(47, 0, 47);
+}
+
+.custom-range::-moz-range-thumb {
+  background: rgb(47, 0, 47);
+}
+
+/* volume */
+.volume-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  background-color: rgb(47, 0, 47);
+  border-radius: 3px;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  margin-top: -6px;
+  height: 18px;
+  width: 18px;
+  background: white;
+  border: 2px solid rgb(47, 0, 47);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0,0,0,0.2);
+}
+
+.volume-slider {
+  appearance: none;
+  height: 6px;
+  background: transparent;
+}
