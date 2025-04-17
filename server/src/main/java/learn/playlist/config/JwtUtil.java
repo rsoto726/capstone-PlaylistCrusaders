@@ -23,6 +23,7 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
+        System.out.println(secretKey);
         if (secretKey == null || secretKey.length() < 64) {
             throw new IllegalArgumentException("JWT secret key is invalid or too short. Ensure it's at least 64 characters long.");
         } else {

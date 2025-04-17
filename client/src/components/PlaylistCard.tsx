@@ -89,6 +89,8 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
+  console.log(playlist);
+
   // make sure youtube api is ready, then coalesce metadata
   useEffect(() => {
     const fetchMetadataSequentially = async () => {
@@ -98,6 +100,7 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
       let currentIndex = 0;
 
       while (currentIndex < playlist.songs.length) {
+
         const song = playlist.songs[currentIndex];
         const videoId = playlist.songs[currentIndex].song.videoId;
 

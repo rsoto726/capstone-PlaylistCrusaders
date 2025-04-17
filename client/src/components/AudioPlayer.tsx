@@ -3,6 +3,12 @@ import { Button, ListGroup } from 'react-bootstrap';
 import { SkipBackwardFill, SkipForwardFill, PlayFill, PauseFill } from 'react-bootstrap-icons';
 import { v4 as uuidv4 } from 'uuid';
 
+type Song = {
+  playlistId: number;
+  songId: number;
+  song: { url: string };
+  index: number;
+};
 type Playlist = {
   playlistId: number;
   name: string;
@@ -10,12 +16,7 @@ type Playlist = {
   published: boolean;
   createdAt: string;
   publishedAt: string | null;
-  songs: Array<{
-    playlistId: number;
-    songId: number;
-    song: { url: string };
-    index: number;
-  }>;
+  songs: Song[];
 };
 
 type VideoMetadata = {
@@ -42,33 +43,32 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
 
   const playerContainerId = `video-player-${uuidv4()}-${playlist.playlistId}`;
 
-  // process video data
+  const sortedSongs: Song[] = [...playlist.songs].sort((a, b) => a.index - b.index);
+
+  // Load metadata
   useEffect(() => {
-    const metadata = metadataMap[playlist.songs[currentIndex].songId];
+    const metadata = metadataMap[sortedSongs[currentIndex].songId];
     if (metadata && metadata.videoId !== videoId) {
-      console.log(`Updating videoId for song: ${playlist.songs[currentIndex].songId} (Index: ${currentIndex})`);
+      console.log(`Updating videoId for song: ${sortedSongs[currentIndex].songId} (Index: ${currentIndex})`);
       setVideoId(metadata.videoId);
     }
-  }, [currentIndex, playlist.songs, metadataMap, videoId]);
+  }, [currentIndex, sortedSongs, metadataMap, videoId]);
 
-  // stop inactive playlists
-  // when track becomes inactive, it stays lit up. clicking on it will make it not play as it's already active, have to press "play" button
-  // ? small issue, not too important, maybe fix later
+  // Stop inactive playlists
   useEffect(() => {
     if (activePlaylist !== playlist.playlistId && !!isPlayingState) {
       stopVideo();
     }
   }, [activePlaylist, playlist.playlistId]);
-  
-  // create video player (very scary)
+
+  // Create video player
   useEffect(() => {
-    // If we already have a player, destroy it before initializing a new one
     if (playerRef.current) {
       playerRef.current.stopVideo?.();
       playerRef.current.destroy?.();
     }
-  
-    if (videoId) {  
+
+    if (videoId) {
       playerRef.current = new window.YT.Player(playerContainerId, {
         videoId,
         events: {
@@ -83,13 +83,11 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
             const playerState = event.data;
             if (playerState === window.YT.PlayerState.PLAYING) {
               setIsPlayingState(true);
-              // Start updating the playhead when video is playing
               setInterval(() => {
-                if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
-                  const currentTime = playerRef.current.getCurrentTime();
-                  setCurrentTime(currentTime);
+                if (playerRef.current?.getCurrentTime) {
+                  setCurrentTime(playerRef.current.getCurrentTime());
                 }
-              }, 100); // Update every 100ms (can be adjusted)
+              }, 100);
             } else if (playerState === window.YT.PlayerState.PAUSED) {
               setIsPlayingState(false);
             } else if (playerState === window.YT.PlayerState.ENDED) {
@@ -101,10 +99,8 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
       });
     }
   }, [videoId, inactive]);
-  
 
-
-  // player controls
+  // Controls
   const playVideo = () => {
     if (playerRef.current) {
       console.log(`Playing video: ${videoId}`);
@@ -122,7 +118,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   };
 
   const stopVideo = () => {
-    if (playerRef.current && typeof playerRef.current.stopVideo === 'function') {
+    if (playerRef.current?.stopVideo) {
       console.log(`Stopping video: ${videoId}`);
       playerRef.current.stopVideo();
       setIsPlayingState(false);
@@ -130,17 +126,17 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   };
 
   const nextVideo = () => {
-    const nextIndex = (currentIndex + 1) % playlist.songs.length;
-    console.log(`Moving to next song - Song ID: ${playlist.songs[nextIndex].songId} (Index: ${nextIndex})`);
+    const nextIndex = (currentIndex + 1) % sortedSongs.length;
+    console.log(`Moving to next song - Song ID: ${sortedSongs[nextIndex].songId} (Index: ${nextIndex})`);
     setCurrentIndex(nextIndex);
-    setCurrentTime(0); 
+    setCurrentTime(0);
   };
 
   const prevVideo = () => {
-    const prevIndex = (currentIndex - 1 + playlist.songs.length) % playlist.songs.length;
-    console.log(`Moving to previous song - Song ID: ${playlist.songs[prevIndex].songId} (Index: ${prevIndex})`);
+    const prevIndex = (currentIndex - 1 + sortedSongs.length) % sortedSongs.length;
+    console.log(`Moving to previous song - Song ID: ${sortedSongs[prevIndex].songId} (Index: ${prevIndex})`);
     setCurrentIndex(prevIndex);
-    setCurrentTime(0); 
+    setCurrentTime(0);
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -178,9 +174,10 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
       ) : (
         <>
           <div className="active-track-container">
-            <h5 className="active-track-title mt-3">{metadataMap[playlist.songs[currentIndex].songId]?.title || 'No title'}</h5>
+            <h5 className="active-track-title mt-3">
+              {metadataMap[sortedSongs[currentIndex].songId]?.title || 'No title'}
+            </h5>
 
-         {/* seek bar */}
             <input
               type="range"
               min={0}
@@ -202,15 +199,14 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
               <Button className="audio-player-button" variant="link" onClick={() => (isPlayingState ? pauseVideo() : playVideo())}>
                 {isPlayingState ? <PauseFill size={24} /> : <PlayFill size={24} />}
               </Button>
-              <Button  className="audio-player-button" variant="link" onClick={nextVideo}>
+              <Button className="audio-player-button" variant="link" onClick={nextVideo}>
                 <SkipForwardFill />
               </Button>
             </div>
           </div>
 
-          {/*// TODO inline css replace with css file later  */}
           <ListGroup className="mt-3" style={{ maxHeight: '200px', overflowY: 'auto', overflowX: 'hidden' }}>
-            {playlist.songs.map((song, idx) => {
+            {sortedSongs.map((song, idx) => {
               const metadata = metadataMap[song.songId];
 
               return (
@@ -223,22 +219,20 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
                     setCurrentTime(0);
                   }}
                   className={idx === currentIndex ? 'active-track-item' : 'track-item'}
-                  
                 >
                   <div className="d-flex align-items-center w-100">
-                    <img 
+                    <img
                       className="audio-track-thumbnail"
-                      src={metadata.thumbnail} 
-                      alt="thumb" 
+                      src={metadata.thumbnail}
+                      alt="thumb"
                     />
-
-                    <div className="d-flex flex-column justify-content-center w-100" >
-                      <div 
-                        style={{ 
-                          whiteSpace: 'nowrap', 
-                          overflow: 'hidden', 
-                          textOverflow: 'ellipsis' ,
-                          width: '80%'
+                    <div className="d-flex flex-column justify-content-center w-100">
+                      <div
+                        style={{
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          width: '80%',
                         }}
                       >
                         {metadata?.title || `Track ${idx + 1}`}

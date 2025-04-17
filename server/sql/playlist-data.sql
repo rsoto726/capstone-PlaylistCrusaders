@@ -5,6 +5,7 @@ select * from `user`;
 select * from playlist;
 select * from song;
 select * from playlist_song;
+select * from `like`;
 
 insert into `user` (username, email, password) values
 ('AdminMcAdmin', 'admin@example.com', 'ValidPassword!12'),
