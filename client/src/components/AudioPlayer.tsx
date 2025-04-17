@@ -40,6 +40,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   const [videoId, setVideoId] = useState<string | null>(null);
   const [isPlayingState, setIsPlayingState] = useState<boolean>(false);
   const [inactive, setInactive] = useState<boolean>(true);
+  const [volume, setVolume] = useState<number>(50);
 
   const playerContainerId = `video-player-${uuidv4()}-${playlist.playlistId}`;
 
@@ -60,6 +61,13 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
       stopVideo();
     }
   }, [activePlaylist, playlist.playlistId]);
+
+  useEffect(() => {
+    if (playerRef.current && typeof playerRef.current.setVolume === 'function') {
+      playerRef.current.setVolume(volume);
+    }
+  }, [volume]);
+  
 
   // Create video player
   useEffect(() => {
@@ -203,6 +211,18 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
                 <SkipForwardFill />
               </Button>
             </div>
+            <div className="d-flex align-items-center mt-2">
+  <small className="me-2 audio-player-text">🔊</small>
+  <input
+    type="range"
+    min={0}
+    max={100}
+    value={volume}
+    onChange={(e) => setVolume(Number(e.target.value))}
+    className="form-range w-100"
+  />
+</div>
+
           </div>
 
           <ListGroup className="mt-3" style={{ maxHeight: '200px', overflowY: 'auto', overflowX: 'hidden' }}>
