@@ -73,7 +73,7 @@ class PlaylistServiceTest {
         boolean result = service.deleteById(5, admin);
         assertTrue(result);
     }
-    
+
 
     @Test
     void shouldFindAllPublic() {
