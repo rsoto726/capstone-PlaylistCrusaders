@@ -227,7 +227,7 @@ const PlaylistEdit = () => {
         <Col>
           <Form.Group as={Row} className="align-items-center">
             <Col>
-              <Form.Label className="small fw-normal">Playlist Title</Form.Label>
+              <Form.Label className="small fw-normal edit-text">Playlist Title</Form.Label>
               <Form.Control
                 type="text"
                 size="lg"
@@ -250,12 +250,12 @@ const PlaylistEdit = () => {
             type="checkbox"
             id="publish-checkbox"
             inline
-            label="Publish Playlist"
+            label="Publish Playlist" 
             checked={playlist.published}
             onChange={(e) =>
               setPlaylist({ ...playlist, published: e.target.checked })
             }
-            className="ms-2"
+            className="ms-2 edit-text"
           />
         </Col>
       </Row>
@@ -275,7 +275,7 @@ const PlaylistEdit = () => {
 
       <ListGroup>
         {playlist.songs.map((song, idx) => (
-          <ListGroup.Item key={song.songId} className="d-flex justify-content-between align-items-center">
+          <ListGroup.Item key={song.songId} className="d-flex justify-content-between align-items-center edit-list-group-item">
             <div>
               <strong>{idx + 1}.</strong>{' '}
               <a href={song.url} target="_blank" rel="noopener noreferrer">
@@ -284,14 +284,14 @@ const PlaylistEdit = () => {
             </div>
             <ButtonGroup size="lg">
               <Button
-                variant="outline-secondary"
+                variant="outline-warning"
                 onClick={() => moveSong(idx, 'up')}
                 disabled={idx === 0}
               >
                 ↑
               </Button>
               <Button
-                variant="outline-secondary"
+                variant="outline-warning"
                 onClick={() => moveSong(idx, 'down')}
                 disabled={idx === playlist.songs.length - 1}
               >

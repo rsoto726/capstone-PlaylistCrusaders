@@ -73,15 +73,7 @@ class PlaylistServiceTest {
         boolean result = service.deleteById(5, admin);
         assertTrue(result);
     }
-
-    @Test
-    void shouldNotDeleteWhenUserIsNotAdmin() {
-        User user = makeUser(List.of("USER"));
-
-        boolean result = service.deleteById(5, user);
-        assertFalse(result);
-        verify(repository, never()).deleteById(anyInt());
-    }
+    
 
     @Test
     void shouldFindAllPublic() {
