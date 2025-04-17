@@ -49,7 +49,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
   useEffect(() => {
     const metadata = metadataMap[sortedSongs[currentIndex].songId];
     if (metadata && metadata.videoId !== videoId) {
-      console.log(`Updating videoId for song: ${sortedSongs[currentIndex].songId} (Index: ${currentIndex})`);
+      // console.log(`Updating videoId for song: ${sortedSongs[currentIndex].songId} (Index: ${currentIndex})`);
       setVideoId(metadata.videoId);
     }
   }, [currentIndex, sortedSongs, metadataMap, videoId]);

@@ -52,7 +52,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         const verifySession = async () => {
             try {
                 const sessionUser = await api.checkSession();
-                console.log(sessionUser);
+                // console.log(sessionUser);
                 if (sessionUser) {
                     authReducer('GET_LOGGED_IN', {
                         user: sessionUser,

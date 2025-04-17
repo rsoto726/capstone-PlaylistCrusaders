@@ -89,8 +89,6 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
-  console.log(playlist);
-
   // make sure youtube api is ready, then coalesce metadata
   useEffect(() => {
     const fetchMetadataSequentially = async () => {

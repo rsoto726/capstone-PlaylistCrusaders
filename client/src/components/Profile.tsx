@@ -67,17 +67,13 @@ const Profile = () => {
       try {
         // Fetching user and liked playlists concurrently
         const url = username ? `${profile.userId}/public` : `${profile.userId}`;
-        console.log(profile);
         const [userPlaylistsResponse, likedPlaylistsResponse] = await Promise.all([
           fetch(`${baseUrl}/api/playlist/user/${url}`).then((r) => r.json()),
           fetch(`${baseUrl}/api/playlist/likes/${profile.userId}`).then((r) => r.json())
         ]);
 
-        console.log(userPlaylists);
-        console.log(likedPlaylistsResponse);
         setUserPlaylists(userPlaylistsResponse);
         setLikedPlaylists(likedPlaylistsResponse);
-        console.log(likedPlaylistsResponse);
       } catch (err) {
         console.error("Error fetching playlists:", err);
       } finally {
