@@ -124,7 +124,6 @@ const PlaylistEdit = () => {
       const oEmbedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
       const res = await fetch(oEmbedUrl);
       const data = await res.json();
-      //console.log(data);
 
       const newSong = {
         url: `https://www.youtube.com/watch?v=${videoId}`,

@@ -92,7 +92,7 @@ const Header = () => {
 
   return (
     <div>
-      <nav className="navbar navbar-dark bg-dark py-4 px-4 justify-content-between">
+      <nav className="navbar navbar-dark py-4 px-4 justify-content-between" style={{backgroundColor:"#8673A1"}}>
         <span onClick={() => { navigate('/') }} className="navbar-brand logo">Playlist Crusaders</span>
         <div className="nav-links mr-4">
           {auth.user ? (

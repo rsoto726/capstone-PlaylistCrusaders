@@ -3,6 +3,11 @@
     align-items: center;
     justify-content: space-between;
   }
+
+  .playlist-creator {
+    cursor: pointer;
+  }
+  
   
   .playlist-col-left {
     width: 33.33%;
@@ -33,7 +38,7 @@
     height: 3rem;
     border-radius: 50%;
     border: 1px solid grey;
-    background: white;
+    background: #f0e6ff;
     display: flex;
     align-items: center;
     justify-content: center;

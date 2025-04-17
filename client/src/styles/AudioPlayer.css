@@ -9,6 +9,14 @@
   .custom-progress {
     height: 6px !important;
   }
+
+  .audio-player-button {
+    color: rgb(47, 0, 47);
+  }
+
+  .audio-player-button:hover {
+    color: rgb(255, 255, 255);
+  }
   
   .active-track-item {
     background-color: #f0e6ff !important; /* Light violet */
@@ -18,9 +26,17 @@
   }
 
   .active-track-title {
+    font-size:1.5rem;
+    color:black;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: bold;
+    cursor:default;
+  }
+
+  .audio-player-text {
+    cursor:default;
   }
 
   .audio-track-thumbnail{
@@ -57,40 +73,11 @@
     opacity: 0 !important;
   }
   
-
-/*  seek bar */
-/* .custom-range {
-  width: 100%;
-  appearance: none;
-  height: 6px;
-  background: #ddd;
-  border-radius: 5px;
-  outline: none;
-  transition: background 0.3s ease;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-}
-
+  /* seek bar */
 .custom-range::-webkit-slider-thumb {
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #333;
-  cursor: pointer;
-  border: none;
+  background: rgb(47, 0, 47);
 }
 
 .custom-range::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #333;
-  cursor: pointer;
-  border: none;
+  background: rgb(47, 0, 47);
 }
-
-.custom-range:focus {
-  outline: none;
-  background: #bbb;
-} */

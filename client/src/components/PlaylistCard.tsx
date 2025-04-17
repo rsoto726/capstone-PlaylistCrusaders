@@ -296,6 +296,10 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
       }
   }
 
+  const handleUserClick = () => {
+    navigate(`/profile/${playlistUser?.username}`)
+  }
+
   return (
     <>
       <div className="playlist-card" onClick={handlePlaylistClick}>
@@ -306,7 +310,7 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
             <p className="like-counter">{likeCount}</p>
           </div>
           <h3 className="playlist-title">{playlist.name}</h3>
-          <h4 className="playlist-creator">
+          <h4 className="playlist-creator" onClick={handleUserClick}>
             {playlistUser ? `by ${playlistUser.username}` : "Loading creator..."}
           </h4>
         </div>

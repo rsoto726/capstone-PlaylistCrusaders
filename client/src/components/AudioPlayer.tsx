@@ -178,7 +178,7 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
       ) : (
         <>
           <div className="active-track-container">
-            <h5 className="active-track-title">{metadataMap[playlist.songs[currentIndex].songId]?.title || 'No title'}</h5>
+            <h5 className="active-track-title mt-3">{metadataMap[playlist.songs[currentIndex].songId]?.title || 'No title'}</h5>
 
          {/* seek bar */}
             <input
@@ -190,19 +190,19 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
               className="custom-range w-100"
             />
 
-            <div className="d-flex justify-content-between mt-2 mb-3">
-              <small>{formatTime(currentTime)}</small>
-              <small>{formatTime(duration)}</small>
+            <div className="d-flex justify-content-between mt-1">
+              <small className="audio-player-text">{formatTime(currentTime)}</small>
+              <small className="audio-player-text">{formatTime(duration)}</small>
             </div>
 
             <div className="d-flex justify-content-between">
-              <Button variant="link" onClick={prevVideo}>
+              <Button className="audio-player-button" variant="link" onClick={prevVideo}>
                 <SkipBackwardFill />
               </Button>
-              <Button variant="link" onClick={() => (isPlayingState ? pauseVideo() : playVideo())}>
+              <Button className="audio-player-button" variant="link" onClick={() => (isPlayingState ? pauseVideo() : playVideo())}>
                 {isPlayingState ? <PauseFill size={24} /> : <PlayFill size={24} />}
               </Button>
-              <Button variant="link" onClick={nextVideo}>
+              <Button  className="audio-player-button" variant="link" onClick={nextVideo}>
                 <SkipForwardFill />
               </Button>
             </div>
