@@ -2,6 +2,7 @@
 @import './AudioPlayer.css';
 @import './Playlistcontainer.css';
 @import './NotFound.css';
+@import './Loader.css';
 
 *{
   box-sizing: border-box; 

@@ -72,8 +72,20 @@ const Home: React.FC = () => {
 
 
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return (
+    <div style={{
+      marginTop: '10%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+      <span className="loader"></span>
+      <p>Loading...</p>
+    </div>
+  );
+  
+  if (error) return <div>{error}</div>
 
   return (
     <div className="container mt-3 home-container">
