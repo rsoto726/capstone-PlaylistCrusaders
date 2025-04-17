@@ -42,6 +42,7 @@ const Profile = () => {
   const [userPlaylists, setUserPlaylists] = useState<Playlist[]>([]);
   const [likedPlaylists, setLikedPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activePlaylist, setActivePlaylist] = useState<number>(0);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -96,7 +97,7 @@ const Profile = () => {
       <div>
         <h3>{!username?"Your ":"User "} Playlists</h3>
         {userPlaylists.length ? (
-          <PlaylistContainer playlists={userPlaylists} isOwnProfile={!username}/>
+          <PlaylistContainer playlists={userPlaylists} isOwnProfile={!username} activePlaylist={activePlaylist} setActivePlaylist={setActivePlaylist}/>
         ) : (
           <p>No playlists found.</p>
         )}
@@ -105,7 +106,7 @@ const Profile = () => {
       <div>
         <h3 className='mt-5'>{!username?"Your ":`${username}'s`}Liked Playlists</h3>
         {likedPlaylists.length ? (
-          <PlaylistContainer playlists={likedPlaylists} isOwnProfile={false}/>
+          <PlaylistContainer playlists={likedPlaylists} isOwnProfile={false} activePlaylist={activePlaylist} setActivePlaylist={setActivePlaylist}/>
         ) : (
           <p>No liked playlists found.</p>
         )}

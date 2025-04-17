@@ -28,11 +28,12 @@ type Playlist = {
 type Props = {
   playlists: Playlist[];
   isOwnProfile: boolean;
+  activePlaylist:any;
+  setActivePlaylist:any;
 };
 
 
-const PlaylistContainer: React.FC<Props> = ({playlists, isOwnProfile}) => {
-  const [activePlaylist, setActivePlaylist] = useState<number>(0);
+const PlaylistContainer: React.FC<Props> = ({playlists, isOwnProfile, activePlaylist, setActivePlaylist}) => {
 
 
 

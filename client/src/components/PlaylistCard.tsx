@@ -86,7 +86,8 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
   const [active, setActive] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
   const [roles,setRoles] = useState<string[]| null>(null);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [random, setRandom] = useState<number>(Math.floor(Math.random() * 9999));
   const navigate = useNavigate();
 
   // make sure youtube api is ready, then coalesce metadata
@@ -257,8 +258,9 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
   const handlePlaylistClick = () => {
     console.log(playlist);
     console.log(playlist.playlistId);
-    setActivePlaylist(playlist.playlistId);
+    setActivePlaylist(random+playlist.playlistId);
   };
+
 
   const toggleDropdown = (e: React.MouseEvent) => {
     e.stopPropagation();

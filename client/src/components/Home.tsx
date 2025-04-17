@@ -34,6 +34,7 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortedPlaylists, setSortedPlaylists] = useState<Playlist[]>([]);
+  const [activePlaylist, setActivePlaylist] = useState<number>(0);
 
   useEffect(() => {
     fetch(`${url}/api/playlist/public`)
@@ -91,11 +92,11 @@ const Home: React.FC = () => {
     <div className="container mt-3 home-container">
       <h1>Published Playlists</h1>
       <div className="row">
-        <PlaylistContainer playlists={playlists} isOwnProfile={false}/>
+        <PlaylistContainer playlists={playlists} isOwnProfile={false} activePlaylist={activePlaylist} setActivePlaylist={setActivePlaylist}/>
       </div>
       <h1 style={{marginTop:"2rem"}}>Most Liked Playlists</h1>
       <div className="row">
-        <PlaylistContainer playlists={sortedPlaylists} isOwnProfile={false}/>
+        <PlaylistContainer playlists={sortedPlaylists} isOwnProfile={false} activePlaylist={activePlaylist} setActivePlaylist={setActivePlaylist}/>
       </div>
     </div>
   );

@@ -30,6 +30,7 @@ type Playlist = {
 const Search = () => {
     const [query, setQuery] = useState<string>('');
     const [playlists, setPlaylists] = useState<Playlist[]>([]);
+    const [activePlaylist, setActivePlaylist] = useState<number>(0);
     const location = useLocation();
   
     useEffect(() => {
@@ -52,7 +53,7 @@ const Search = () => {
     <div className='container'>
         <h3 className='mt-2 ml-2'>Search results for: <span style={{fontStyle : "italic"}}>{query}</span></h3>
         {playlists.length > 0  ? (
-          <PlaylistContainer playlists={playlists} isOwnProfile={false}/>
+          <PlaylistContainer playlists={playlists} isOwnProfile={false} activePlaylist={activePlaylist} setActivePlaylist={setActivePlaylist}/>
         ) : (
           <h2>{"No results found :{"}</h2>
         )}
