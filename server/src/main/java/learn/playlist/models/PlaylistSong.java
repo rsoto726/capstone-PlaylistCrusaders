@@ -55,8 +55,7 @@ public class PlaylistSong {
         return "PlaylistSong{" +
                 "playlistId=" + playlistId +
                 ", songId=" + songId +
-                ", playlist=" + playlist +
-                ", song=" + song +
+                ", index=" + index +
                 '}';
     }
 

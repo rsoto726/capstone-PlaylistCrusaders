@@ -48,12 +48,12 @@ const PlaylistEdit = () => {
         if (authRes.userId !== data.userId) {
           navigate("/");
         }
-
+        console.log(data.songs);
         const sortedSongs = [...data.songs]
           .sort((a, b) => a.index - b.index)
           .map(entry => entry.song);
         data.songs = sortedSongs;
-        //console.log(data);
+        console.log(sortedSongs);
         setPlaylist(data);
       } catch (err: any) {
         setError(err.message);
@@ -112,7 +112,7 @@ const PlaylistEdit = () => {
       const oEmbedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
       const res = await fetch(oEmbedUrl);
       const data = await res.json();
-      console.log(data);
+      //console.log(data);
 
       const newSong = {
         url: `https://www.youtube.com/watch?v=${videoId}`,
@@ -161,9 +161,27 @@ const PlaylistEdit = () => {
 
   const handleSave = async () => {
     console.log("Saving playlist:", playlist);
+
+    const playlistSongs = playlist.songs.map((song, index) => ({
+      playlistId: playlist.playlistId,
+      songId: song.songId,
+      index
+    }));
+
+    console.log(playlistSongs);
+
     fetchWithCredentials(`/playlist/${numericPlaylistId}`, {
       method: 'PUT',
       body: JSON.stringify(playlist),
+    })
+      .catch(console.log);
+
+    fetchWithCredentials(`/playlist-song/replace/${numericPlaylistId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(playlistSongs)
     })
       .then((response) => {
         if (!response) { //update returns no content

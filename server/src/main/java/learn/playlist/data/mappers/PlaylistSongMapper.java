@@ -12,6 +12,7 @@ public class PlaylistSongMapper implements RowMapper<PlaylistSong> {
         PlaylistSong playlistSong = new PlaylistSong();
         playlistSong.setPlaylistId(resultSet.getInt("playlist_id"));
         playlistSong.setSongId(resultSet.getInt("song_id"));
+        playlistSong.setIndex(resultSet.getInt("index"));
 
         PlaylistMapper playlistMapper = new PlaylistMapper();
         playlistSong.setPlaylist(playlistMapper.mapRow(resultSet, i));

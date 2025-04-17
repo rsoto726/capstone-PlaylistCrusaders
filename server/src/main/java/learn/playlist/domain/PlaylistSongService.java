@@ -4,6 +4,8 @@ import learn.playlist.data.PlaylistSongRepository;
 import learn.playlist.models.PlaylistSong;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PlaylistSongService {
     private final PlaylistSongRepository repository;
@@ -24,6 +26,24 @@ public class PlaylistSongService {
             result.setPayload(playlistSong);
         }
 
+        return result;
+    }
+
+    public Result<?> addList(int playlistId, List<PlaylistSong> playlistSongs) {
+        Result<PlaylistSong> result = new Result<>();
+        for (PlaylistSong ps : playlistSongs) {
+            if (ps.getPlaylistId() != playlistId) {
+                result.addMessage("Invalid entry.", ResultType.INVALID);
+            }
+            result = validate(ps);
+            if (!result.isSuccess()) {
+                return result;
+            }
+        }
+
+        if (!repository.replaceAllForPlaylist(playlistId, playlistSongs)) {
+            result.addMessage("Some entries could not be updated.", ResultType.INVALID);
+        }
         return result;
     }
 

@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RequestMapping("/api/playlist-song")
@@ -33,6 +35,16 @@ public class PlayerSongController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return ErrorResponse.build(result);
+    }
+
+    @PutMapping("/replace/{playlistId}")
+    public ResponseEntity<Void> replaceAll(@PathVariable int playlistId, @RequestBody List<PlaylistSong> playlistSongs) {
+        Result<?> result = service.addList(playlistId, playlistSongs);
+
+        if (result.isSuccess()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping
