@@ -1,5 +1,5 @@
 .active-track-container {
-    background-color: #8673A1; /* pearl violet */
+    background-color: #8673A1!important; /* pearl violet */
     padding: 1rem 2rem 0.5rem 2rem ;
     border-radius: 8px;
     margin-bottom: 15px;
@@ -19,7 +19,7 @@
   }
   
   .active-track-item {
-    background-color: #f0e6ff !important; /* Light violet */
+    background-color:  #8673A1 !important; /* Light violet */
     border: none !important;
     margin-bottom: 5px;
     border-radius: 4px;
@@ -80,4 +80,29 @@
 
 .custom-range::-moz-range-thumb {
   background: rgb(47, 0, 47);
+}
+
+/* volume */
+.volume-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  background-color: rgb(47, 0, 47);
+  border-radius: 3px;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  margin-top: -6px;
+  height: 18px;
+  width: 18px;
+  background: white;
+  border: 2px solid rgb(47, 0, 47);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0,0,0,0.2);
+}
+
+.volume-slider {
+  appearance: none;
+  height: 6px;
+  background: transparent;
 }

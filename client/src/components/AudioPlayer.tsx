@@ -212,17 +212,16 @@ const AudioPlayer: React.FC<Props> = ({ playlist, metadataMap, activePlaylist })
               </Button>
             </div>
             <div className="d-flex align-items-center mt-2">
-  <small className="me-2 audio-player-text">🔊</small>
-  <input
-    type="range"
-    min={0}
-    max={100}
-    value={volume}
-    onChange={(e) => setVolume(Number(e.target.value))}
-    className="form-range w-100"
-  />
-</div>
-
+              <small className="me-2 audio-player-text">🔊</small>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={volume}
+                onChange={(e) => setVolume(Number(e.target.value))}
+                className="form-range w-100 volume-slider"
+              />
+            </div>
           </div>
 
           <ListGroup className="mt-3" style={{ maxHeight: '200px', overflowY: 'auto', overflowX: 'hidden' }}>
