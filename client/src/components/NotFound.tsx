@@ -4,7 +4,9 @@ import React from 'react'
 const NotFound = () => {
   return (
     <div>
-      404 Page Not Found ¯⁠\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯
+      <h1 className="not-found">404 Page Not Found</h1>
+      <h3 className="shruggie">¯⁠\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯</h3>
+
     </div>
   )
 }

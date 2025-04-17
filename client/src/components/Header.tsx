@@ -1,20 +1,17 @@
-import React, { useEffect } from 'react'
-import Navbar from './Navbar';
-import { Button, Dropdown } from 'react-bootstrap';
-import SearchBar from './SearchBar';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../auth";
+import SearchBar from './SearchBar';
 import '../styles/Header.css';
 
 const Header = () => {
   const { auth } = useAuth();
   const navigate = useNavigate();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     auth.getLoggedIn();
-
   }, []);
-
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -68,6 +65,31 @@ const Header = () => {
     navigate('/');
   };
 
+  const toggleDropdown = () => {
+    setDropdownOpen(prev => !prev);
+  };
+
+  const closeDropdown = () => {
+    setDropdownOpen(false);
+  };
+
+  // if click anywhere besides dropdown, closer dropdown
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target && !target.closest('.user-dropdown')) {
+        closeDropdown();
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+  
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  
+
   return (
     <div>
       <nav className="navbar navbar-dark bg-dark py-4 px-4 justify-content-between">
@@ -75,48 +97,52 @@ const Header = () => {
         <div className="nav-links mr-4">
           {auth.user ? (
             <>
-              <Button
-                variant="btn btn-outline-light btn-lg mr-4"
+              <button
+                className="btn btn-outline-light btn-lg mr-4"
                 onClick={handleCreatePlaylistClick}
               >
                 Create Playlist
-              </Button>
+              </button>
 
-              <Dropdown align="end">
-                <Dropdown.Toggle
-                  variant="light"
-                  id="dropdown-user"
-                  className="rounded-circle user-icon"
-                  style={{ width: '40px', height: '40px', padding: 0 }}
+              <div className="user-dropdown" style={{ position: 'relative' }}>
+                <button
+                  className="user-icon"
+                  onClick={toggleDropdown}
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    padding: 0,
+                    borderRadius: '50%',
+                    backgroundColor: 'lightgray',
+                  }}
                 >
                   <span role="img" aria-label="user">👤</span>
-                </Dropdown.Toggle>
+                </button>
 
-                <Dropdown.Menu>
-                  <Dropdown.Item onClick={handleProfileClick}>Profile</Dropdown.Item>
-                  {auth.user?.roles?.includes('ADMIN') && (
-                  <Dropdown.Item onClick={() => navigate('/admin/')}>
-                    Admin Panel
-                  </Dropdown.Item>
+                {dropdownOpen && (
+                  <div className="profile-dropdown-menu">
+                    <button className="dropdown-item" onClick={handleProfileClick}>Profile</button>
+                    {auth.user?.roles?.includes('ADMIN') && (
+                      <button className="dropdown-item" onClick={() => navigate('/admin/')}>Admin Panel</button>
                     )}
-                  <Dropdown.Item onClick={handleLogoutClick}>Logout</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                    <button className="dropdown-item" onClick={handleLogoutClick}>Logout</button>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
-            <Button
-              variant="btn btn-outline-light btn-lg mr-4"
-              className="custom-button"
+            <button
+              className="btn btn-outline-light btn-lg mr-4 custom-button"
               onClick={handleLoginClick}
             >
               Login / Register
-            </Button>
+            </button>
           )}
         </div>
       </nav>
       <SearchBar />
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

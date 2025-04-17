@@ -57,6 +57,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="container mt-3">
+      <h1>Published Playlists</h1>
       <div className="row">
         <PlaylistContainer playlists={playlists} isOwnProfile={false}/>
       </div>

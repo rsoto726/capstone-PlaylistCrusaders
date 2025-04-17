@@ -44,7 +44,6 @@ const PlaylistEdit = () => {
         const res = await fetch(`http://localhost:8080/api/playlist/${numericPlaylistId}`);
         if (!res.ok) throw new Error('Failed to fetch playlist');
         const data = await res.json();
-        //console.log(data.userId);
 
         //Not your playlist so get out
         if (authRes.userId !== data.userId) {
@@ -237,34 +236,44 @@ const PlaylistEdit = () => {
                 onChange={(e) => setPlaylist({ ...playlist, name: e.target.value })}
               />
             </Col>
-            <Col xs="auto" className="pt-4">
-              <Button variant="dark" size="lg" onClick={handleAddSong}>
-                + Add Song
-              </Button>
-            </Col>
           </Form.Group>
         </Col>
       </Row>
 
-      <Row className="mb-4">
+      <Row className="align-items-center mb-4">
         <Col>
           <Button variant="success" onClick={handleSave}>
             Save Changes
           </Button>
         </Col>
-        <Form.Group className="mt-3">
-        <Form.Check 
-          type="checkbox"
-          label="Publish Playlist"
-          checked={playlist.published}
-          onChange={(e) =>
-            setPlaylist({ ...playlist, published: e.target.checked })
-          }
-        />
-      </Form.Group>
+        <Col xs="auto">
+          <Form.Check 
+            type="checkbox"
+            id="publish-checkbox"
+            inline
+            label="Publish Playlist"
+            checked={playlist.published}
+            onChange={(e) =>
+              setPlaylist({ ...playlist, published: e.target.checked })
+            }
+            className="ms-2"
+          />
+        </Col>
       </Row>
 
-      <h4 className="mb-3">Songs</h4>
+
+      <Row className="align-items-center mb-3">
+        <Col>
+          <h4 className="mb-0">Songs</h4>
+        </Col>
+        <Col xs="auto">
+          <Button variant="dark" size="lg" onClick={handleAddSong}>
+            + Add Song
+          </Button>
+        </Col>
+      </Row>
+
+
       <ListGroup>
         {playlist.songs.map((song, idx) => (
           <ListGroup.Item key={song.songId} className="d-flex justify-content-between align-items-center">

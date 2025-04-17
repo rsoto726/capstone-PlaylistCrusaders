@@ -18,7 +18,6 @@ const PlaylistFullView = () => {
     const fetchPlaylist = async () => {
       try {
         const res = await fetch(`http://localhost:8080/api/playlist/${id}`);
-        //console.log(res);
         if (!res.ok) throw new Error('Failed to fetch playlist');
         const data = await res.json();
         console.log(data)

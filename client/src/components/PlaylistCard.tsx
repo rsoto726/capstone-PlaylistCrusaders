@@ -44,13 +44,6 @@ const loadYouTubeAPI = () => {
   });
 };
 
-// ? break youtube url into usable parts (useless right now, save for url submitter)
-const extractVideoId = (url: string): string | null => {
-  const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|v\/|e(?:mbed)?\/))([\w-]{11})/;
-  const match = url.match(regex);
-  return match ? match[1] : null;
-};
-
 type Song = {
   songId: number;
   url: string;
@@ -106,7 +99,7 @@ const PlaylistCard: React.FC<Props> = ({ playlist, activePlaylist, setActivePlay
 
       while (currentIndex < playlist.songs.length) {
         const song = playlist.songs[currentIndex];
-        const videoId = extractVideoId(song.song.url);
+        const videoId = playlist.songs[currentIndex].song.videoId;
 
         if (!videoId) {
           console.warn(`No video ID found for song URL: ${song.song.url}`);
