@@ -1,11 +1,18 @@
 .logo {
-    font-size: 2rem;
+    font-size: 3rem;
     letter-spacing: 0.2rem;
     cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-style:bold;
+    color: rgb(241, 215, 64)!important;
+    text-shadow: 
+    -1.5px -1.5px 0 rgb(47, 0, 47),  
+     1.5px -1.5px 0 rgb(47, 0, 47),
+    -1.5px  1.5px 0 rgb(47, 0, 47),
+     1.5px  1.5px 0 rgb(47, 0, 47); 
 }
 
 .nav-links {
-    
     display: flex;
     justify-content: center;
     align-items: center;

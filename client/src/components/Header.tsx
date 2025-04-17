@@ -25,6 +25,10 @@ const Header = () => {
       return;
     }
 
+    if(!window.confirm("Create a playlist?")){
+      return;
+    }
+
     const playlistData = {
       name: "New Playlist",
       publish: false,
