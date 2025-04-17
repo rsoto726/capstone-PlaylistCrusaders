@@ -46,7 +46,6 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<Object> add(@RequestBody User user){
         Result<User> result = service.add(user, user.getPassword());
-        System.out.println(result);
         if(result.isSuccess()){
             return new ResponseEntity<>(result.getPayload(), HttpStatus.CREATED);
         }

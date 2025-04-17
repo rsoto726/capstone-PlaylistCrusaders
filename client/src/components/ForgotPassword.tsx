@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import '../styles/Login.css';
 
 export default function ForgotPassword() {
@@ -31,17 +32,21 @@ export default function ForgotPassword() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Forgot Password</h2>
-      <input
-        type="email"
-        name="email"
-        placeholder="Enter your email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        required
-      />
-      <button type="submit">Validate Email</button>
-    </form>
+    <div className='login-page'>
+      <div className='login-container'>
+        <form onSubmit={handleSubmit}>
+          <h2>Forgot Password</h2>
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+          />
+          <Button type="submit" variant="primary" size="lg" className="login-buttons w-100 mt-3">Validate Email</Button>
+        </form>
+      </div>
+    </div>
   );
 }

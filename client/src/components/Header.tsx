@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from "../auth";
 import SearchBar from './SearchBar';
 import '../styles/Header.css';
@@ -7,6 +7,7 @@ import '../styles/Header.css';
 const Header = () => {
   const { auth } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
@@ -52,8 +53,11 @@ const Header = () => {
 
       const data = await response.json();
       console.log("Created playlist:", data);
-      alert(`Playlist created: ${data.name}`);
-      navigate("/profile");
+      if (location.pathname === '/profile') {
+        window.location.reload();
+      } else {
+        navigate('/profile');
+      }
     } catch (err) {
       console.error(err);
       alert('An error occurred while creating the playlist.');

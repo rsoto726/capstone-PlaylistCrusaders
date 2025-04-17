@@ -5,7 +5,7 @@ import React, {
     useState,
     ReactNode,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import api from './auth-req-api';
 
 interface User {
@@ -41,6 +41,7 @@ export const AuthActionType = {
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [auth, setAuth] = useState<AuthState>({
         user: null,
         loggedIn: false,
@@ -153,7 +154,11 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
             loggedIn: false,
             visitor: 'NONE',
         });
-        navigate('/');
+        if (location.pathname === '/') {
+            window.location.reload();
+        } else {
+            navigate('/');
+        }
     };
 
     authMethods = {

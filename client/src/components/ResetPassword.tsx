@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import '../styles/Login.css';
 
 // Define a type for the form state
@@ -43,24 +44,28 @@ export default function ResetPassword() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Reset Password</h2>
-      <input
-        name="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="New Password"
-        value={form.password}
-        onChange={handleChange}
-        required
-      />
-      <button type="submit">Reset Password</button>
-    </form>
+    <div className='login-page'>
+      <div className="login-container">
+        <form onSubmit={handleSubmit}>
+          <h2>Reset Password</h2>
+          <input
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="New Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+          <Button type="submit" variant="primary" size="lg" className="login-buttons w-100 mt-3">Reset Password</Button>
+        </form>
+      </div>
+    </div>
   );
 }
