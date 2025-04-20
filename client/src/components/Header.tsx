@@ -53,8 +53,9 @@ const Header = () => {
 
       const data = await response.json();
       console.log("Created playlist:", data);
-      if (location.pathname === '/profile') {
-        window.location.reload();
+      console.log(location.pathname);
+      if (location.pathname === '/profile/' || location.pathname === '/profile') {
+        navigate(0);
       } else {
         navigate('/profile');
       }

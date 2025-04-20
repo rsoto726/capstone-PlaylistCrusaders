@@ -104,7 +104,7 @@ const Profile = () => {
       </div>
 
       <div>
-        <h3 className='mt-5'>{!username?"Your ":`${username}'s`}Liked Playlists</h3>
+        <h3 className='mt-5'>{!username?"Your ":`${username}'s `}Liked Playlists</h3>
         {likedPlaylists.length ? (
           <PlaylistContainer playlists={likedPlaylists} isOwnProfile={false} activePlaylist={activePlaylist} setActivePlaylist={setActivePlaylist}/>
         ) : (
